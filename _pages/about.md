@@ -6,7 +6,7 @@ subtitle: Affiliation - <a href='https://khwarizmilab.github.io/' target='_blank
 
 profile:
   align: right
-  image: prof_pic.jpg
+  image: ali.jpg
   image_circular: false # crops the image to make it circular
   more_info: >
     <p>Knowles Engineering Building 304</p>
