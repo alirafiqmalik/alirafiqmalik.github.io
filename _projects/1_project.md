@@ -78,4 +78,8 @@ Here's the code for the last row of images above:
 </div>
 ```
 
+<<<<<<< HEAD
 {% endraw %}
+=======
+{% endraw %}
+>>>>>>> parent of b6fe442 (Updated projects page settings)
