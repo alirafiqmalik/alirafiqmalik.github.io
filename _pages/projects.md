@@ -60,7 +60,7 @@ horizontal: false
     {% for project in sorted_projects %}
       {% include projects.liquid %}
     {% endfor %}
-  <!-- </div> -->
+  </div>
   {% endif %}
 {% endif %}
 </div>
