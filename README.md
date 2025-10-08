@@ -6,5 +6,4 @@ Before joining UMass, I completed my Bachelor's in Electrical Engineering (BSEE)
 
 I am engaged in the examination of quantum protocols pertaining to network communication, focusing on conducting formal analyses to uncover security vulnerabilities. My research endeavors lay the groundwork for devising efficient techniques to automate protocol analysis, ensuring the security guarantees provided by these protocols.
 
-
 <!-- node --experimental-strip-types node_modules/prettier/bin/prettier.cjs . --write -->
