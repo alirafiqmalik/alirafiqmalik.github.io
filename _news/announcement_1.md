@@ -5,4 +5,4 @@ inline: true
 related_posts: false
 ---
 
-Joined ECE Doctorate program at UMass Amherst; started working in [Khwarizmi Lab](https://khwarizmilab.github.io/){:target="_blank"} .
+Joined ECE Doctorate program at UMass Amherst; started working in [Khwarizmi Lab](https://khwarizmilab.github.io/){:target="_blank"}.
