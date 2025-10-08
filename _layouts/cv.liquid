@@ -1,11 +1,10 @@
 ---
 layout: default
 ---
-
 <a href="{{ page.cv_pdf | prepend: 'assets/pdf/' | relative_url }}" class="btn btn-primary" download>Download CV</a>
 
 <div class="post">
   <article>
-    <embed src="{{ page.cv_pdf | prepend: 'assets/pdf/' | relative_url }}" width="{{ site.max_width }}" height="1000px" />
+    <embed src="{{ page.cv_pdf | prepend: 'assets/pdf/' | relative_url }}" width="{{ site.max_width }}" height="1000px">
   </article>
 </div>
