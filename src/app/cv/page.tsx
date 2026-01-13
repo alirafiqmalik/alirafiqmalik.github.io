@@ -1,22 +1,13 @@
 import { getPageContent } from '@/lib/content';
 import type { CVData } from '@/types';
-import { Mail, MapPin, Globe, Download, GraduationCap } from 'lucide-react';
+import { Mail, MapPin, Globe, Download } from 'lucide-react';
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
 
 
 export default function CVPage() {
   const cvContent = getPageContent<CVData>('cv.md');
   const cv = cvContent.data;
-  // console.log('CV Data:', cv);
-  // console.log('Available CV sections:', Object.keys(cv));
-  // console.log('interests:', cv.interests);
-  // console.log('Education:', cv.education);
-  // console.log('Experience:', cv.experience);
-  // console.log('Skills:', cv.skills);
-  // console.log('Awards:', cv.awards);
-  // console.log('Publications:', cv.publications);
-  // console.log('Teaching:', cv.teaching);
-  // console.log('Service:', cv.service);
+  
 
   // Get section order from the cv.md file structure, excluding contact
   const sectionOrder = Object.keys(cv).filter(
