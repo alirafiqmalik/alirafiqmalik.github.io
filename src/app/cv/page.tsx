@@ -1,6 +1,6 @@
 import { getPageContent } from '@/lib/content';
 import type { CVData } from '@/types';
-import { Mail, MapPin, Globe, Download } from 'lucide-react';
+import { Mail, MapPin, Globe, Download, GraduationCap } from 'lucide-react';
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
 
 
