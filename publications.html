@@ -1,0 +1,40 @@
+---
+layout: default
+title: Publications
+---
+<div class="page">
+    <header class="page-header">
+        <h1 class="page-title">Publications</h1>
+        <p class="page-description">Academic publications and research papers.</p>
+    </header>
+
+    {% if site.publications.size > 0 %}
+    <div class="publication-list">
+        {% for pub in site.publications %}
+        <div class="publication-item">
+            <div class="publication-title">{{ pub.title }}</div>
+            {% if pub.authors %}
+            <div class="publication-authors">{{ pub.authors }}</div>
+            {% endif %}
+            {% if pub.venue %}
+            <div class="publication-venue">{{ pub.venue }}</div>
+            {% endif %}
+            {% if pub.links %}
+            <div class="project-links" style="margin-top: 0.5rem;">
+                {% if pub.links.pdf %}
+                <a href="{{ pub.links.pdf }}" target="_blank" rel="noopener noreferrer" class="project-link">PDF</a>
+                {% endif %}
+                {% if pub.links.doi %}
+                <a href="{{ pub.links.doi }}" target="_blank" rel="noopener noreferrer" class="project-link">DOI</a>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <p>Publications coming soon.</p>
+    </div>
+    {% endif %}
+</div>

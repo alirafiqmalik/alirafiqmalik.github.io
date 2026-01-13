@@ -1,0 +1,8 @@
+# News items - uncomment and add when you have news
+news: []
+  # - date: Dec 2025
+  #   title: Paper Accepted at POPL 2026
+  #   description: Our work on automated theorem proving accepted at top-tier conference.
+  # - date: Nov 2025
+  #   title: Invited Talk at MIT
+  #   description: Presented research on formal verification of cryptographic protocols.

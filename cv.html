@@ -1,0 +1,88 @@
+---
+layout: default
+title: CV
+---
+<div class="page">
+    <header class="page-header">
+        <h1 class="page-title">Curriculum Vitae</h1>
+    </header>
+
+    <!-- Education -->
+    <section class="cv-section">
+        <h2 class="cv-section-title">Education</h2>
+        {% for edu in site.data.cv.education %}
+        <div class="cv-item">
+            <div class="cv-item-header">
+                <span class="cv-item-title">{{ edu.degree }}</span>
+                <span class="cv-item-year">{{ edu.year }}</span>
+            </div>
+            <div class="cv-item-subtitle">{{ edu.institution }} • {{ edu.location }}</div>
+            {% if edu.details %}
+            <div class="cv-item-details">{{ edu.details }}</div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </section>
+
+    <!-- Experience -->
+    <section class="cv-section">
+        <h2 class="cv-section-title">Experience</h2>
+        {% for exp in site.data.cv.experience %}
+        <div class="cv-item">
+            <div class="cv-item-header">
+                <span class="cv-item-title">{{ exp.title }}</span>
+                <span class="cv-item-year">{{ exp.year }}</span>
+            </div>
+            <div class="cv-item-subtitle">{{ exp.company }} • {{ exp.location }}</div>
+            {% if exp.responsibilities %}
+            <ul class="cv-responsibilities">
+                {% for resp in exp.responsibilities %}
+                <li>{{ resp }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </section>
+
+    <!-- Skills -->
+    <section class="cv-section">
+        <h2 class="cv-section-title">Skills</h2>
+        <div class="skills-grid">
+            {% for category in site.data.cv.skills %}
+            <div class="skill-category">
+                <div class="skill-category-name">{{ category.category }}</div>
+                <div class="skill-tags">
+                    {% for skill in category.skills %}
+                    <span class="skill-tag">{{ skill }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Awards -->
+    <section class="cv-section">
+        <h2 class="cv-section-title">Awards & Honors</h2>
+        {% for award in site.data.cv.awards %}
+        <div class="cv-item">
+            <div class="cv-item-header">
+                <span class="cv-item-title">{{ award.title }}</span>
+                <span class="cv-item-year">{{ award.year }}</span>
+            </div>
+            <div class="cv-item-details">{{ award.details }}</div>
+        </div>
+        {% endfor %}
+    </section>
+
+    <!-- Interests -->
+    <section class="cv-section">
+        <h2 class="cv-section-title">Interests</h2>
+        <div class="skill-tags">
+            {% for interest in site.data.cv.interests %}
+            <span class="skill-tag">{{ interest }}</span>
+            {% endfor %}
+        </div>
+    </section>
+</div>

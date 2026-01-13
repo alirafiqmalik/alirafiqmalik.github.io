@@ -1,0 +1,27 @@
+---
+layout: default
+title: History
+---
+<div class="page">
+    <header class="page-header">
+        <h1 class="page-title">History</h1>
+        <p class="page-description">Academic and professional milestones.</p>
+    </header>
+
+    {% if site.history.size > 0 %}
+    <div class="timeline">
+        {% assign sorted_history = site.history | sort: 'date' | reverse %}
+        {% for item in sorted_history %}
+        <div class="timeline-item">
+            <div class="timeline-date">{{ item.date | date: "%B %Y" }}</div>
+            <h3 class="timeline-title">{{ item.title }}</h3>
+            <div class="timeline-content">{{ item.content | markdownify }}</div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <p>History items coming soon.</p>
+    </div>
+    {% endif %}
+</div>

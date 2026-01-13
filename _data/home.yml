@@ -1,0 +1,12 @@
+researchInterests:
+  - title: Formal Verification
+    description: Symbolic execution, model checking (TLA+, nuXMV, STORM), and theorem proving (Coq, Lean)
+  - title: Security Analysis
+    description: Verification of cryptographic protocols, quantum key distribution, and banking system security
+  - title: Generative AI/ML
+    description: Fine-tuning (SFT, DPO, RLHF), RAG, Agentic AI, and specification-aware approaches
+
+selectedPublications: []
+  # - title: Automated Verification of Cryptographic Protocols Using SMT Solvers
+  #   venue: ACM CCS 2024
+  #   authors: A. H. Malik, J. Doe, M. Smith

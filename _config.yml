@@ -1,0 +1,68 @@
+# Site Settings
+title: Ali Hamza Malik
+description: Research scientist specializing in formal verification, automated reasoning, and security.
+url: "https://alihamzamalik.me"
+baseurl: ""
+
+# Author
+author:
+  name: Ali Hamza Malik
+  email: ahmalik@umass.edu
+
+# Build Settings
+markdown: kramdown
+highlighter: rouge
+permalink: /blog/:title/
+
+# Sass
+sass:
+  sass_dir: _sass
+  style: compressed
+
+# Collections
+collections:
+  projects:
+    output: true
+    permalink: /projects/:name/
+  history:
+    output: false
+    permalink: /history/:name/
+  publications:
+    output: false
+
+# Defaults
+defaults:
+  - scope:
+      path: ""
+      type: "projects"
+    values:
+      layout: "project"
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+  - scope:
+      path: ""
+    values:
+      layout: "default"
+
+# Plugins
+plugins:
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+# Exclude from build
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - package.json
+  - package-lock.json
+  - src
+  - .next
+  - out
+  - archive
+  - README.md
+  - "*.mjs"
+  - "*.ts"

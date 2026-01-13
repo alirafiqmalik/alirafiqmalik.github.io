@@ -1,34 +1,41 @@
-# Personal Website
+# Ali Hamza Malik - Personal Website
 
-Next.js 15 + MDX academic portfolio. Al-folio inspired design.
+Jekyll-based academic portfolio. Al-folio inspired design.
 
 ## Quick Start
 
 ```bash
-npm install
-npm run dev      # localhost:3000
-npm run build    # production build
+# Install Ruby first (https://rubyinstaller.org/ for Windows)
+gem install bundler jekyll
+
+# Install dependencies
+bundle install
+
+# Serve locally
+bundle exec jekyll serve --livereload
+# Visit http://localhost:4000
 ```
 
 ## Structure
 
 ```
-src/
-  app/           # Routes (page.tsx per route)
-  components/
-    layout/      # Navigation, Footer, ThemeProvider
-    ui/          # shadcn/ui primitives
-    mdx/         # Callout, CodeBlock, YouTube
-  content/       # Markdown/MDX content
-    personal.md, cv.md, news.md
-    posts/*.mdx, projects/*.mdx
-    publications/*.md, history/*.md
-  lib/content.ts # Content loader (gray-matter)
-  types/index.ts # TypeScript interfaces
+├── _config.yml      # Site configuration
+├── _layouts/        # Page templates
+├── _includes/       # Reusable components
+├── _data/           # YAML data files
+├── _projects/       # Project collection
+├── _history/        # Timeline collection
+├── assets/          # CSS, JS, images
+└── *.html           # Pages
 ```
 
 ## Content
 
-Edit files in `src/content/`. Frontmatter (YAML) for metadata, markdown body for content.
+- Edit `_data/personal.yml` for profile info
+- Edit `_data/cv.yml` for CV sections
+- Add projects to `_projects/`
+- Add timeline items to `_history/`
 
-Projects and posts use `.mdx` for interactive components.
+## Deploy
+
+Push to GitHub - uses Jekyll Pages action in `.github/workflows/`.
