@@ -1,41 +1,32 @@
-# Ali Hamza Malik - Personal Website
+# Ali Hamza Malik — Personal Website
 
-Jekyll-based academic portfolio. Al-folio inspired design.
+Jekyll academic portfolio. Built with vanilla CSS, dark mode, and project filtering.
 
-## Quick Start
+## Local Development
 
 ```bash
-# Install Ruby first (https://rubyinstaller.org/ for Windows)
-gem install bundler jekyll
-
-# Install dependencies
+gem install bundler
 bundle install
-
-# Serve locally
 bundle exec jekyll serve --livereload
-# Visit http://localhost:4000
+# http://localhost:4000
 ```
+
+Requires Ruby 3+. Works on macOS, Linux, and Windows.
 
 ## Structure
 
 ```
-├── _config.yml      # Site configuration
-├── _layouts/        # Page templates
-├── _includes/       # Reusable components
-├── _data/           # YAML data files
-├── _projects/       # Project collection
-├── _history/        # Timeline collection
-├── assets/          # CSS, JS, images
-└── *.html           # Pages
+_config.yml      Site configuration
+_layouts/        Page templates
+_includes/       Reusable components (head, nav, footer)
+_data/           YAML data (personal, cv, home, news)
+_projects/       Project collection (markdown)
+_history/        Timeline collection (markdown)
+assets/          CSS, JS, images, PDF
 ```
-
-## Content
-
-- Edit `_data/personal.yml` for profile info
-- Edit `_data/cv.yml` for CV sections
-- Add projects to `_projects/`
-- Add timeline items to `_history/`
 
 ## Deploy
 
-Push to GitHub - uses Jekyll Pages action in `.github/workflows/`.
+Push to `main` — GitHub Actions builds and deploys via `.github/workflows/jekyll.yml`.
+
+> Repo Settings → Pages → Source must be set to **GitHub Actions**.

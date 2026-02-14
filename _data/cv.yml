@@ -21,26 +21,23 @@ experience:
     location: Amherst, MA
     year: September 2023 - Present
     responsibilities:
-      - Built a verification framework to analyze quantum key distribution (QKD) protocols; identified four new vulnerabilities arising from quantum–classical interactions
+      - Built a verification framework to analyze quantum key distribution (QKD) protocols; identified four new vulnerabilities arising from quantum-classical interactions
       - Applied formal analysis to U.S. ACH banking systems to uncover security vulnerabilities in the access control and authorization of ACH direct payments
   - title: Undergraduate Research Assistant
     company: Communication Systems and Networks Lab, NUST
-    location: Islamabad
     year: September 2022 - July 2023
     responsibilities:
       - Collaborated in the design and implementation of an event-driven coordination protocol for multi-agent aerial swarms on Raspberry Pi companion computers with Pixhawk/ArduPilot flight controllers
-      - Designed and optimized leader–follower formation control (flock, line, helical) with dynamic reconfiguration, achieving under 2 min formation-switching latency
+      - Designed and optimized leader-follower formation control (flock, line, helical) with dynamic reconfiguration, achieving under 2 min formation-switching latency
       - Engineered a mesh networking stack (IEEE 802.11, UDP/TCP, MAVLink) to enable fault-tolerant communication for control coordination in real-time (under 100 ms latency)
   - title: Hardware Security Intern
     company: IC Design Lab, NUST
-    location: Islamabad
     year: June 2022 - September 2022
     responsibilities:
       - Led the design of ENIGMA, a Python framework that automatically inserts logic-locking defenses into hardware designs, protecting IP designs from unauthorized use and reverse engineering
-      - Designed a parametrized key-insertion system (64–256 bits) with user-defined cell libraries to analyze the impact of logic obfuscation on a chip's area, delay, and power
+      - Designed a parametrized key-insertion system (64-256 bits) with user-defined cell libraries to analyze the impact of logic obfuscation on a chip's area, delay, and power
   - title: Machine Learning Intern
     company: TUKL Deep Learning Lab, NUST
-    location: Islamabad
     year: June 2021 - September 2021
     responsibilities:
       - Implemented an automated pipeline to extract, structure, and preprocess raw court documents
@@ -62,9 +59,8 @@ education:
     details: "Teaching Assistant: ECE 304 (Junior Design Project), ECE 361 (Fundamentals of Electrical Engineering)"
   - degree: BE in Electrical Engineering & Minor in Computer Science
     institution: National University of Sciences and Technology
-    location: Islamabad
     year: Graduated 2023
-    details: "Capstone: Logic-Locking Security Evaluation - End-to-end pipeline for security-cost tradeoffs of hardware obfuscation on RISC-V designs. Funded Project: Multi-Agent Aerial Swarm - Grant-funded research on event-driven, low-latency control for multi-UAV swarms."
+    details: "Capstone: Logic-Locking Security Evaluation - End-to-end pipeline for security-cost tradeoffs of hardware obfuscation on RISC-V designs. \nFunded Project: Multi-Agent Aerial Swarm - Grant-funded research on event-driven, low-latency control for multi-UAV swarms."
 
 interests:
   - Reading books (fiction and non-fiction)

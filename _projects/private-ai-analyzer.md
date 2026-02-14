@@ -2,7 +2,7 @@
 title: Private AI Document Analyzer
 description: Secure offline document analysis using locally deployed LLMs
 img: https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&h=400&fit=crop
-importance: 2
+importance: 3
 category: AI & Privacy
 technologies: [Python, Docker, Ollama, LLaMA, DeepSeek]
 status: Completed

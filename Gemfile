@@ -1,6 +1,7 @@
 source "https://rubygems.org"
 
 gem "jekyll", "~> 4.3"
+gem "webrick", "~> 1.7"
 
 group :jekyll_plugins do
   gem "jekyll-seo-tag"
@@ -15,3 +16,6 @@ end
 
 # Performance-booster for watching directories on Windows
 gem "wdm", "~> 0.1", :platforms => [:mingw, :x64_mingw, :mswin]
+
+# JRuby HTTP parser
+gem "http_parser.rb", "~> 0.6", :platforms => [:jruby]
