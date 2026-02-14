@@ -941,17 +941,6 @@ img {
   padding-bottom: 2rem;
 }
 
-.timeline-item::before {
-  content: '';
-  position: absolute;
-  left: -2rem;
-  top: 0.25rem;
-  width: 0.75rem;
-  height: 0.75rem;
-  border-radius: 50%;
-  background-color: var(--primary);
-  border: 2px solid var(--background);
-}
 
 .timeline-date {
   font-size: 0.875rem;
@@ -1117,4 +1106,303 @@ img {
 
 .markdown-content a:hover {
   text-decoration: underline;
+}
+
+/* ============================================
+   History Timeline Page
+   ============================================ */
+.history-page {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 3rem 1.5rem;
+}
+
+/* Legend */
+.history-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-bottom: 4rem;
+  padding: 1.5rem;
+  border-radius: var(--radius);
+  background-color: var(--card);
+  border: 1px solid var(--border);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.legend-dot {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  display: none;
+}
+
+.legend-dot-professional {
+  background-color: #3ea6ff;
+}
+
+.legend-dot-education {
+  background-color: #6c63ff;
+}
+
+.legend-dot-award {
+  background-color: #2ec4b6;
+}
+
+.legend-dot-internship {
+  background-color: #ff6b9d;
+}
+
+.legend-item span {
+  color: var(--card-foreground);
+  font-size: 0.875rem;
+}
+
+/* Timeline Container */
+.timeline-container {
+  position: relative;
+}
+
+.timeline-line {
+  position: absolute;
+  left: 2rem;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background-color: var(--border);
+  margin-left: -1px;
+}
+
+@media (min-width: 768px) {
+  .timeline-line {
+    left: 50%;
+    margin-left: 0;
+  }
+}
+
+.timeline-items {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  list-style: none;
+  padding: 0;
+}
+
+/* Timeline Item */
+.timeline-item {
+  position: relative;
+  min-height: 4rem;
+}
+
+/* Marker Node */
+.timeline-marker {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 4px solid var(--background);
+  cursor: pointer;
+  transition: transform 0.2s;
+  color: white;
+  font-weight: 700;
+  font-size: 0.875rem;
+}
+
+.timeline-marker:hover {
+  transform: scale(1.1);
+}
+
+@media (min-width: 768px) {
+  .timeline-marker {
+    left: 50%;
+    margin-left: -2rem;
+  }
+}
+
+.timeline-marker-professional {
+  background-color: #3ea6ff;
+}
+
+.timeline-marker-education {
+  background-color: #6c63ff;
+}
+
+.timeline-marker-award {
+  background-color: #2ec4b6;
+}
+
+.timeline-marker-internship {
+  background-color: #ff6b9d;
+}
+
+/* Timeline Card */
+.timeline-card {
+  position: relative;
+  margin-left: 5rem;
+  width: calc(100% - 5rem);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.timeline-card:hover {
+  border-color: var(--primary);
+}
+
+.timeline-item.expanded .timeline-card {
+  border-color: var(--primary);
+  box-shadow: 0 10px 40px rgba(62, 166, 255, 0.1);
+}
+
+@media (min-width: 768px) {
+  .timeline-card {
+    width: calc(50% - 3rem);
+    margin-left: 0;
+    margin-right: auto;
+  }
+
+  .timeline-item[data-index="1"] .timeline-card,
+  .timeline-item[data-index="3"] .timeline-card,
+  .timeline-item[data-index="5"] .timeline-card,
+  .timeline-item[data-index="7"] .timeline-card,
+  .timeline-item[data-index="9"] .timeline-card {
+    margin-left: auto;
+    margin-right: 0;
+  }
+}
+
+.timeline-card-header {
+  margin-bottom: 1rem;
+}
+
+.timeline-card-title {
+  color: var(--foreground);
+  font-size: 1.125rem;
+  margin-bottom: 0.25rem;
+}
+
+.timeline-card-organization {
+  color: var(--primary);
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+}
+
+.timeline-card-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+}
+
+.timeline-badge-professional {
+  background-color: rgba(62, 166, 255, 0.12);
+  color: #3ea6ff;
+}
+
+.timeline-badge-education {
+  background-color: rgba(108, 99, 255, 0.12);
+  color: #6c63ff;
+}
+
+.timeline-badge-award {
+  background-color: rgba(46, 196, 182, 0.12);
+  color: #2ec4b6;
+}
+
+.timeline-badge-internship {
+  background-color: rgba(255, 107, 157, 0.12);
+  color: #ff6b9d;
+}
+
+.timeline-card-description {
+  color: var(--card-foreground);
+  margin-top: 1rem;
+  line-height: 1.6;
+}
+
+/* Expanded Details */
+.timeline-card-details {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+}
+
+.timeline-item.expanded .timeline-card-details {
+  max-height: 500px;
+  transition: max-height 0.3s ease-in;
+}
+
+.timeline-card-content {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.timeline-card-content p {
+  color: var(--card-foreground);
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+/* Toggle Text */
+.timeline-card-toggle {
+  color: var(--muted-foreground);
+  font-size: 0.875rem;
+  margin-top: 1rem;
+}
+
+.timeline-item .toggle-collapse {
+  display: none;
+}
+
+.timeline-item.expanded .toggle-expand {
+  display: none;
+}
+
+.timeline-item.expanded .toggle-collapse {
+  display: block;
+}
+
+/* Additional timeline marker and badge types */
+.timeline-marker-teaching,
+.timeline-marker-research {
+  background-color: #ff6b9d;
+}
+
+.timeline-badge-teaching,
+.timeline-badge-research {
+  background-color: rgba(255, 107, 157, 0.12);
+  color: #ff6b9d;
+}
+
+.legend-dot-teaching,
+.legend-dot-research {
+  background-color: #ff6b9d;
+}
+
+/* Map all professional experience types to the same color */
+.timeline-marker-internship,
+.timeline-badge-internship,
+.legend-dot-internship,
+.legend-dot-professional {
+  background-color: #ff6b9d;
+}
+
+.timeline-badge-internship {
+  background-color: rgba(255, 107, 157, 0.12);
+  color: #ff6b9d;
 }
