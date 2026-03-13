@@ -15,7 +15,8 @@
         <h2 class="card-title text-lowercase">{{ project.title }}</h2>
         <p class="card-text">{{ project.description }}</p>
         <div class="row ml-1 mr-1 p-0">
-          {% if project.github %}
+          {% assign gh_url = project.github | strip %}
+          {% if gh_url and gh_url != "" and gh_url != "#" %}
             <div class="github-icon">
               <div class="icon" data-toggle="tooltip" title="Code Repository">
                 <a href="{{ project.github }}"><i class="fa-brands fa-github gh-icon"></i></a>

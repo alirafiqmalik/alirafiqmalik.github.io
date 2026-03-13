@@ -30,7 +30,8 @@ layout: default
 
     {% if page.links %}
     <div class="project-links">
-        {% if page.links.github %}
+        {% assign gh_url = page.links.github | strip %}
+        {% if gh_url and gh_url != "" and gh_url != "#" %}
         <a href="{{ page.links.github }}" target="_blank" rel="noopener noreferrer" class="project-link">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                 <path

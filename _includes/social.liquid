@@ -31,7 +31,8 @@
 {% if site.scopus_id %}
   <a href="https://www.scopus.com/authid/detail.uri?authorId={{site.scopus_id}}" title="Scopus"><i class="ai ai-scopus"></i></a>
 {% endif %}
-{% if site.github_username %}
+{% assign gh_username = site.github_username | strip %}
+{% if gh_username and gh_username != "" %}
   <a href="https://github.com/{{ site.github_username }}" title="GitHub"><i class="fa-brands fa-github"></i></a>
 {% endif %}
 {% if site.linkedin_username %}

@@ -110,7 +110,8 @@ title: Projects
                         </svg>
                         <span>View Details</span>
                     </a>
-                    {% if project.links.github %}
+                    {% assign gh_url = project.links.github | strip %}
+                    {% if gh_url and gh_url != "" and gh_url != "#" %}
                     <a href="{{ project.links.github }}" target="_blank" rel="noopener noreferrer" class="icon-link"
                         aria-label="GitHub">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">

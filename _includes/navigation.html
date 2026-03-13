@@ -2,9 +2,11 @@
     <div class="nav-container">
         <!-- Desktop Navigation -->
         <div class="nav-links">
-            {% assign nav_items =
-            "Home:/,CV:/cv/,History:/history/,Publications:/publications/,Projects:/projects/,Blog:/blog/" | split: ","
-            %}
+            {% if site.show_blog_in_nav != false %}
+            {% assign nav_items = "Home:/,CV:/cv/,History:/history/,Publications:/publications/,Projects:/projects/,Blog:/blog/" | split: "," %}
+            {% else %}
+            {% assign nav_items = "Home:/,CV:/cv/,History:/history/,Publications:/publications/,Projects:/projects/" | split: "," %}
+            {% endif %}
             {% for item in nav_items %}
             {% assign parts = item | split: ":" %}
             {% assign label = parts[0] %}

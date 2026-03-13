@@ -5,7 +5,8 @@
                 © {{ 'now' | date: "%Y" }} {{ site.author.name }}. All rights reserved.
             </p>
             <div class="footer-socials">
-                {% if site.data.personal.socials.github %}
+                {% assign gh_url = site.data.personal.socials.github | strip %}
+                {% if gh_url and gh_url != "" and gh_url != "#" %}
                 <a href="{{ site.data.personal.socials.github }}" target="_blank" rel="noopener noreferrer"
                     aria-label="GitHub">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
