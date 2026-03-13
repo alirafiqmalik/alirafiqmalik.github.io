@@ -14,11 +14,6 @@ markdown: kramdown
 highlighter: rouge
 permalink: /blog/:title/
 
-# Sass
-sass:
-  sass_dir: _sass
-  style: compressed
-
 # Collections
 collections:
   projects:
@@ -58,4 +53,9 @@ exclude:
   - Gemfile.lock
   - README.md
   - .github
+
+# Keep CNAME for custom domain (GitHub Pages)
+keep_files:
+  - CNAME
+  - .nojekyll
 
