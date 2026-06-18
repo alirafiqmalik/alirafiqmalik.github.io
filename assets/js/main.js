@@ -84,6 +84,13 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     };
 
+    const syncHashToSection = (sectionId) => {
+      const newHash = `#${sectionId}`;
+      if (window.location.hash !== newHash) {
+        history.replaceState(null, '', newHash);
+      }
+    };
+
     const sectionObserver = new IntersectionObserver((entries) => {
       const visible = entries
         .filter(entry => entry.isIntersecting)
@@ -92,6 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!visible.length) return;
       const sectionId = visible[0].target.id;
       setActiveSection(sectionNavMap[sectionId] || null);
+      syncHashToSection(sectionId);
     }, {
       root: scrollContainer,
       threshold: [0.6, 0.75, 0.9]
