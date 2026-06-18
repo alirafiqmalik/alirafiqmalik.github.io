@@ -590,7 +590,7 @@ html.one-page-scroll-root body.one-page-scroll {
   position: relative;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   background-color: var(--bg);
 }
 
@@ -601,10 +601,11 @@ html.one-page-scroll-root body.one-page-scroll {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   gap: clamp(1.75rem, 5vh, 3rem);
   min-height: calc(100dvh - 6.5rem);
   padding: clamp(2rem, 8vh, 5rem) 0;
+  text-align: center;
 }
 
 .landing-name {
@@ -614,12 +615,8 @@ html.one-page-scroll-root body.one-page-scroll {
   line-height: 1.05;
   letter-spacing: -0.02em;
   margin: 0;
-  text-align: left;
+  text-align: center;
   color: var(--text-primary);
-}
-
-.landing-name .accent-name {
-  color: var(--accent);
 }
 
 .landing-tagline {
@@ -629,17 +626,13 @@ html.one-page-scroll-root body.one-page-scroll {
   line-height: 1.1;
   letter-spacing: -0.02em;
   margin: 0;
-  text-align: left;
-  color: var(--text-primary);
-}
-
-.landing-tagline .accent-name {
+  text-align: center;
   color: var(--accent);
 }
 
 .landing-bio {
   max-width: 40rem;
-  margin: 0;
+  margin: 0 auto;
 }
 
 .landing-bio p {
@@ -657,6 +650,7 @@ html.one-page-scroll-root body.one-page-scroll {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: center;
   gap: 1.5rem;
   margin-top: clamp(0.5rem, 2vh, 1.5rem);
 }

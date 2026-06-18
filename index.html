@@ -5,16 +5,9 @@ layout: home
 <!-- Landing -->
 <section class="page-panel page-panel-landing landing-hero" id="landing">
   <div class="landing-hero-inner">
-    {% assign name_parts = site.data.personal.name | split: ' ' %}
-    <h1 class="landing-name">
-      <span class="accent-name">{{ name_parts[0] }}</span> {{ name_parts[1] }}<br>
-      <span class="accent-name">{{ name_parts[2] }}</span>
-    </h1>
+    <h1 class="landing-name">{{ site.data.personal.name }}</h1>
 
-    <p class="landing-tagline">
-      Provable <span class="accent-name">Security</span> for<br>
-      Emerging <span class="accent-name">System</span>.
-    </p>
+    <p class="landing-tagline">Provable Security for Emerging System.</p>
 
     <div class="landing-bio">
       {% if site.data.personal.bio_paragraphs %}
