@@ -19,10 +19,26 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('scroll', onScroll, { passive: true });
   }
 
+  const getPanelScrollTop = (panel) => {
+    if (!scrollContainer || !panel) return 0;
+    const panelRect = panel.getBoundingClientRect();
+    const containerRect = scrollContainer.getBoundingClientRect();
+    return panelRect.top - containerRect.top + scrollContainer.scrollTop;
+  };
+
   const scrollToSection = (id) => {
     const target = document.getElementById(id);
     if (!target) return false;
-    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    if (scrollContainer) {
+      scrollContainer.scrollTo({
+        top: getPanelScrollTop(target),
+        behavior: 'smooth'
+      });
+    } else {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
     history.replaceState(null, '', `#${id}`);
     return true;
   };
@@ -78,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
       setActiveSection(sectionNavMap[sectionId] || null);
     }, {
       root: scrollContainer,
-      threshold: [0.35, 0.5, 0.65]
+      threshold: [0.6, 0.75, 0.9]
     });
 
     ['landing', 'about', 'publications', 'contact'].forEach(id => {

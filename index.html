@@ -91,54 +91,7 @@ layout: home
       <div class="about-text">
         <h2>About <span class="highlight">Me</span></h2>
         <div class="markdown-content">{{ site.data.personal.extended_bio | markdownify }}</div>
-
-        <div class="about-stats">
-          <div class="stat-card">
-            <div class="stat-value">{{ site.projects.size }}</div>
-            <div class="stat-label">Projects Built</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-value">{{ site.data.cv.experience.size }}</div>
-            <div class="stat-label">Research &amp; Industry Roles</div>
-          </div>
-          <div class="stat-card">
-            {% assign current_education = site.data.cv.education | first %}
-            <div class="stat-value">{{ current_education.degree | split: ' ' | first }}</div>
-            <div class="stat-label">{{ current_education.institution }}</div>
-          </div>
-        </div>
       </div>
-    </div>
-
-    <div class="about-extra">
-      <div class="text-center section-header animate-on-scroll">
-        <h2>Research <span class="highlight">Interests</span></h2>
-      </div>
-      <div class="skills-grid animate-on-scroll">
-        {% for interest in site.data.home.researchInterests %}
-        <div class="skill-category">
-          <div class="skill-category-name">{{ interest.title }}</div>
-          <p style="color: var(--text-secondary); font-size: 0.875rem; line-height: 1.7;">{{ interest.description }}</p>
-        </div>
-        {% endfor %}
-      </div>
-
-      {% if site.data.news.news.size > 0 %}
-      <div class="section-title-row animate-on-scroll about-news-header">
-        <h2>Latest <span class="highlight">News</span></h2>
-      </div>
-      <div class="news-list">
-        {% for item in site.data.news.news %}
-        <div class="news-item animate-on-scroll">
-          <span class="news-date">{{ item.date }}</span>
-          <div>
-            <span class="news-title">{{ item.title }}</span>
-            <span class="news-description"> &mdash; {{ item.description }}</span>
-          </div>
-        </div>
-        {% endfor %}
-      </div>
-      {% endif %}
     </div>
   </div>
 </section>

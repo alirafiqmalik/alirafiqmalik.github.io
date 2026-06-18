@@ -106,10 +106,12 @@ html.one-page-scroll-root body.one-page-scroll {
 
 .page-scroll-container {
   height: 100vh;
+  height: 100dvh;
   overflow-y: auto;
   overflow-x: hidden;
   scroll-snap-type: y mandatory;
   scroll-behavior: smooth;
+  overscroll-behavior-y: contain;
   -webkit-overflow-scrolling: touch;
 }
 
@@ -118,79 +120,124 @@ html.one-page-scroll-root body.one-page-scroll {
 }
 
 .page-panel {
+  height: 100vh;
+  height: 100dvh;
   min-height: 100vh;
+  min-height: 100dvh;
+  max-height: 100vh;
+  max-height: 100dvh;
   scroll-snap-align: start;
   scroll-snap-stop: always;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: stretch;
   box-sizing: border-box;
-  padding: 5rem 0 2rem;
+  padding: 5rem 1rem 1.5rem;
+  overflow: hidden;
+  flex-shrink: 0;
 }
 
 .page-panel-inner {
   width: 100%;
-  max-height: calc(100vh - 7rem);
-  overflow-y: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   margin: 0 auto;
-  padding: 0 1rem;
+  overflow: hidden;
 }
 
 .page-panel-header {
   text-align: center;
-  margin-bottom: 2.5rem;
+  margin-bottom: 1.5rem;
+  flex-shrink: 0;
 }
 
 .page-panel-header h2 {
-  font-size: clamp(2rem, 5vw, 3rem);
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
   font-weight: 700;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
 }
 
 .page-panel-header .subtitle {
   color: var(--text-secondary);
-  font-size: 1.125rem;
+  font-size: 1rem;
 }
 
-.page-panel-about .page-panel-inner {
-  padding-top: 1rem;
-  padding-bottom: 1rem;
+.page-panel-about .about-grid {
+  align-items: center;
 }
 
-.about-extra {
-  margin-top: 3rem;
-  padding-top: 2rem;
-  border-top: 1px solid var(--border);
+.page-panel-about .about-text p {
+  font-size: 0.9375rem;
+  line-height: 1.65;
 }
 
-.about-news-header {
-  margin-top: 2.5rem;
+.page-panel-about .about-portrait img,
+.page-panel-about .about-placeholder {
+  max-height: min(52vh, 22rem);
+  width: auto;
+  object-fit: cover;
+}
+
+.page-panel-publications .publication-list {
+  overflow: hidden;
+}
+
+.page-panel-publications .publication-item {
+  padding: 1rem 0;
+}
+
+.page-panel-publications .publication-item:first-child {
+  padding-top: 0;
 }
 
 .page-panel-landing.landing-hero {
   margin-top: 0;
-  padding-top: 5rem;
-  padding-bottom: 2rem;
+  padding: 5rem 1.5rem 1.5rem;
 }
 
 .footer-one-page {
   margin-top: 0;
   border-top: none;
+  flex-shrink: 0;
 }
 
 .footer-one-page .footer-content {
-  padding: 0 1rem 0;
+  padding: 0;
 }
 
 .page-panel-contact.footer-contact {
+  height: 100vh;
+  height: 100dvh;
   min-height: 100vh;
-  padding: 5rem 0 2rem;
+  min-height: 100dvh;
+  max-height: 100vh;
+  max-height: 100dvh;
+  width: 100%;
+  padding: 5rem 1rem 1.5rem;
   scroll-margin-top: 0;
+  justify-content: space-between;
+}
+
+.page-panel-contact .footer-columns {
+  flex: 1;
+  display: grid;
+  align-content: center;
+  width: 100%;
+  max-width: 72rem;
+  margin: 0 auto;
 }
 
 .footer-one-page .footer-copyright {
-  scroll-snap-align: end;
-  padding: 1.5rem 0 2rem;
+  margin-top: auto;
+  padding: 1.5rem 0 0;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  flex-shrink: 0;
 }
 
 #landing,
@@ -467,13 +514,10 @@ html.one-page-scroll-root body.one-page-scroll {
 /* === LANDING HERO === */
 .landing-hero {
   position: relative;
-  min-height: 100vh;
   display: flex;
   align-items: flex-end;
   justify-content: flex-start;
   background-color: var(--bg);
-  margin-top: -5rem;
-  padding: 5rem 1.5rem 4rem;
 }
 
 .landing-hero-inner {
@@ -1938,13 +1982,10 @@ html.one-page-scroll-root body.one-page-scroll {
 }
 
 .footer-contact {
-  min-height: calc(100vh - 5rem);
-  scroll-margin-top: 5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 4rem 0 2rem;
 }
 
 .footer-columns {
