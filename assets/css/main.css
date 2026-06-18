@@ -685,6 +685,10 @@ img {
   padding: 5rem 0 6rem;
 }
 
+#about {
+  scroll-margin-top: 5rem;
+}
+
 .section-header {
   margin-bottom: 3rem;
 }

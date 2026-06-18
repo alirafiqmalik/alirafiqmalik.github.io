@@ -9,15 +9,31 @@ document.addEventListener('DOMContentLoaded', () => {
     nav.classList.toggle('scrolled', window.scrollY > 20);
   });
 
-  // Scroll to footer contact section
+  // Scroll to in-page sections (About Me, Contact footer, etc.)
   document.querySelectorAll('[data-scroll-to]').forEach(btn => {
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', (e) => {
       const target = document.getElementById(btn.dataset.scrollTo);
       if (!target) return;
+      e.preventDefault();
       target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      history.replaceState(null, '', `#${btn.dataset.scrollTo}`);
       if (mobileMenu) mobileMenu.classList.remove('open');
     });
   });
+
+  const scrollToHashTarget = () => {
+    const id = window.location.hash.replace('#', '');
+    if (!id) return;
+    const target = document.getElementById(id);
+    if (!target) return;
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  if (window.location.hash) {
+    requestAnimationFrame(scrollToHashTarget);
+  }
+
+  window.addEventListener('hashchange', scrollToHashTarget);
 
   // More dropdown toggle
   document.querySelectorAll('.nav-dropdown').forEach(dropdown => {
