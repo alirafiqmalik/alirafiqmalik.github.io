@@ -1358,6 +1358,10 @@ img {
   line-height: 1.6;
 }
 
+.timeline-item.expanded .timeline-card-description {
+  display: none;
+}
+
 .timeline-card-details {
   max-height: 0;
   overflow: hidden;
