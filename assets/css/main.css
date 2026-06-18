@@ -1810,15 +1810,16 @@ img {
 
 .footer-quick-links {
   display: flex;
-  flex-direction: column;
-  align-items: stretch;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-end;
   gap: 1rem;
   width: 100%;
-  max-width: 14rem;
 }
 
 .footer-quick-links .quick-link {
-  width: 100%;
+  flex: 0 1 auto;
+  min-width: 8rem;
 }
 
 .footer-social {
@@ -1828,7 +1829,7 @@ img {
 }
 
 .footer-column-explore .footer-quick-links {
-  align-items: flex-end;
+  justify-content: flex-end;
 }
 
 .footer-social a {
