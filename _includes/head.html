@@ -3,20 +3,11 @@
 <title>{% if page.title %}{{ page.title }} | {% endif %}{{ site.title }}</title>
 <meta name="description" content="{{ page.description | default: site.description }}">
 
-<!-- Preload theme script to prevent flash -->
-<script>
-    (function () {
-        const theme = localStorage.getItem('theme') ||
-            (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-        if (theme === 'dark') document.documentElement.classList.add('dark');
-    })();
-</script>
-
 <!-- Styles -->
 <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
 
 <!-- Favicon -->
-<link rel="icon" type="image/svg+xml" href="{{ '/assets/img/favicon.png' | relative_url }}">
+<link rel="icon" type="image/png" href="{{ '/assets/img/favicon.png' | relative_url }}">
 
 <!-- SEO -->
 {% seo %}
@@ -25,9 +16,9 @@
 {% if site.google_analytics %}
 <script async src="https://www.googletagmanager.com/gtag/js?id={{ site.google_analytics }}"></script>
 <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
-    gtag('js', new Date());
-    gtag('config', '{{ site.google_analytics }}');
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){ dataLayer.push(arguments); }
+  gtag('js', new Date());
+  gtag('config', '{{ site.google_analytics }}');
 </script>
 {% endif %}
