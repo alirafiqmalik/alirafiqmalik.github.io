@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return true;
   };
 
-  // Scroll to in-page sections (Publications, Contact, etc.)
+  // Scroll to in-page sections (Landing, Publications, Contact, etc.)
   document.querySelectorAll('[data-scroll-to]').forEach(btn => {
     btn.addEventListener('click', (e) => {
       const sectionId = btn.dataset.scrollTo;
@@ -54,29 +54,6 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         if (mobileMenu) mobileMenu.classList.remove('open');
       }
-    });
-  });
-
-  const aboutCycleSections = ['landing', 'about', 'research', 'experience', 'explore'];
-  let currentVisibleSection = window.location.hash.replace('#', '') || 'landing';
-
-  const getNextAboutSection = (currentId) => {
-    if (currentId === 'contact') return 'landing';
-    const idx = aboutCycleSections.indexOf(currentId);
-    if (idx === -1) return 'about';
-    return aboutCycleSections[(idx + 1) % aboutCycleSections.length];
-  };
-
-  document.querySelectorAll('[data-about-cycle]').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      const onHomePage = isOnePageScroll || window.location.pathname === '/' || window.location.pathname.endsWith('/index.html');
-      if (!onHomePage) return;
-
-      e.preventDefault();
-      const nextId = getNextAboutSection(currentVisibleSection);
-      scrollToSection(nextId);
-      currentVisibleSection = nextId;
-      if (mobileMenu) mobileMenu.classList.remove('open');
     });
   });
 
@@ -95,17 +72,16 @@ document.addEventListener('DOMContentLoaded', () => {
   // Highlight active section in nav during one-page scroll
   if (isOnePageScroll) {
     const sectionNavMap = {
-      landing: null,
-      about: 'about',
-      research: 'about',
-      experience: 'about',
-      explore: 'about',
-      publications: 'publications',
+      landing: 'about',
+      about: null,
+      research: null,
+      experience: null,
+      explore: null,
+      publications: 'research',
       contact: 'contact'
     };
 
     const setActiveSection = (sectionId) => {
-      currentVisibleSection = sectionId;
       document.querySelectorAll('[data-nav-section]').forEach(link => {
         link.classList.toggle('active', link.dataset.navSection === sectionNavMap[sectionId]);
       });
@@ -125,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (!visible.length) return;
       const sectionId = visible[0].target.id;
-      setActiveSection(sectionNavMap[sectionId] || null);
+      setActiveSection(sectionId);
       syncHashToSection(sectionId);
     }, {
       root: scrollContainer,
