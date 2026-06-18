@@ -1764,70 +1764,69 @@ img {
 .footer-content {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 3rem 1rem;
+  padding: 0 1rem 3rem;
 }
 
-.footer-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 2rem;
+.footer-contact {
+  min-height: calc(100vh - 5rem);
+  scroll-margin-top: 5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 4rem 0 2rem;
 }
 
-.footer-brand h3 {
-  font-size: 1.25rem;
+.footer-heading {
+  font-size: clamp(2rem, 5vw, 3rem);
   font-weight: 700;
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
 }
 
-.footer-brand h3 .dot {
-  color: var(--accent);
+.footer-quick-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  width: 100%;
+  max-width: 48rem;
+  margin-bottom: 3rem;
 }
 
-.footer-brand p {
-  color: var(--text-secondary);
-  font-size: 0.875rem;
-  line-height: 1.7;
+.footer-quick-links .quick-link {
+  flex: 1 1 10rem;
+  max-width: 14rem;
 }
 
-.footer-links h4 {
+.footer-connect-heading {
+  font-size: 1.25rem;
   font-weight: 600;
-  margin-bottom: 1rem;
-  color: var(--text-primary);
-}
-
-.footer-links button,
-.footer-links a {
-  display: block;
-  font-size: 0.875rem;
-  color: var(--text-secondary);
-  transition: color 0.3s;
-  padding: 0.25rem 0;
-}
-
-.footer-links button:hover,
-.footer-links a:hover {
-  color: var(--accent);
-}
-
-.footer-connect h4 {
-  font-weight: 600;
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
   color: var(--text-primary);
 }
 
 .footer-social {
   display: flex;
-  gap: 1rem;
-  margin-bottom: 1rem;
+  justify-content: center;
+  gap: 1.25rem;
 }
 
 .footer-social a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
   color: var(--text-secondary);
-  transition: color 0.3s;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  transition: color 0.3s, border-color 0.3s;
 }
 
 .footer-social a:hover {
   color: var(--accent);
+  border-color: var(--accent);
 }
 
 .footer-social svg {
@@ -1836,8 +1835,7 @@ img {
 }
 
 .footer-copyright {
-  margin-top: 3rem;
-  padding-top: 2rem;
+  padding: 2rem 0;
   border-top: 1px solid var(--border);
   text-align: center;
   font-size: 0.875rem;
@@ -1909,14 +1907,6 @@ img {
 
   .projects-grid {
     grid-template-columns: repeat(2, 1fr);
-  }
-
-  .footer-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .quick-links {
-    grid-template-columns: repeat(3, 1fr);
   }
 
   .timeline-line {
