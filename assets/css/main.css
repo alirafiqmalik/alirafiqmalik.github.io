@@ -283,7 +283,6 @@ html.one-page-scroll-root body.one-page-scroll {
   overflow: hidden;
   flex-shrink: 0;
   padding-bottom: 1.5rem;
-  border-top: none;
 }
 
 .footer-snap-panel .footer-content {
@@ -292,7 +291,6 @@ html.one-page-scroll-root body.one-page-scroll {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  border-top: 1px solid var(--border);
 }
 
 .footer-snap-panel .footer-contact {
