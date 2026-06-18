@@ -1,9 +1,9 @@
 ---
-layout: default
+layout: home
 ---
 
-<!-- Landing Hero -->
-<section class="landing-hero">
+<!-- Landing -->
+<section class="page-panel page-panel-landing landing-hero" id="landing">
   <div class="landing-hero-inner">
     {% assign name_parts = site.data.personal.name | split: ' ' %}
     <h1 class="landing-name">
@@ -76,9 +76,9 @@ layout: default
   </div>
 </section>
 
-<!-- About Section -->
-<section class="section-lg" id="about">
-  <div class="container">
+<!-- About -->
+<section class="page-panel page-panel-about" id="about">
+  <div class="page-panel-inner container">
     <div class="about-grid animate-on-scroll">
       <div class="about-portrait">
         {% assign profile_image = site.static_files | where: "path", site.data.personal.profileImage | first %}
@@ -109,71 +109,47 @@ layout: default
         </div>
       </div>
     </div>
-  </div>
-</section>
 
-<!-- Research Interests Section -->
-<section class="section">
-  <div class="container">
-    <div class="text-center section-header animate-on-scroll">
-      <h2>Research <span class="highlight">Interests</span></h2>
-    </div>
-    <div class="skills-grid animate-on-scroll">
-      {% for interest in site.data.home.researchInterests %}
-      <div class="skill-category">
-        <div class="skill-category-name">{{ interest.title }}</div>
-        <p style="color: var(--text-secondary); font-size: 0.875rem; line-height: 1.7;">{{ interest.description }}</p>
+    <div class="about-extra">
+      <div class="text-center section-header animate-on-scroll">
+        <h2>Research <span class="highlight">Interests</span></h2>
       </div>
-      {% endfor %}
-    </div>
-  </div>
-</section>
-
-<!-- News Section -->
-{% if site.data.news.news.size > 0 %}
-<section class="section">
-  <div class="container-sm">
-    <div class="section-title-row animate-on-scroll">
-      <h2>Latest <span class="highlight">News</span></h2>
-    </div>
-    <div class="news-list">
-      {% for item in site.data.news.news %}
-      <div class="news-item animate-on-scroll">
-        <span class="news-date">{{ item.date }}</span>
-        <div>
-          <span class="news-title">{{ item.title }}</span>
-          <span class="news-description"> &mdash; {{ item.description }}</span>
+      <div class="skills-grid animate-on-scroll">
+        {% for interest in site.data.home.researchInterests %}
+        <div class="skill-category">
+          <div class="skill-category-name">{{ interest.title }}</div>
+          <p style="color: var(--text-secondary); font-size: 0.875rem; line-height: 1.7;">{{ interest.description }}</p>
         </div>
+        {% endfor %}
       </div>
-      {% endfor %}
+
+      {% if site.data.news.news.size > 0 %}
+      <div class="section-title-row animate-on-scroll about-news-header">
+        <h2>Latest <span class="highlight">News</span></h2>
+      </div>
+      <div class="news-list">
+        {% for item in site.data.news.news %}
+        <div class="news-item animate-on-scroll">
+          <span class="news-date">{{ item.date }}</span>
+          <div>
+            <span class="news-title">{{ item.title }}</span>
+            <span class="news-description"> &mdash; {{ item.description }}</span>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
     </div>
   </div>
 </section>
-{% endif %}
 
-<!-- Selected Publications -->
-{% if site.data.home.selectedPublications.size > 0 %}
-<section class="section">
-  <div class="container-sm">
-    <div class="section-title-row animate-on-scroll">
-      <h2>Selected <span class="highlight">Publications</span></h2>
-      <a href="{{ '/publications/' | relative_url }}" class="section-title-link">
-        View all
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path>
-        </svg>
-      </a>
+<!-- Publications -->
+<section class="page-panel page-panel-publications" id="publications">
+  <div class="page-panel-inner container-sm">
+    <div class="page-panel-header animate-on-scroll">
+      <h2><span class="highlight">Publications</span></h2>
+      <p class="subtitle">Academic publications and research papers.</p>
     </div>
-    <div class="publication-list">
-      {% for pub in site.data.home.selectedPublications %}
-      <div class="publication-item animate-on-scroll">
-        <div class="publication-title">{{ pub.title }}</div>
-        <div class="publication-authors">{{ pub.authors }}</div>
-        <div class="publication-venue">{{ pub.venue }}</div>
-      </div>
-      {% endfor %}
-    </div>
+    {% include publications-list.html %}
   </div>
 </section>
-{% endif %}
-

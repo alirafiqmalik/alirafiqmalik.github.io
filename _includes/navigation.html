@@ -1,24 +1,11 @@
 <!-- Navigation -->
 <nav class="nav">
   <div class="nav-content">
-    <a class="nav-logo" href="{{ '/' | relative_url }}">{{ site.data.personal.name | split: ' ' | first | upcase }}<span class="dot">.</span></a>
+    <a class="nav-logo" href="{{ '/' | relative_url }}#landing" data-scroll-to="landing">{{ site.data.personal.name | split: ' ' | first | upcase }}<span class="dot">.</span></a>
     <div class="nav-links">
-      {% assign nav_items = "Publications:/publications/" | split: "," %}
-      <a href="{{ '/' | relative_url }}#about" class="nav-link {% if page.url == '/' %}active{% endif %}" data-scroll-to="about">About</a>
-      {% for item in nav_items %}
-        {% assign parts = item | split: ":" %}
-        {% assign label = parts[0] %}
-        {% assign path = parts[1] %}
-        {% assign is_active = false %}
-        {% if path == "/" %}
-          {% if page.url == "/" %}{% assign is_active = true %}{% endif %}
-        {% else %}
-          {% if page.url contains path %}{% assign is_active = true %}{% endif %}
-        {% endif %}
-        <a href="{{ path | relative_url }}" class="nav-link {% if is_active %}active{% endif %}">{{ label }}</a>
-      {% endfor %}
-
-      <button type="button" class="nav-link" data-scroll-to="contact">Contact</button>
+      <a href="{{ '/' | relative_url }}#about" class="nav-link" data-scroll-to="about" data-nav-section="about">About</a>
+      <a href="{{ '/' | relative_url }}#publications" class="nav-link" data-scroll-to="publications" data-nav-section="publications">Publications</a>
+      <button type="button" class="nav-link" data-scroll-to="contact" data-nav-section="contact">Contact</button>
 
       <div class="nav-dropdown">
         <button type="button" class="nav-cta nav-dropdown-toggle" aria-expanded="false" aria-haspopup="true">
@@ -58,21 +45,9 @@
   </div>
   <!-- Mobile Menu -->
   <div class="mobile-menu">
-    <a href="{{ '/' | relative_url }}#about" class="nav-link {% if page.url == '/' %}active{% endif %}" data-scroll-to="about">About</a>
-    {% for item in nav_items %}
-      {% assign parts = item | split: ":" %}
-      {% assign label = parts[0] %}
-      {% assign path = parts[1] %}
-      {% assign is_active = false %}
-      {% if path == "/" %}
-        {% if page.url == "/" %}{% assign is_active = true %}{% endif %}
-      {% else %}
-        {% if page.url contains path %}{% assign is_active = true %}{% endif %}
-      {% endif %}
-      <a href="{{ path | relative_url }}" class="nav-link {% if is_active %}active{% endif %}">{{ label }}</a>
-    {% endfor %}
-
-    <button type="button" class="nav-link" data-scroll-to="contact">Contact</button>
+    <a href="{{ '/' | relative_url }}#about" class="nav-link" data-scroll-to="about" data-nav-section="about">About</a>
+    <a href="{{ '/' | relative_url }}#publications" class="nav-link" data-scroll-to="publications" data-nav-section="publications">Publications</a>
+    <button type="button" class="nav-link" data-scroll-to="contact" data-nav-section="contact">Contact</button>
 
     <div class="mobile-more-group">
       <span class="mobile-more-label">More</span>

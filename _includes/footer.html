@@ -1,7 +1,7 @@
 <!-- Footer -->
-<footer class="footer">
+<footer class="footer{% if page.layout == 'home' %} footer-one-page{% endif %}">
   <div class="footer-content">
-    <div class="footer-contact" id="contact">
+    <div class="footer-contact{% if page.layout == 'home' %} page-panel page-panel-contact{% endif %}" id="contact">
       <div class="footer-columns">
         <div class="footer-column footer-column-connect">
           <h2 class="footer-heading">Connect</h2>

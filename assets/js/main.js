@@ -3,37 +3,89 @@ document.addEventListener('DOMContentLoaded', () => {
   const nav = document.querySelector('.nav');
   const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
   const mobileMenu = document.querySelector('.mobile-menu');
+  const scrollContainer = document.getElementById('page-scroll-container');
+  const isOnePageScroll = Boolean(scrollContainer);
+
+  const getScrollTop = () => scrollContainer ? scrollContainer.scrollTop : window.scrollY;
 
   // Scroll effect for nav
-  window.addEventListener('scroll', () => {
-    nav.classList.toggle('scrolled', window.scrollY > 20);
-  });
+  const onScroll = () => {
+    nav.classList.toggle('scrolled', getScrollTop() > 20);
+  };
 
-  // Scroll to in-page sections (About Me, Contact footer, etc.)
+  if (scrollContainer) {
+    scrollContainer.addEventListener('scroll', onScroll, { passive: true });
+  } else {
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
+
+  const scrollToSection = (id) => {
+    const target = document.getElementById(id);
+    if (!target) return false;
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    history.replaceState(null, '', `#${id}`);
+    return true;
+  };
+
+  // Scroll to in-page sections (About, Publications, Contact, etc.)
   document.querySelectorAll('[data-scroll-to]').forEach(btn => {
     btn.addEventListener('click', (e) => {
-      const target = document.getElementById(btn.dataset.scrollTo);
-      if (!target) return;
-      e.preventDefault();
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      history.replaceState(null, '', `#${btn.dataset.scrollTo}`);
-      if (mobileMenu) mobileMenu.classList.remove('open');
+      const sectionId = btn.dataset.scrollTo;
+      const onHomePage = isOnePageScroll || window.location.pathname === '/' || window.location.pathname.endsWith('/index.html');
+      if (!onHomePage) return;
+
+      if (scrollToSection(sectionId)) {
+        e.preventDefault();
+        if (mobileMenu) mobileMenu.classList.remove('open');
+      }
     });
   });
 
   const scrollToHashTarget = () => {
     const id = window.location.hash.replace('#', '');
     if (!id) return;
-    const target = document.getElementById(id);
-    if (!target) return;
-    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    requestAnimationFrame(() => scrollToSection(id));
   };
 
   if (window.location.hash) {
-    requestAnimationFrame(scrollToHashTarget);
+    setTimeout(scrollToHashTarget, 100);
   }
 
   window.addEventListener('hashchange', scrollToHashTarget);
+
+  // Highlight active section in nav during one-page scroll
+  if (isOnePageScroll) {
+    const sectionNavMap = {
+      landing: null,
+      about: 'about',
+      publications: 'publications',
+      contact: 'contact'
+    };
+
+    const setActiveSection = (sectionId) => {
+      document.querySelectorAll('[data-nav-section]').forEach(link => {
+        link.classList.toggle('active', link.dataset.navSection === sectionId);
+      });
+    };
+
+    const sectionObserver = new IntersectionObserver((entries) => {
+      const visible = entries
+        .filter(entry => entry.isIntersecting)
+        .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+
+      if (!visible.length) return;
+      const sectionId = visible[0].target.id;
+      setActiveSection(sectionNavMap[sectionId] || null);
+    }, {
+      root: scrollContainer,
+      threshold: [0.35, 0.5, 0.65]
+    });
+
+    ['landing', 'about', 'publications', 'contact'].forEach(id => {
+      const section = document.getElementById(id);
+      if (section) sectionObserver.observe(section);
+    });
+  }
 
   // More dropdown toggle
   document.querySelectorAll('.nav-dropdown').forEach(dropdown => {
@@ -124,17 +176,19 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Active nav link from pathname
-  const path = window.location.pathname;
-  document.querySelectorAll('.nav-link').forEach(link => {
-    const href = link.getAttribute('href') || link.getAttribute('onclick');
-    if (!href) return;
-    if (path === '/' && (href === '/' || href.includes('index'))) {
-      link.classList.add('active');
-    } else if (path !== '/' && href !== '/' && path.includes(href.replace(/\.html$/, '').replace(/\/$/, ''))) {
-      link.classList.add('active');
-    }
-  });
+  // Active nav link from pathname (non-home pages)
+  if (!isOnePageScroll) {
+    const path = window.location.pathname;
+    document.querySelectorAll('.nav-link').forEach(link => {
+      const href = link.getAttribute('href');
+      if (!href) return;
+      if (path === '/' && (href === '/' || href.includes('index'))) {
+        link.classList.add('active');
+      } else if (path !== '/' && href !== '/' && path.includes(href.replace(/\.html$/, '').replace(/\/$/, ''))) {
+        link.classList.add('active');
+      }
+    });
+  }
 
   // Scroll animations via IntersectionObserver
   const observer = new IntersectionObserver((entries) => {
