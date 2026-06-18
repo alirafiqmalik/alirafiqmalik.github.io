@@ -1,6 +1,10 @@
 name: Ali Hamza Malik
 tagline: Formal Verification | Security | Quantum Networks
 bio: PhD student at University of Massachusetts Amherst working on quantum computers and quantum systems, focusing on security aspects. Researching formal analysis of quantum protocols to uncover security vulnerabilities and develop automated verification techniques.
+bio_paragraphs:
+  - PhD student at University of Massachusetts Amherst working on quantum computers and quantum systems, focusing on security aspects.
+  - Researching formal analysis of quantum protocols to uncover security vulnerabilities and develop automated verification techniques.
+cv_pdf: /assets/pdf/AliMalik_Resume.pdf
 email: ahmalik@umass.edu
 location: Amherst, MA
 profileImage: /assets/img/ali.jpg

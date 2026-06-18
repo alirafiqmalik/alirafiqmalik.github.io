@@ -4,9 +4,9 @@
     <a class="nav-logo" href="{{ '/' | relative_url }}">{{ site.data.personal.name | split: ' ' | first | upcase }}<span class="dot">.</span></a>
     <div class="nav-links">
       {% if site.show_blog_in_nav != false %}
-      {% assign nav_items = "Home:/,CV:/cv/,History:/history/,Publications:/publications/,Projects:/projects/,Blog:/blog/" | split: "," %}
+      {% assign nav_items = "About:/,Publications:/publications/,Projects:/projects/,Blog:/blog/" | split: "," %}
       {% else %}
-      {% assign nav_items = "Home:/,CV:/cv/,History:/history/,Publications:/publications/,Projects:/projects/" | split: "," %}
+      {% assign nav_items = "About:/,Publications:/publications/,Projects:/projects/" | split: "," %}
       {% endif %}
       {% for item in nav_items %}
         {% assign parts = item | split: ":" %}

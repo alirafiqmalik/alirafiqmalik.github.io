@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700&display=swap');
 
 /* === RESET & BASE === */
 *, *::before, *::after {
@@ -223,7 +223,127 @@ img {
   color: var(--accent);
 }
 
-/* === HERO SECTION === */
+/* === LANDING HERO === */
+.landing-hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+  background-color: var(--bg);
+  margin-top: -5rem;
+  padding: 5rem 1.5rem 4rem;
+}
+
+.landing-hero-inner {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.landing-name {
+  font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  font-size: clamp(3rem, 10vw, 6.5rem);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-bottom: 2rem;
+  text-align: left;
+  color: var(--text-primary);
+}
+
+.landing-name .accent-name {
+  color: var(--accent);
+}
+
+.landing-bio {
+  max-width: 40rem;
+  margin-bottom: 2.5rem;
+}
+
+.landing-bio p {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  line-height: 1.7;
+  margin-bottom: 1rem;
+}
+
+.landing-bio p:last-child {
+  margin-bottom: 0;
+}
+
+.landing-footer-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.landing-social {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.landing-social a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  transition: color 0.3s, border-color 0.3s;
+}
+
+.landing-social a:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.landing-social svg {
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
+.landing-divider {
+  width: 1px;
+  height: 2rem;
+  background: var(--border);
+  flex-shrink: 0;
+}
+
+.landing-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.landing-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--text-primary);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  transition: border-color 0.3s, color 0.3s;
+}
+
+.landing-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.landing-btn svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* === HERO SECTION (legacy) === */
 .hero {
   position: relative;
   min-height: 100vh;
