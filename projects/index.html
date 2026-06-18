@@ -2,235 +2,88 @@
 layout: default
 title: Projects
 ---
-<div class="projects-page">
-    <header class="page-header">
-        <h1 class="page-title">Projects</h1>
-        <p class="page-description">Open-source tools and research prototypes in formal verification, security analysis,
-            and automated reasoning.</p>
-    </header>
 
-    <!-- Category Filter Pills -->
-    <div class="category-filters" style="margin-bottom: 2rem;">
-        <button class="category-pill active" data-category="all">All</button>
-        {% assign categories = site.projects | map: 'category' | uniq | sort %}
-        {% for category in categories %}
-        <button class="category-pill" data-category="{{ category }}">{{ category }}</button>
-        {% endfor %}
+<!-- Page Hero -->
+<section class="page-hero">
+  <h1 class="animate-on-scroll">My <span class="highlight">Projects</span></h1>
+  <p class="subtitle animate-on-scroll">Open-source tools and research prototypes in formal verification, security analysis, and automated reasoning.</p>
+</section>
+
+<section>
+  <div class="container">
+
+    <!-- Category Filter -->
+    <div class="category-filters animate-on-scroll">
+      <button class="category-pill active" data-category="all">All</button>
+      {% assign categories = site.projects | map: 'category' | uniq | sort %}
+      {% for category in categories %}
+      <button class="category-pill" data-category="{{ category }}">{{ category }}</button>
+      {% endfor %}
     </div>
 
     <!-- Results Count -->
-    <div class="results-count" style="margin-bottom: 1.5rem; color: var(--muted-foreground); font-size: 0.875rem;">
-        <span id="project-count">{{ site.projects.size }}</span> of {{ site.projects.size }} projects
+    <div class="results-count animate-on-scroll">
+      <span id="project-count">{{ site.projects.size }}</span> of {{ site.projects.size }} projects
     </div>
 
     <!-- Projects Grid -->
     <div class="projects-grid">
-        {% assign sorted_projects = site.projects | sort: 'importance' %}
-        {% for project in sorted_projects %}
-        <article class="project-card" data-category="{{ project.category }}">
-            {% if project.img %}
-            <div class="project-card-image">
-                <img src="{{ project.img }}" alt="{{ project.title }}" loading="lazy">
-                {% if project.status %}
-                <span class="project-status-badge">{{ project.status }}</span>
-                {% endif %}
-            </div>
+      {% assign sorted_projects = site.projects | sort: 'importance' %}
+      {% for project in sorted_projects %}
+      <article class="project-card animate-on-scroll" data-category="{{ project.category }}">
+        {% if project.img %}
+        <div class="project-card-image">
+          <img src="{{ project.img }}" alt="{{ project.title }}" loading="lazy">
+          {% if project.status %}
+          <span class="project-status-badge">{{ project.status }}</span>
+          {% endif %}
+        </div>
+        {% endif %}
+
+        <div class="project-card-content">
+          <h3 class="project-card-title">{{ project.title }}</h3>
+          <div class="project-card-category">{{ project.category }}</div>
+          <p class="project-card-description">{{ project.description }}</p>
+
+          {% if project.technologies %}
+          <div class="tech-tags">
+            {% for tech in project.technologies %}
+            <span class="tech-tag">{{ tech }}</span>
+            {% endfor %}
+          </div>
+          {% endif %}
+
+          <div class="project-card-links">
+            <a href="{{ project.url | relative_url }}" class="project-link">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                <polyline points="15 3 21 3 21 9"/>
+                <line x1="10" y1="14" x2="21" y2="3"/>
+              </svg>
+              <span>View Details</span>
+            </a>
+            {% assign github_url = project.links.github | strip %}
+            {% if github_url and github_url != "" and github_url != "#" %}
+            <a href="{{ project.links.github }}" target="_blank" rel="noopener noreferrer" class="icon-link" aria-label="GitHub">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+              </svg>
+            </a>
             {% endif %}
-
-            <div class="project-card-content">
-                <div style="margin-bottom: 0.75rem;">
-                    <h3 class="project-card-title">{{ project.title }}</h3>
-                    <div class="project-card-category">{{ project.category }}</div>
-                </div>
-
-                <p class="project-card-description">{{ project.description }}</p>
-
-                <!-- Long Description (excerpt from content) -->
-                {% if project.content %}
-                <p style="color: var(--muted-foreground); font-size: 0.875rem; margin-bottom: 1rem; line-height: 1.6;">
-                    {{ project.content | strip_html | truncatewords: 30 }}
-                </p>
-                {% endif %}
-
-                {% if project.technologies %}
-                <div class="tech-tags">
-                    {% for tech in project.technologies %}
-                    <span class="tech-tag">{{ tech }}</span>
-                    {% endfor %}
-                </div>
-                {% endif %}
-
-                <!-- Stats Section -->
-                {% assign has_stats = false %}
-                {% if project.content contains 'stars' or project.content contains 'GitHub' %}
-                    {% assign has_stats = true %}
-                {% endif %}
-                
-                {% if has_stats %}
-                <div style="display: flex; gap: 1.5rem; margin-bottom: 1rem; font-size: 0.875rem;">
-                    {% if project.content contains 'stars' %}
-                    <div style="display: flex; align-items: center; gap: 0.5rem; color: var(--muted-foreground);">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-                        </svg>
-                        <span>
-                            {% assign content_words = project.content | split: ' ' %}
-                            {% for word in content_words %}
-                                {% if word contains 'stars' %}
-                                    {% assign index = forloop.index | minus: 2 %}
-                                    {{ content_words[index] }} stars
-                                    {% break %}
-                                {% endif %}
-                            {% endfor %}
-                        </span>
-                    </div>
-                    {% endif %}
-                    {% if project.content contains 'organizations' or project.content contains 'labs' %}
-                    <div style="color: var(--muted-foreground);">
-                        {% assign content_words = project.content | split: ' ' %}
-                        {% for word in content_words %}
-                            {% if word contains 'organizations' or word contains 'labs' %}
-                                {% assign index = forloop.index | minus: 2 %}
-                                {{ content_words[index] }}+ 
-                                {% if word contains 'organizations' %}organizations{% else %}labs{% endif %}
-                                {% break %}
-                            {% endif %}
-                        {% endfor %}
-                    </div>
-                    {% endif %}
-                </div>
-                {% endif %}
-
-                <div class="project-card-links">
-                    <a href="{{ project.url | relative_url }}" class="project-link">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                            <polyline points="15 3 21 3 21 9" />
-                            <line x1="10" y1="14" x2="21" y2="3" />
-                        </svg>
-                        <span>View Details</span>
-                    </a>
-                    {% assign gh_url = project.links.github | strip %}
-                    {% if gh_url and gh_url != "" and gh_url != "#" %}
-                    <a href="{{ project.links.github }}" target="_blank" rel="noopener noreferrer" class="icon-link"
-                        aria-label="GitHub">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                            <path
-                                d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-                        </svg>
-                    </a>
-                    {% endif %}
-                    {% if project.links.demo %}
-                    <a href="{{ project.links.demo }}" target="_blank" rel="noopener noreferrer" class="icon-link"
-                        aria-label="Demo">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                            <polyline points="15 3 21 3 21 9" />
-                            <line x1="10" y1="14" x2="21" y2="3" />
-                        </svg>
-                    </a>
-                    {% endif %}
-                    {% if project.links.docs %}
-                    <a href="{{ project.links.docs }}" target="_blank" rel="noopener noreferrer" class="icon-link"
-                        aria-label="Documentation">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                            <polyline points="15 3 21 3 21 9" />
-                            <line x1="10" y1="14" x2="21" y2="3" />
-                        </svg>
-                    </a>
-                    {% endif %}
-                    {% if project.links.paper %}
-                    <a href="{{ project.links.paper }}" target="_blank" rel="noopener noreferrer" class="icon-link"
-                        aria-label="Paper">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                            <polyline points="14 2 14 8 20 8"></polyline>
-                            <line x1="16" y1="13" x2="8" y2="13"></line>
-                            <line x1="16" y1="17" x2="8" y2="17"></line>
-                            <polyline points="10 9 9 9 8 9"></polyline>
-                        </svg>
-                    </a>
-                    {% endif %}
-                </div>
-            </div>
-        </article>
-        {% endfor %}
+            {% assign paper_url = project.links.paper | strip %}
+            {% if paper_url and paper_url != "" and paper_url != "#" %}
+            <a href="{{ project.links.paper }}" target="_blank" rel="noopener noreferrer" class="icon-link" aria-label="Paper">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+              </svg>
+            </a>
+            {% endif %}
+          </div>
+        </div>
+      </article>
+      {% endfor %}
     </div>
-</div>
 
-<style>
-.category-filters {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-}
-
-.category-pill {
-    padding: 0.5rem 1rem;
-    border-radius: 9999px;
-    border: 1px solid var(--border);
-    background-color: transparent;
-    color: var(--card-foreground);
-    font-size: 0.875rem;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-family: inherit;
-}
-
-.category-pill:hover {
-    border-color: var(--primary);
-    color: var(--primary);
-}
-
-.category-pill.active {
-    border-color: var(--primary);
-    background-color: var(--primary);
-    color: white;
-}
-
-.project-card {
-    transition: all 0.3s ease;
-}
-
-.project-card.hidden {
-    display: none;
-}
-</style>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const categoryButtons = document.querySelectorAll('.category-pill');
-    const projectCards = document.querySelectorAll('.project-card');
-    const projectCount = document.getElementById('project-count');
-    const totalProjects = projectCards.length;
-
-    categoryButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const selectedCategory = this.getAttribute('data-category');
-
-            // Update active button
-            categoryButtons.forEach(btn => btn.classList.remove('active'));
-            this.classList.add('active');
-
-            // Filter projects
-            let visibleCount = 0;
-            projectCards.forEach(card => {
-                const cardCategory = card.getAttribute('data-category');
-                if (selectedCategory === 'all' || cardCategory === selectedCategory) {
-                    card.classList.remove('hidden');
-                    visibleCount++;
-                } else {
-                    card.classList.add('hidden');
-                }
-            });
-
-            // Update count
-            projectCount.textContent = visibleCount;
-        });
-    });
-});
-</script>
+  </div>
+</section>

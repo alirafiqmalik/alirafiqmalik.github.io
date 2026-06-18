@@ -1,97 +1,51 @@
-<nav class="navigation">
-    <div class="nav-container">
-        <a href="https://alihamzamalik.me/sec-deadlines/" class="nav-link nav-deadlines">Deadlines</a>
-        <!-- Desktop Navigation -->
-        <div class="nav-links">
-            {% if site.show_blog_in_nav != false %}
-            {% assign nav_items = "Home:/,CV:/cv/,History:/history/,Publications:/publications/,Projects:/projects/,Blog:/blog/" | split: "," %}
-            {% else %}
-            {% assign nav_items = "Home:/,CV:/cv/,History:/history/,Publications:/publications/,Projects:/projects/" | split: "," %}
-            {% endif %}
-            {% for item in nav_items %}
-            {% assign parts = item | split: ":" %}
-            {% assign label = parts[0] %}
-            {% assign path = parts[1] %}
-            {% assign is_active = false %}
-            {% if path == "/" %}
-            {% if page.url == "/" %}{% assign is_active = true %}{% endif %}
-            {% else %}
-            {% if page.url contains path %}{% assign is_active = true %}{% endif %}
-            {% endif %}
-            <a href="{{ path | relative_url }}" class="nav-link {% if is_active %}active{% endif %}">
-                {{ label }}
-                {% if is_active %}<span class="nav-indicator"></span>{% endif %}
-            </a>
-            {% endfor %}
-            <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
-                <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    stroke-width="2">
-                    <circle cx="12" cy="12" r="5" />
-                    <line x1="12" y1="1" x2="12" y2="3" />
-                    <line x1="12" y1="21" x2="12" y2="23" />
-                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-                    <line x1="1" y1="12" x2="3" y2="12" />
-                    <line x1="21" y1="12" x2="23" y2="12" />
-                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-                </svg>
-                <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    stroke-width="2">
-                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-                </svg>
-            </button>
-        </div>
-
-        <!-- Mobile Menu Button -->
-        <div class="mobile-controls">
-            <button id="theme-toggle-mobile" class="theme-toggle" aria-label="Toggle theme">
-                <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    stroke-width="2">
-                    <circle cx="12" cy="12" r="5" />
-                    <line x1="12" y1="1" x2="12" y2="3" />
-                    <line x1="12" y1="21" x2="12" y2="23" />
-                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-                    <line x1="1" y1="12" x2="3" y2="12" />
-                    <line x1="21" y1="12" x2="23" y2="12" />
-                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-                </svg>
-                <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    stroke-width="2">
-                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-                </svg>
-            </button>
-            <button id="mobile-menu-toggle" class="mobile-menu-toggle" aria-label="Toggle menu">
-                <svg class="menu-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    stroke-width="2">
-                    <line x1="3" y1="12" x2="21" y2="12" />
-                    <line x1="3" y1="6" x2="21" y2="6" />
-                    <line x1="3" y1="18" x2="21" y2="18" />
-                </svg>
-                <svg class="close-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    stroke-width="2">
-                    <line x1="18" y1="6" x2="6" y2="18" />
-                    <line x1="6" y1="6" x2="18" y2="18" />
-                </svg>
-            </button>
-        </div>
-    </div>
-
-    <!-- Mobile Navigation -->
-    <div id="mobile-menu" class="mobile-menu">
-        {% for item in nav_items %}
+<!-- Navigation -->
+<nav class="nav">
+  <div class="nav-content">
+    <a class="nav-logo" href="{{ '/' | relative_url }}">{{ site.data.personal.name | split: ' ' | first | upcase }}<span class="dot">.</span></a>
+    <div class="nav-links">
+      {% if site.show_blog_in_nav != false %}
+      {% assign nav_items = "Home:/,CV:/cv/,History:/history/,Publications:/publications/,Projects:/projects/,Blog:/blog/" | split: "," %}
+      {% else %}
+      {% assign nav_items = "Home:/,CV:/cv/,History:/history/,Publications:/publications/,Projects:/projects/" | split: "," %}
+      {% endif %}
+      {% for item in nav_items %}
         {% assign parts = item | split: ":" %}
         {% assign label = parts[0] %}
         {% assign path = parts[1] %}
         {% assign is_active = false %}
         {% if path == "/" %}
-        {% if page.url == "/" %}{% assign is_active = true %}{% endif %}
+          {% if page.url == "/" %}{% assign is_active = true %}{% endif %}
         {% else %}
-        {% if page.url contains path %}{% assign is_active = true %}{% endif %}
+          {% if page.url contains path %}{% assign is_active = true %}{% endif %}
         {% endif %}
-        <a href="{{ path | relative_url }}" class="mobile-nav-link {% if is_active %}active{% endif %}">{{ label }}</a>
-        {% endfor %}
+        <a href="{{ path | relative_url }}" class="nav-link {% if is_active %}active{% endif %}">{{ label }}</a>
+      {% endfor %}
+      <a href="https://alihamzamalik.me/sec-deadlines/" class="nav-link">Deadlines</a>
+      <a href="mailto:{{ site.data.personal.email }}" class="nav-cta">Contact</a>
     </div>
+    <button class="mobile-menu-btn" aria-label="Toggle menu">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="4" x2="20" y1="12" y2="12"></line>
+        <line x1="4" x2="20" y1="6" y2="6"></line>
+        <line x1="4" x2="20" y1="18" y2="18"></line>
+      </svg>
+    </button>
+  </div>
+  <!-- Mobile Menu -->
+  <div class="mobile-menu">
+    {% for item in nav_items %}
+      {% assign parts = item | split: ":" %}
+      {% assign label = parts[0] %}
+      {% assign path = parts[1] %}
+      {% assign is_active = false %}
+      {% if path == "/" %}
+        {% if page.url == "/" %}{% assign is_active = true %}{% endif %}
+      {% else %}
+        {% if page.url contains path %}{% assign is_active = true %}{% endif %}
+      {% endif %}
+      <a href="{{ path | relative_url }}" class="nav-link {% if is_active %}active{% endif %}">{{ label }}</a>
+    {% endfor %}
+    <a href="https://alihamzamalik.me/sec-deadlines/" class="nav-link">Deadlines</a>
+    <a href="mailto:{{ site.data.personal.email }}" class="nav-cta">Contact</a>
+  </div>
 </nav>
