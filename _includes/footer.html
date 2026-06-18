@@ -45,8 +45,7 @@
       </div>
 
       <div class="footer-copyright">
-        {% assign copyright_start = site.data.personal.copyright_start_year | default: site.time | date: '%Y' %}
-        &copy; {{ copyright_start }} - {{ 'now' | date: '%Y' }} {{ site.author.name | upcase }}
+        &copy; {{ 'now' | date: "%Y" }} {{ site.author.name }}. All rights reserved.
       </div>
     </div>
   </div>

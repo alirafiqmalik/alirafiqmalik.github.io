@@ -290,12 +290,12 @@ html.one-page-scroll-root body.one-page-scroll {
   flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  text-align: center;
+  text-align: left;
   width: 100%;
-  max-width: 40rem;
-  margin: 0 auto;
+  max-width: 1280px;
+  margin: 0;
   gap: clamp(1.5rem, 4vh, 2.5rem);
 }
 
@@ -303,10 +303,12 @@ html.one-page-scroll-root body.one-page-scroll {
   margin-top: auto;
   padding: 1.5rem 0 0;
   border-top: 1px solid var(--border);
-  text-align: center;
+  text-align: left;
   font-size: 0.875rem;
   color: var(--text-secondary);
   flex-shrink: 0;
+  width: 100%;
+  max-width: 1280px;
 }
 
 #landing,
@@ -628,7 +630,11 @@ html.one-page-scroll-root body.one-page-scroll {
   letter-spacing: -0.02em;
   margin: 0;
   text-align: left;
-  color: var(--text-secondary);
+  color: var(--text-primary);
+}
+
+.landing-tagline .accent-name {
+  color: var(--accent);
 }
 
 .landing-bio {
@@ -2075,18 +2081,18 @@ html.one-page-scroll-root body.one-page-scroll {
 .footer-contact {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
 }
 
 .footer-contact-inner {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
+  align-items: flex-start;
+  text-align: left;
   width: 100%;
-  max-width: 40rem;
-  margin: 0 auto;
+  max-width: 1280px;
+  margin: 0;
   gap: 2rem;
   padding: 3rem 0;
 }
@@ -2103,41 +2109,36 @@ html.one-page-scroll-root body.one-page-scroll {
   font-size: clamp(0.9375rem, 2vw, 1.0625rem);
   line-height: 1.75;
   margin: 0;
-  max-width: 36rem;
+  max-width: 40rem;
 }
 
 .footer-social {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
-  gap: clamp(1.25rem, 4vw, 2rem);
-  padding: clamp(1.5rem, 4vw, 2rem) clamp(2rem, 6vw, 3.5rem);
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
+  gap: 1.5rem;
 }
 
 .footer-social a {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: clamp(4rem, 10vw, 5rem);
-  height: clamp(4rem, 10vw, 5rem);
+  width: 3.75rem;
+  height: 3.75rem;
   color: var(--text-secondary);
   border: 1px solid var(--border);
   border-radius: 50%;
-  transition: color 0.3s, border-color 0.3s, transform 0.3s;
+  transition: color 0.3s, border-color 0.3s;
 }
 
 .footer-social a:hover {
   color: var(--accent);
   border-color: var(--accent);
-  transform: translateY(-2px);
 }
 
 .footer-social svg {
-  width: clamp(1.75rem, 4vw, 2.25rem);
-  height: clamp(1.75rem, 4vw, 2.25rem);
+  width: 1.875rem;
+  height: 1.875rem;
 }
 
 .footer-location {
@@ -2156,9 +2157,10 @@ html.one-page-scroll-root body.one-page-scroll {
 .footer-copyright {
   padding: 2rem 0;
   border-top: 1px solid var(--border);
-  text-align: center;
+  text-align: left;
   font-size: 0.875rem;
   color: var(--text-secondary);
+  width: 100%;
 }
 
 /* === MARKDOWN (for Jekyll markdownify) === */
