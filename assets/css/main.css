@@ -175,21 +175,6 @@ img {
   filter: brightness(1.1);
 }
 
-.nav-contact-btn {
-  padding: 0.625rem 1.5rem;
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  color: var(--text-primary);
-  font-weight: 600;
-  font-size: 0.875rem;
-  transition: border-color 0.3s, color 0.3s;
-}
-
-.nav-contact-btn:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
 .nav-dropdown {
   position: relative;
 }
@@ -245,13 +230,6 @@ img {
 .nav-dropdown-item:hover {
   color: var(--text-primary);
   background-color: var(--bg-card);
-}
-
-.mobile-nav-contact {
-  display: block;
-  width: 100%;
-  text-align: center;
-  margin-top: 0.5rem;
 }
 
 .mobile-more-group {
