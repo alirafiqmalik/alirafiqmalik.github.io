@@ -294,6 +294,7 @@ html.one-page-scroll-root body.one-page-scroll {
 
 .footer-snap-panel .footer-contact {
   width: 100%;
+  border-top: 1px solid var(--border);
 }
 
 #landing,
