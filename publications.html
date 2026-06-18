@@ -24,10 +24,12 @@ title: Publications
         {% endif %}
         {% if pub.links %}
         <div class="project-links" style="margin-top: 0.75rem;">
-          {% if pub.links.pdf %}
+          {% assign pdf_url = pub.links.pdf | strip %}
+          {% if pdf_url and pdf_url != "" and pdf_url != "#" %}
           <a href="{{ pub.links.pdf }}" target="_blank" rel="noopener noreferrer" class="project-link">PDF</a>
           {% endif %}
-          {% if pub.links.doi %}
+          {% assign doi_url = pub.links.doi | strip %}
+          {% if doi_url and doi_url != "" and doi_url != "#" %}
           <a href="{{ pub.links.doi }}" target="_blank" rel="noopener noreferrer" class="project-link">DOI</a>
           {% endif %}
         </div>

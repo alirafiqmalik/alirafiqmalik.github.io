@@ -8,6 +8,11 @@ layout: default
   <div class="hero-content">
     <h1>{{ site.data.personal.name }}<br><span class="highlight">{{ site.data.personal.tagline }}</span></h1>
     <p class="hero-subtitle">{{ site.data.personal.bio }}</p>
+    <div class="hero-meta">
+      <span>{{ site.data.personal.location }}</span>
+      <span aria-hidden="true">&bull;</span>
+      <a href="mailto:{{ site.data.personal.email }}">{{ site.data.personal.email }}</a>
+    </div>
 
     <!-- Research Interest Tags -->
     <div class="hero-tags">
