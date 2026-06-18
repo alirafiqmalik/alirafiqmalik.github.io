@@ -4,7 +4,7 @@
     <a class="nav-logo" href="{{ '/' | relative_url }}">{{ site.data.personal.name | split: ' ' | first | upcase }}<span class="dot">.</span></a>
     <div class="nav-links">
       {% assign nav_items = "Publications:/publications/,Projects:/projects/" | split: "," %}
-      <a href="{{ '/' | relative_url }}#about" class="nav-link {% if page.url == '/' %}active{% endif %}" data-scroll-to="about">Home</a>
+      <a href="{{ '/' | relative_url }}#about" class="nav-link {% if page.url == '/' %}active{% endif %}" data-scroll-to="about">About</a>
       {% for item in nav_items %}
         {% assign parts = item | split: ":" %}
         {% assign label = parts[0] %}
@@ -57,7 +57,7 @@
   </div>
   <!-- Mobile Menu -->
   <div class="mobile-menu">
-    <a href="{{ '/' | relative_url }}#about" class="nav-link {% if page.url == '/' %}active{% endif %}" data-scroll-to="about">Home</a>
+    <a href="{{ '/' | relative_url }}#about" class="nav-link {% if page.url == '/' %}active{% endif %}" data-scroll-to="about">About</a>
     {% for item in nav_items %}
       {% assign parts = item | split: ":" %}
       {% assign label = parts[0] %}
