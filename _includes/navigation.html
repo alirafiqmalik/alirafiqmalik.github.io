@@ -27,8 +27,7 @@
           </svg>
         </button>
         <div class="nav-dropdown-menu" role="menu">
-          {% assign cv_pdf = site.data.personal.cv_pdf | default: '/assets/pdf/AliMalik_Resume.pdf' %}
-          <a href="{{ cv_pdf | relative_url }}" class="nav-dropdown-item" role="menuitem" target="_blank" rel="noopener noreferrer">CV</a>
+          <a href="{{ '/cv/' | relative_url }}" class="nav-dropdown-item" role="menuitem">CV</a>
           {% if site.show_blog_in_nav != false %}
           <a href="{{ '/blog/' | relative_url }}" class="nav-dropdown-item" role="menuitem">Blog</a>
           {% endif %}
@@ -64,8 +63,7 @@
 
     <div class="mobile-more-group">
       <span class="mobile-more-label">More</span>
-      {% assign cv_pdf = site.data.personal.cv_pdf | default: '/assets/pdf/AliMalik_Resume.pdf' %}
-      <a href="{{ cv_pdf | relative_url }}" class="nav-link" target="_blank" rel="noopener noreferrer">CV</a>
+      <a href="{{ '/cv/' | relative_url }}" class="nav-link">CV</a>
       {% if site.show_blog_in_nav != false %}
       <a href="{{ '/blog/' | relative_url }}" class="nav-link">Blog</a>
       {% endif %}

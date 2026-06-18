@@ -1,0 +1,133 @@
+---
+layout: default
+title: CV
+---
+
+<!-- Page Hero -->
+<section class="page-hero">
+  <h1 class="animate-on-scroll">Curriculum <span class="highlight">Vitae</span></h1>
+  <p class="subtitle animate-on-scroll">Academic and professional background in formal verification and security research.</p>
+</section>
+
+<section>
+  <div class="container-sm">
+
+    <!-- Download CV -->
+    <div class="animate-on-scroll" style="text-align: center; margin-bottom: 3rem;">
+      {% assign cv_pdf = site.data.personal.cv_pdf | default: '/assets/pdf/AliMalik_Resume.pdf' %}
+      <a href="{{ cv_pdf | relative_url }}" target="_blank" rel="noopener noreferrer" class="cv-download">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Download CV
+      </a>
+    </div>
+
+    <!-- Education -->
+    <section class="cv-section animate-on-scroll">
+      <h2 class="cv-section-title">
+        <span class="section-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+        </span>
+        Education
+      </h2>
+      {% for edu in site.data.cv.education %}
+      <div class="cv-item">
+        <div class="cv-item-header">
+          <span class="cv-item-title">{{ edu.degree }}</span>
+          <span class="cv-item-year">{{ edu.year }}</span>
+        </div>
+        <div class="cv-item-subtitle">{{ edu.institution }}{% if edu.location %} &bull; {{ edu.location }}{% endif %}</div>
+        {% if edu.details %}
+        <div class="cv-item-details">{{ edu.details }}</div>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </section>
+
+    <!-- Experience -->
+    <section class="cv-section animate-on-scroll">
+      <h2 class="cv-section-title">
+        <span class="section-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+        </span>
+        Experience
+      </h2>
+      {% for exp in site.data.cv.experience %}
+      <div class="cv-item">
+        <div class="cv-item-header">
+          <span class="cv-item-title">{{ exp.title }}</span>
+          <span class="cv-item-year">{{ exp.year }}</span>
+        </div>
+        <div class="cv-item-subtitle">{{ exp.company }}{% if exp.location %} &bull; {{ exp.location }}{% endif %}</div>
+        {% if exp.responsibilities %}
+        <ul class="cv-responsibilities">
+          {% for resp in exp.responsibilities %}
+          <li>{{ resp }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </section>
+
+    <!-- Skills -->
+    <section class="cv-section animate-on-scroll">
+      <h2 class="cv-section-title">
+        <span class="section-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        </span>
+        Skills
+      </h2>
+      <div class="skills-grid">
+        {% for category in site.data.cv.skills %}
+        <div class="skill-category">
+          <div class="skill-category-name">{{ category.category }}</div>
+          <div class="skill-tags">
+            {% for skill in category.skills %}
+            <span class="skill-tag">{{ skill }}</span>
+            {% endfor %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <!-- Awards -->
+    <section class="cv-section animate-on-scroll">
+      <h2 class="cv-section-title">
+        <span class="section-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
+        </span>
+        Awards &amp; Honors
+      </h2>
+      {% for award in site.data.cv.awards %}
+      <div class="cv-item">
+        <div class="cv-item-header">
+          <span class="cv-item-title">{{ award.title }}</span>
+          <span class="cv-item-year">{{ award.year }}</span>
+        </div>
+        <div class="cv-item-details">{{ award.details }}</div>
+      </div>
+      {% endfor %}
+    </section>
+
+    <!-- Interests -->
+    <section class="cv-section animate-on-scroll">
+      <h2 class="cv-section-title">
+        <span class="section-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </span>
+        Interests
+      </h2>
+      <div class="skill-tags">
+        {% for interest in site.data.cv.interests %}
+        <span class="skill-tag">{{ interest }}</span>
+        {% endfor %}
+      </div>
+    </section>
+
+  </div>
+</section>
