@@ -2244,6 +2244,11 @@ html.one-page-scroll-root body.one-page-scroll {
     grid-template-columns: repeat(2, 1fr);
   }
 
+  .page-panel-experience .experience-list {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.625rem;
+  }
+
   .projects-grid {
     grid-template-columns: repeat(2, 1fr);
   }

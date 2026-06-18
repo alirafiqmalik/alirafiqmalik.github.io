@@ -72,11 +72,11 @@ document.addEventListener('DOMContentLoaded', () => {
       const onHomePage = isOnePageScroll || window.location.pathname === '/' || window.location.pathname.endsWith('/index.html');
       if (!onHomePage) return;
 
+      e.preventDefault();
       const nextId = getNextAboutSection(currentVisibleSection);
-      if (scrollToSection(nextId)) {
-        e.preventDefault();
-        if (mobileMenu) mobileMenu.classList.remove('open');
-      }
+      scrollToSection(nextId);
+      currentVisibleSection = nextId;
+      if (mobileMenu) mobileMenu.classList.remove('open');
     });
   });
 
