@@ -3,11 +3,7 @@
   <div class="nav-content">
     <a class="nav-logo" href="{{ '/' | relative_url }}">{{ site.data.personal.name | split: ' ' | first | upcase }}<span class="dot">.</span></a>
     <div class="nav-links">
-      {% if site.show_blog_in_nav != false %}
-      {% assign nav_items = "About:/,Publications:/publications/,Projects:/projects/,Blog:/blog/" | split: "," %}
-      {% else %}
-      {% assign nav_items = "About:/,Publications:/publications/,Projects:/projects/" | split: "," %}
-      {% endif %}
+      {% assign nav_items = "About:/,Publications:/publications/" | split: "," %}
       {% for item in nav_items %}
         {% assign parts = item | split: ":" %}
         {% assign label = parts[0] %}
@@ -20,8 +16,26 @@
         {% endif %}
         <a href="{{ path | relative_url }}" class="nav-link {% if is_active %}active{% endif %}">{{ label }}</a>
       {% endfor %}
-      <a href="https://alihamzamalik.me/sec-deadlines/" class="nav-link">Deadlines</a>
-      <a href="mailto:{{ site.data.personal.email }}" class="nav-cta">Contact</a>
+
+      <button type="button" class="nav-contact-btn" data-scroll-to="contact">Contact</button>
+
+      <div class="nav-dropdown">
+        <button type="button" class="nav-cta nav-dropdown-toggle" aria-expanded="false" aria-haspopup="true">
+          More
+          <svg class="nav-dropdown-chevron" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+        <div class="nav-dropdown-menu" role="menu">
+          {% assign cv_pdf = site.data.personal.cv_pdf | default: '/assets/pdf/AliMalik_Resume.pdf' %}
+          <a href="{{ cv_pdf | relative_url }}" class="nav-dropdown-item" role="menuitem" target="_blank" rel="noopener noreferrer">CV</a>
+          {% if site.show_blog_in_nav != false %}
+          <a href="{{ '/blog/' | relative_url }}" class="nav-dropdown-item" role="menuitem">Blog</a>
+          {% endif %}
+          <a href="{{ '/projects/' | relative_url }}" class="nav-dropdown-item" role="menuitem">Projects</a>
+          <a href="https://alihamzamalik.me/sec-deadlines/" class="nav-dropdown-item" role="menuitem">Deadlines</a>
+        </div>
+      </div>
     </div>
     <button class="mobile-menu-btn" aria-label="Toggle menu">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -45,7 +59,18 @@
       {% endif %}
       <a href="{{ path | relative_url }}" class="nav-link {% if is_active %}active{% endif %}">{{ label }}</a>
     {% endfor %}
-    <a href="https://alihamzamalik.me/sec-deadlines/" class="nav-link">Deadlines</a>
-    <a href="mailto:{{ site.data.personal.email }}" class="nav-cta">Contact</a>
+
+    <button type="button" class="nav-contact-btn mobile-nav-contact" data-scroll-to="contact">Contact</button>
+
+    <div class="mobile-more-group">
+      <span class="mobile-more-label">More</span>
+      {% assign cv_pdf = site.data.personal.cv_pdf | default: '/assets/pdf/AliMalik_Resume.pdf' %}
+      <a href="{{ cv_pdf | relative_url }}" class="nav-link" target="_blank" rel="noopener noreferrer">CV</a>
+      {% if site.show_blog_in_nav != false %}
+      <a href="{{ '/blog/' | relative_url }}" class="nav-link">Blog</a>
+      {% endif %}
+      <a href="{{ '/projects/' | relative_url }}" class="nav-link">Projects</a>
+      <a href="https://alihamzamalik.me/sec-deadlines/" class="nav-link">Deadlines</a>
+    </div>
   </div>
 </nav>
