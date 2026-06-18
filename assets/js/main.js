@@ -74,6 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const sectionNavMap = {
       landing: null,
       about: 'about',
+      research: 'research',
       publications: 'publications',
       contact: 'contact'
     };
@@ -105,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
       threshold: [0.6, 0.75, 0.9]
     });
 
-    ['landing', 'about', 'publications', 'contact'].forEach(id => {
+    ['landing', 'about', 'research', 'publications', 'contact'].forEach(id => {
       const section = document.getElementById(id);
       if (section) sectionObserver.observe(section);
     });

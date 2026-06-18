@@ -96,6 +96,23 @@ layout: home
   </div>
 </section>
 
+<!-- Research Interests -->
+<section class="page-panel page-panel-research" id="research">
+  <div class="page-panel-inner container">
+    <div class="page-panel-header animate-on-scroll">
+      <h2>Research <span class="highlight">Interests</span></h2>
+    </div>
+    <div class="skills-grid animate-on-scroll">
+      {% for interest in site.data.home.researchInterests %}
+      <div class="skill-category">
+        <div class="skill-category-name">{{ interest.title }}</div>
+        <p class="skill-category-description">{{ interest.description }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
 <!-- Publications -->
 <section class="page-panel page-panel-publications" id="publications">
   <div class="page-panel-inner container-sm">
