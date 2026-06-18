@@ -3,7 +3,7 @@
   <div class="nav-content">
     <a class="nav-logo" href="{{ '/' | relative_url }}">{{ site.data.personal.name | split: ' ' | first | upcase }}<span class="dot">.</span></a>
     <div class="nav-links">
-      {% assign nav_items = "Publications:/publications/,Projects:/projects/" | split: "," %}
+      {% assign nav_items = "Publications:/publications/" | split: "," %}
       <a href="{{ '/' | relative_url }}#about" class="nav-link {% if page.url == '/' %}active{% endif %}" data-scroll-to="about">About</a>
       {% for item in nav_items %}
         {% assign parts = item | split: ":" %}
@@ -33,6 +33,7 @@
           <a href="{{ '/blog/' | relative_url }}" class="nav-dropdown-item" role="menuitem">Blog</a>
           {% endif %}
           <a href="{{ '/cv/' | relative_url }}" class="nav-dropdown-item" role="menuitem">CV</a>
+          <a href="{{ '/projects/' | relative_url }}" class="nav-dropdown-item" role="menuitem">Projects</a>
           <div class="nav-dropdown-submenu">
             <button type="button" class="nav-dropdown-item nav-dropdown-submenu-toggle" aria-expanded="false" aria-haspopup="true">
               Tools
@@ -80,6 +81,7 @@
       <a href="{{ '/blog/' | relative_url }}" class="nav-link">Blog</a>
       {% endif %}
       <a href="{{ '/cv/' | relative_url }}" class="nav-link">CV</a>
+      <a href="{{ '/projects/' | relative_url }}" class="nav-link">Projects</a>
       <span class="mobile-more-label mobile-tools-label">Tools</span>
       <a href="https://alihamzamalik.me/sec-deadlines/" class="nav-link mobile-tools-link">Deadlines</a>
     </div>
