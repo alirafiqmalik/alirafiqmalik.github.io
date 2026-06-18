@@ -1,0 +1,79 @@
+---
+layout: default
+title: History
+---
+
+<!-- Page Hero -->
+<section class="page-hero">
+  <h1 class="animate-on-scroll">Professional <span class="highlight">History</span></h1>
+  <p class="subtitle animate-on-scroll">A timeline of my academic and professional journey in formal verification and security research.</p>
+</section>
+
+<div class="history-page">
+
+  <!-- Legend -->
+  <div class="history-legend animate-on-scroll">
+    <div class="legend-item">
+      <div class="legend-dot legend-dot-education"></div>
+      <span>Education</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-dot legend-dot-award"></div>
+      <span>Awards</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-dot legend-dot-research"></div>
+      <span>Research</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-dot legend-dot-internship"></div>
+      <span>Internship</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-dot legend-dot-teaching"></div>
+      <span>Teaching</span>
+    </div>
+  </div>
+
+  {% if site.history.size > 0 %}
+  <!-- Timeline -->
+  <div class="timeline-container">
+    <div class="timeline-line"></div>
+    <div class="timeline-items">
+      {% assign sorted_history = site.history | sort: 'date' | reverse %}
+      {% for item in sorted_history %}
+        {% assign year = item.date | date: "%Y" %}
+        {% assign item_type = item.type | default: "Professional" %}
+        <div class="timeline-item animate-on-scroll" data-index="{{ forloop.index0 }}">
+          <!-- Marker -->
+          <div class="timeline-marker timeline-marker-{{ item_type | downcase }}">
+            <span>{{ year }}</span>
+          </div>
+          <!-- Card -->
+          <div class="timeline-card">
+            <div class="timeline-card-header">
+              <div class="timeline-card-title">{{ item.title }}</div>
+              <div class="timeline-card-organization">{{ item.organization }}</div>
+              <div class="timeline-card-badge timeline-badge-{{ item_type | downcase }}">{{ item_type }}</div>
+            </div>
+            <p class="timeline-card-description">{{ item.content | strip_html | truncatewords: 25 }}</p>
+            <div class="timeline-card-details">
+              <div class="timeline-card-content">
+                {{ item.content | markdownify }}
+              </div>
+            </div>
+            <div class="timeline-card-toggle">
+              <span class="toggle-expand">Click to expand</span>
+              <span class="toggle-collapse">Click to collapse</span>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <p>History items coming soon.</p>
+  </div>
+  {% endif %}
+</div>

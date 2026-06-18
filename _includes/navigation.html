@@ -3,7 +3,7 @@
   <div class="nav-content">
     <a class="nav-logo" href="{{ '/' | relative_url }}">{{ site.data.personal.name | split: ' ' | first | upcase }}<span class="dot">.</span></a>
     <div class="nav-links">
-      {% assign nav_items = "About:/,Publications:/publications/" | split: "," %}
+      {% assign nav_items = "Home:/,Publications:/publications/,Projects:/projects/" | split: "," %}
       {% for item in nav_items %}
         {% assign parts = item | split: ":" %}
         {% assign label = parts[0] %}
@@ -27,12 +27,22 @@
           </svg>
         </button>
         <div class="nav-dropdown-menu" role="menu">
-          <a href="{{ '/cv/' | relative_url }}" class="nav-dropdown-item" role="menuitem">CV</a>
+          <a href="{{ '/history/' | relative_url }}" class="nav-dropdown-item" role="menuitem">History</a>
           {% if site.show_blog_in_nav != false %}
           <a href="{{ '/blog/' | relative_url }}" class="nav-dropdown-item" role="menuitem">Blog</a>
           {% endif %}
-          <a href="{{ '/projects/' | relative_url }}" class="nav-dropdown-item" role="menuitem">Projects</a>
-          <a href="https://alihamzamalik.me/sec-deadlines/" class="nav-dropdown-item" role="menuitem">Deadlines</a>
+          <a href="{{ '/cv/' | relative_url }}" class="nav-dropdown-item" role="menuitem">CV</a>
+          <div class="nav-dropdown-submenu">
+            <button type="button" class="nav-dropdown-item nav-dropdown-submenu-toggle" aria-expanded="false" aria-haspopup="true">
+              Tools
+              <svg class="nav-dropdown-submenu-chevron" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </button>
+            <div class="nav-dropdown-submenu-menu" role="menu">
+              <a href="https://alihamzamalik.me/sec-deadlines/" class="nav-dropdown-item" role="menuitem">Deadlines</a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -63,12 +73,13 @@
 
     <div class="mobile-more-group">
       <span class="mobile-more-label">More</span>
-      <a href="{{ '/cv/' | relative_url }}" class="nav-link">CV</a>
+      <a href="{{ '/history/' | relative_url }}" class="nav-link">History</a>
       {% if site.show_blog_in_nav != false %}
       <a href="{{ '/blog/' | relative_url }}" class="nav-link">Blog</a>
       {% endif %}
-      <a href="{{ '/projects/' | relative_url }}" class="nav-link">Projects</a>
-      <a href="https://alihamzamalik.me/sec-deadlines/" class="nav-link">Deadlines</a>
+      <a href="{{ '/cv/' | relative_url }}" class="nav-link">CV</a>
+      <span class="mobile-more-label mobile-tools-label">Tools</span>
+      <a href="https://alihamzamalik.me/sec-deadlines/" class="nav-link mobile-tools-link">Deadlines</a>
     </div>
   </div>
 </nav>

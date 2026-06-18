@@ -232,6 +232,64 @@ img {
   background-color: var(--bg-card);
 }
 
+.nav-dropdown-submenu {
+  position: relative;
+}
+
+.nav-dropdown-submenu-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.nav-dropdown-submenu-chevron {
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.nav-dropdown-submenu.open .nav-dropdown-submenu-chevron {
+  transform: rotate(90deg);
+}
+
+.nav-dropdown-submenu-menu {
+  position: absolute;
+  top: 0;
+  right: calc(100% + 0.5rem);
+  min-width: 9rem;
+  padding: 0.5rem;
+  background: rgba(26, 26, 26, 0.98);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(0.5rem);
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+  z-index: 61;
+}
+
+.nav-dropdown-submenu.open .nav-dropdown-submenu-menu,
+.nav-dropdown-submenu:hover .nav-dropdown-submenu-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(0);
+}
+
+.mobile-tools-label {
+  margin-top: 0.5rem;
+}
+
+.mobile-tools-link {
+  padding-left: 0.75rem;
+}
+
 .mobile-more-group {
   display: flex;
   flex-direction: column;
