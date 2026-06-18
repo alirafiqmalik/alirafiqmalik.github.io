@@ -11,9 +11,10 @@ title: Publications
 
 <section>
   <div class="container-sm">
-    {% if site.publications.size > 0 %}
+    {% assign pubs = site.publications | sort: 'year' | reverse %}
+    {% if pubs.size > 0 %}
     <div class="publication-list">
-      {% for pub in site.publications %}
+      {% for pub in pubs %}
       <div class="publication-item animate-on-scroll">
         <div class="publication-title">{{ pub.title }}</div>
         {% if pub.authors %}
@@ -24,6 +25,10 @@ title: Publications
         {% endif %}
         {% if pub.links %}
         <div class="project-links" style="margin-top: 0.75rem;">
+          {% assign preprint_url = pub.links.preprint | strip %}
+          {% if preprint_url and preprint_url != "" and preprint_url != "#" %}
+          <a href="{{ preprint_url }}" target="_blank" rel="noopener noreferrer" class="project-link">Preprint</a>
+          {% endif %}
           {% assign pdf_url = pub.links.pdf | strip %}
           {% if pdf_url and pdf_url != "" and pdf_url != "#" %}
           <a href="{{ pub.links.pdf }}" target="_blank" rel="noopener noreferrer" class="project-link">PDF</a>
