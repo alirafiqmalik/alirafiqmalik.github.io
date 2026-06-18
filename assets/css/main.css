@@ -218,6 +218,51 @@ html.one-page-scroll-root body.one-page-scroll {
   margin: 0;
 }
 
+.page-panel-experience .page-panel-header {
+  margin-bottom: 1.25rem;
+}
+
+.page-panel-experience .experience-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+  overflow: hidden;
+}
+
+.page-panel-experience .cv-item {
+  padding: 0.875rem 1rem;
+  margin-bottom: 0;
+}
+
+.page-panel-experience .cv-item-title {
+  font-size: 0.9375rem;
+}
+
+.page-panel-experience .cv-item-year {
+  font-size: 0.6875rem;
+  padding: 0.2rem 0.5rem;
+}
+
+.page-panel-experience .cv-item-subtitle {
+  font-size: 0.8125rem;
+}
+
+.page-panel-experience .cv-responsibilities li {
+  font-size: 0.75rem;
+  line-height: 1.5;
+  margin-bottom: 0.25rem;
+}
+
+.page-panel-explore .page-panel-header {
+  margin-bottom: 2rem;
+}
+
+.page-panel-explore .explore-quick-links {
+  max-width: 48rem;
+  margin: 0 auto;
+  width: 100%;
+}
+
 .footer-one-page {
   margin-top: 0;
   border-top: none;
@@ -250,6 +295,20 @@ html.one-page-scroll-root body.one-page-scroll {
   margin: 0 auto;
 }
 
+.page-panel-contact .footer-columns-connect-only {
+  grid-template-columns: 1fr;
+  justify-items: center;
+  text-align: center;
+}
+
+.page-panel-contact .footer-column-connect {
+  align-items: center;
+}
+
+.page-panel-contact .footer-social {
+  justify-content: center;
+}
+
 .footer-one-page .footer-copyright {
   margin-top: auto;
   padding: 1.5rem 0 0;
@@ -263,6 +322,8 @@ html.one-page-scroll-root body.one-page-scroll {
 #landing,
 #about,
 #research,
+#experience,
+#explore,
 #publications,
 #contact {
   scroll-margin-top: 0;
@@ -567,6 +628,17 @@ html.one-page-scroll-root body.one-page-scroll {
 
 .landing-name .accent-name {
   color: var(--accent);
+}
+
+.landing-tagline {
+  font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  font-size: clamp(1.5rem, 5vw, 3.25rem);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin: 0;
+  text-align: left;
+  color: var(--text-secondary);
 }
 
 .landing-bio {

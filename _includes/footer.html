@@ -2,7 +2,7 @@
 <footer class="footer{% if page.layout == 'home' %} footer-one-page{% endif %}">
   <div class="footer-content">
     <div class="footer-contact{% if page.layout == 'home' %} page-panel page-panel-contact{% endif %}" id="contact">
-      <div class="footer-columns">
+      <div class="footer-columns footer-columns-connect-only">
         <div class="footer-column footer-column-connect">
           <h2 class="footer-heading">Connect</h2>
           <div class="footer-social">
@@ -26,26 +26,6 @@
                 <rect width="20" height="16" x="2" y="4" rx="2"></rect>
                 <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
               </svg>
-            </a>
-          </div>
-        </div>
-
-        <div class="footer-column footer-column-explore">
-          <h2 class="footer-heading">Explore <span class="highlight">More</span></h2>
-          <div class="footer-quick-links">
-            <a href="{{ '/projects/' | relative_url }}" class="quick-link">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
-              Projects
-            </a>
-            {% if site.show_blog_in_nav != false %}
-            <a href="{{ '/blog/' | relative_url }}" class="quick-link">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/></svg>
-              Blog
-            </a>
-            {% endif %}
-            <a href="https://alihamzamalik.me/sec-deadlines/" class="quick-link">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg>
-              Deadlines
             </a>
           </div>
         </div>

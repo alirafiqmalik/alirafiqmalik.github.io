@@ -11,6 +11,11 @@ layout: home
       <span class="accent-name">{{ name_parts[2] }}</span>
     </h1>
 
+    <p class="landing-tagline">
+      Provable Security for<br>
+      Emerging Systems..
+    </p>
+
     <div class="landing-bio">
       {% if site.data.personal.bio_paragraphs %}
         {% for paragraph in site.data.personal.bio_paragraphs %}
@@ -109,6 +114,58 @@ layout: home
         <p class="skill-category-description">{{ interest.description }}</p>
       </div>
       {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Experience -->
+<section class="page-panel page-panel-experience" id="experience">
+  <div class="page-panel-inner container">
+    <div class="page-panel-header animate-on-scroll">
+      <h2><span class="highlight">Experience</span></h2>
+    </div>
+    <div class="experience-list animate-on-scroll">
+      {% for exp in site.data.cv.experience %}
+      <div class="cv-item">
+        <div class="cv-item-header">
+          <span class="cv-item-title">{{ exp.title }}</span>
+          <span class="cv-item-year">{{ exp.year }}</span>
+        </div>
+        <div class="cv-item-subtitle">{{ exp.company }}{% if exp.location %} &bull; {{ exp.location }}{% endif %}</div>
+        {% if exp.responsibilities %}
+        <ul class="cv-responsibilities">
+          {% for resp in exp.responsibilities %}
+          <li>{{ resp }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Explore More -->
+<section class="page-panel page-panel-explore" id="explore">
+  <div class="page-panel-inner container">
+    <div class="page-panel-header animate-on-scroll">
+      <h2>Explore <span class="highlight">More</span></h2>
+    </div>
+    <div class="quick-links explore-quick-links animate-on-scroll">
+      <a href="{{ '/projects/' | relative_url }}" class="quick-link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+        Projects
+      </a>
+      {% if site.show_blog_in_nav != false %}
+      <a href="{{ '/blog/' | relative_url }}" class="quick-link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/></svg>
+        Blog
+      </a>
+      {% endif %}
+      <a href="https://alihamzamalik.me/sec-deadlines/" class="quick-link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg>
+        Deadlines
+      </a>
     </div>
   </div>
 </section>
