@@ -265,12 +265,6 @@ html.one-page-scroll-root body.one-page-scroll {
 
 .footer-one-page {
   margin-top: 0;
-  border-top: none;
-  flex-shrink: 0;
-}
-
-.footer-one-page .footer-content {
-  padding: 0;
 }
 
 .page-panel-contact.footer-contact {
@@ -281,34 +275,14 @@ html.one-page-scroll-root body.one-page-scroll {
   max-height: 100vh;
   max-height: 100dvh;
   width: 100%;
-  padding: 5rem 1rem 1.5rem;
+  padding: 5rem 0 1.5rem;
   scroll-margin-top: 0;
   justify-content: space-between;
+  flex-shrink: 0;
 }
 
 .page-panel-contact .footer-contact-inner {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  text-align: left;
-  width: 100%;
-  max-width: 1280px;
-  margin: 0;
-  gap: clamp(1.5rem, 4vh, 2.5rem);
-}
-
-.footer-one-page .footer-copyright {
-  margin-top: auto;
-  padding: 1.5rem 0 0;
-  border-top: 1px solid var(--border);
-  text-align: left;
-  font-size: 0.875rem;
-  color: var(--text-secondary);
-  flex-shrink: 0;
-  width: 100%;
-  max-width: 1280px;
+  flex: 0 0 auto;
 }
 
 #landing,
@@ -2064,19 +2038,22 @@ html.one-page-scroll-root body.one-page-scroll {
 .footer {
   border-top: 1px solid var(--border);
   margin-top: 4rem;
+  flex-shrink: 0;
 }
 
 .footer-content {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 0 1rem 3rem;
+  padding: 0 1rem;
+  width: 100%;
 }
 
 .footer-contact {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  justify-content: center;
+  justify-content: flex-start;
+  width: 100%;
 }
 
 .footer-contact-inner {
@@ -2085,10 +2062,8 @@ html.one-page-scroll-root body.one-page-scroll {
   align-items: flex-start;
   text-align: left;
   width: 100%;
-  max-width: 1280px;
-  margin: 0;
-  gap: 2rem;
-  padding: 3rem 0;
+  gap: clamp(1.5rem, 4vh, 2rem);
+  padding: 3rem 0 2rem;
 }
 
 .footer-heading {
@@ -2110,6 +2085,7 @@ html.one-page-scroll-root body.one-page-scroll {
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  flex-wrap: wrap;
   gap: 1.5rem;
 }
 
@@ -2149,12 +2125,14 @@ html.one-page-scroll-root body.one-page-scroll {
 }
 
 .footer-copyright {
-  padding: 2rem 0;
+  margin-top: auto;
+  padding: 1.5rem 0 2rem;
   border-top: 1px solid var(--border);
   text-align: left;
   font-size: 0.875rem;
   color: var(--text-secondary);
   width: 100%;
+  flex-shrink: 0;
 }
 
 /* === MARKDOWN (for Jekyll markdownify) === */
@@ -2195,6 +2173,10 @@ html.one-page-scroll-root body.one-page-scroll {
 /* === RESPONSIVE === */
 @media (min-width: 640px) {
   .container, .container-sm, .container-md {
+    padding: 0 1.5rem;
+  }
+
+  .footer-content {
     padding: 0 1.5rem;
   }
 
