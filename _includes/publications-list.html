@@ -1,0 +1,36 @@
+{% assign pubs = site.publications | sort: 'year' | reverse %}
+{% if pubs.size > 0 %}
+<div class="publication-list">
+  {% for pub in pubs %}
+  <div class="publication-item animate-on-scroll">
+    <div class="publication-title">{{ pub.title }}</div>
+    {% if pub.authors %}
+    <div class="publication-authors">{{ pub.authors }}</div>
+    {% endif %}
+    {% if pub.venue %}
+    <div class="publication-venue">{{ pub.venue }}</div>
+    {% endif %}
+    {% if pub.links %}
+    <div class="project-links" style="margin-top: 0.75rem;">
+      {% assign preprint_url = pub.links.preprint | strip %}
+      {% if preprint_url and preprint_url != "" and preprint_url != "#" %}
+      <a href="{{ preprint_url }}" target="_blank" rel="noopener noreferrer" class="project-link">Preprint</a>
+      {% endif %}
+      {% assign pdf_url = pub.links.pdf | strip %}
+      {% if pdf_url and pdf_url != "" and pdf_url != "#" %}
+      <a href="{{ pub.links.pdf }}" target="_blank" rel="noopener noreferrer" class="project-link">PDF</a>
+      {% endif %}
+      {% assign doi_url = pub.links.doi | strip %}
+      {% if doi_url and doi_url != "" and doi_url != "#" %}
+      <a href="{{ pub.links.doi }}" target="_blank" rel="noopener noreferrer" class="project-link">DOI</a>
+      {% endif %}
+    </div>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="empty-state animate-on-scroll">
+  <p>Publications coming soon.</p>
+</div>
+{% endif %}

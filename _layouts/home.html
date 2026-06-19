@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" class="one-page-scroll-root">
+<head>
+  {% include head.html %}
+</head>
+<body class="one-page-scroll">
+  <div class="site-wrapper site-wrapper-scroll">
+    {% include navigation.html %}
+    <div class="page-scroll-container" id="page-scroll-container">
+      <main class="main-content main-content-scroll">
+        {{ content }}
+      </main>
+      {% include footer.html %}
+    </div>
+  </div>
+  <script src="{{ '/assets/js/main.js' | relative_url }}"></script>
+</body>
+</html>

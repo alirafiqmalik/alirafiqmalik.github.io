@@ -1,46 +1,17 @@
 ---
-layout: default
-title: Publications
+layout: null
+permalink: /publications/
 ---
-
-<!-- Page Hero -->
-<section class="page-hero">
-  <h1 class="animate-on-scroll"><span class="highlight">Publications</span></h1>
-  <p class="subtitle animate-on-scroll">Academic publications and research papers.</p>
-</section>
-
-<section>
-  <div class="container-sm">
-    {% if site.publications.size > 0 %}
-    <div class="publication-list">
-      {% for pub in site.publications %}
-      <div class="publication-item animate-on-scroll">
-        <div class="publication-title">{{ pub.title }}</div>
-        {% if pub.authors %}
-        <div class="publication-authors">{{ pub.authors }}</div>
-        {% endif %}
-        {% if pub.venue %}
-        <div class="publication-venue">{{ pub.venue }}</div>
-        {% endif %}
-        {% if pub.links %}
-        <div class="project-links" style="margin-top: 0.75rem;">
-          {% assign pdf_url = pub.links.pdf | strip %}
-          {% if pdf_url and pdf_url != "" and pdf_url != "#" %}
-          <a href="{{ pub.links.pdf }}" target="_blank" rel="noopener noreferrer" class="project-link">PDF</a>
-          {% endif %}
-          {% assign doi_url = pub.links.doi | strip %}
-          {% if doi_url and doi_url != "" and doi_url != "#" %}
-          <a href="{{ pub.links.doi }}" target="_blank" rel="noopener noreferrer" class="project-link">DOI</a>
-          {% endif %}
-        </div>
-        {% endif %}
-      </div>
-      {% endfor %}
-    </div>
-    {% else %}
-    <div class="empty-state animate-on-scroll">
-      <p>Publications coming soon.</p>
-    </div>
-    {% endif %}
-  </div>
-</section>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="refresh" content="0; url={{ '/' | relative_url }}#publications">
+  <link rel="canonical" href="{{ '/' | relative_url }}#publications">
+  <title>Redirecting to Publications</title>
+  <script>window.location.replace('{{ '/' | relative_url }}#publications');</script>
+</head>
+<body>
+  <p><a href="{{ '/' | relative_url }}#publications">Continue to Publications</a></p>
+</body>
+</html>
