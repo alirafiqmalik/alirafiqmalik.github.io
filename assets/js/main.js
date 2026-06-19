@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
       threshold: [0.6, 0.75, 0.9]
     });
 
-    ['landing', 'about', 'research', 'experience', 'explore', 'publications', 'contact'].forEach(id => {
+    ['landing', 'about', 'research', 'experience', 'publications', 'explore', 'contact'].forEach(id => {
       const section = document.getElementById(id);
       if (section) sectionObserver.observe(section);
     });

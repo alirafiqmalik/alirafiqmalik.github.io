@@ -258,9 +258,19 @@ html.one-page-scroll-root body.one-page-scroll {
 }
 
 .page-panel-explore .explore-quick-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
   max-width: 48rem;
   margin: 0 auto;
-  width: 100%;
+}
+
+.page-panel-explore .explore-quick-links .quick-link {
+  flex: 0 1 auto;
+  min-width: 9rem;
 }
 
 .footer-one-page {
