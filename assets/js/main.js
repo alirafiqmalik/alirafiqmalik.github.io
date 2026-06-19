@@ -26,6 +26,17 @@ document.addEventListener('DOMContentLoaded', () => {
     return panelRect.top - containerRect.top + scrollContainer.scrollTop;
   };
 
+  const updateUrlForSection = (id) => {
+    if (id === 'landing') {
+      const path = window.location.pathname || '/';
+      if (window.location.hash) {
+        history.replaceState(null, '', path);
+      }
+      return;
+    }
+    history.replaceState(null, '', `#${id}`);
+  };
+
   const scrollToSection = (id) => {
     const target = document.getElementById(id);
     if (!target) return false;
@@ -39,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
       target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
-    history.replaceState(null, '', `#${id}`);
+    updateUrlForSection(id);
     return true;
   };
 
@@ -60,6 +71,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const scrollToHashTarget = () => {
     const id = window.location.hash.replace('#', '');
     if (!id) return;
+    if (id === 'landing') {
+      updateUrlForSection('landing');
+    }
     requestAnimationFrame(() => scrollToSection(id));
   };
 
@@ -72,8 +86,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Highlight active section in nav during one-page scroll
   if (isOnePageScroll) {
     const sectionNavMap = {
-      landing: 'about',
-      about: null,
+      landing: null,
+      about: 'about',
       research: null,
       experience: null,
       explore: null,
@@ -88,10 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const syncHashToSection = (sectionId) => {
-      const newHash = `#${sectionId}`;
-      if (window.location.hash !== newHash) {
-        history.replaceState(null, '', newHash);
-      }
+      updateUrlForSection(sectionId);
     };
 
     const sectionObserver = new IntersectionObserver((entries) => {
