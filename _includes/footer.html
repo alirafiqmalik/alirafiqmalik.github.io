@@ -1,5 +1,8 @@
 <!-- Footer -->
 <footer class="footer{% if page.layout == 'home' %} footer-one-page footer-snap-panel{% endif %}"{% if page.layout == 'home' %} id="contact"{% endif %}>
+  {% if page.layout == 'home' %}
+  <div class="footer-top-divider" aria-hidden="true"></div>
+  {% endif %}
   <div class="footer-content">
     <div class="footer-contact"{% unless page.layout == 'home' %} id="contact"{% endunless %}>
       <div class="footer-contact-inner">
