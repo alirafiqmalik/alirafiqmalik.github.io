@@ -88,11 +88,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const sectionNavMap = {
       landing: null,
       about: 'about',
-      research: null,
-      experience: null,
+      research: 'research',
+      experience: 'about',
       explore: null,
       publications: 'research',
       contact: 'contact'
+    };
+
+    const canonicalHashForSection = (sectionId) => {
+      // Experience is part of the About zone; keep hash stable instead of #experience.
+      if (sectionId === 'experience') return 'about';
+      return sectionId;
     };
 
     const setActiveSection = (sectionId) => {
@@ -102,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const syncHashToSection = (sectionId) => {
-      updateUrlForSection(sectionId);
+      updateUrlForSection(canonicalHashForSection(sectionId));
     };
 
     const sectionObserver = new IntersectionObserver((entries) => {
