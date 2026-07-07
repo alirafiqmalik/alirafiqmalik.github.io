@@ -1,31 +1,73 @@
 {% assign pubs = site.publications | sort: 'year' | reverse %}
+{% assign author_name = site.data.personal.name %}
 {% if pubs.size > 0 %}
-<div class="publication-list">
-  {% for pub in pubs %}
-  <div class="publication-item animate-on-scroll">
-    <div class="publication-title">{{ pub.title }}</div>
-    {% if pub.authors %}
-    <div class="publication-authors">{{ pub.authors }}</div>
-    {% endif %}
-    {% if pub.venue %}
-    <div class="publication-venue">{{ pub.venue }}</div>
-    {% endif %}
-    {% if pub.links %}
-    <div class="project-links" style="margin-top: 0.75rem;">
-      {% assign preprint_url = pub.links.preprint | strip %}
-      {% if preprint_url and preprint_url != "" and preprint_url != "#" %}
-      <a href="{{ preprint_url }}" target="_blank" rel="noopener noreferrer" class="project-link">Preprint</a>
-      {% endif %}
-      {% assign pdf_url = pub.links.pdf | strip %}
-      {% if pdf_url and pdf_url != "" and pdf_url != "#" %}
-      <a href="{{ pub.links.pdf }}" target="_blank" rel="noopener noreferrer" class="project-link">PDF</a>
-      {% endif %}
-      {% assign doi_url = pub.links.doi | strip %}
-      {% if doi_url and doi_url != "" and doi_url != "#" %}
-      <a href="{{ pub.links.doi }}" target="_blank" rel="noopener noreferrer" class="project-link">DOI</a>
-      {% endif %}
+<div class="publications-showcase">
+  <header class="publications-showcase-header animate-on-scroll">
+    <h2 class="publications-showcase-title">publications</h2>
+    <p class="publications-showcase-subtitle">publications in reversed chronological order.</p>
+  </header>
+
+  {% assign years = pubs | map: 'year' | uniq | sort | reverse %}
+  {% for year in years %}
+  <div class="publication-year-group animate-on-scroll">
+    <div class="publication-year-marker" aria-hidden="true">{{ year }}</div>
+    <div class="publication-year-entries">
+      {% assign year_pubs = pubs | where: 'year', year %}
+      {% for pub in year_pubs %}
+      <article class="publication-entry">
+        {% if pub.badge %}
+        <div class="publication-badge">{{ pub.badge }}</div>
+        {% elsif pub.venue %}
+        {% assign venue_words = pub.venue | split: ' ' %}
+        {% assign badge_text = venue_words | last %}
+        {% if pub.year %}
+        {% assign short_year = pub.year | append: '' | slice: -2, 2 %}
+        {% assign badge_text = badge_text | replace: pub.year, short_year %}
+        {% endif %}
+        <div class="publication-badge">{{ badge_text }}</div>
+        {% endif %}
+
+        <div class="publication-entry-body">
+          <h3 class="publication-entry-title">{{ pub.title }}</h3>
+
+          {% if pub.authors %}
+          <p class="publication-entry-authors">
+            {% assign author_list = pub.authors | split: ', ' %}
+            {% for author in author_list %}
+              {% if author == author_name %}
+              <span class="publication-author-self">{{ author }}</span>
+              {% else %}
+              <span>{{ author }}</span>
+              {% endif %}
+              {% unless forloop.last %}<span class="publication-author-sep">, </span>{% endunless %}
+            {% endfor %}
+          </p>
+          {% endif %}
+
+          {% if pub.venue %}
+          <p class="publication-entry-venue"><em>{{ pub.venue }}</em></p>
+          {% endif %}
+
+          {% if pub.links %}
+          <div class="publication-entry-links">
+            {% assign pdf_url = pub.links.pdf | strip %}
+            {% if pdf_url and pdf_url != "" and pdf_url != "#" %}
+            <a href="{{ pdf_url }}" target="_blank" rel="noopener noreferrer" class="publication-link-btn">PDF</a>
+            {% endif %}
+            {% assign preprint_url = pub.links.preprint | strip %}
+            {% if preprint_url and preprint_url != "" and preprint_url != "#" %}
+            <a href="{{ preprint_url }}" target="_blank" rel="noopener noreferrer" class="publication-link-btn">Preprint</a>
+            {% endif %}
+            {% assign doi_url = pub.links.doi | strip %}
+            {% if doi_url and doi_url != "" and doi_url != "#" %}
+            <a href="{{ doi_url }}" target="_blank" rel="noopener noreferrer" class="publication-link-btn">DOI</a>
+            {% endif %}
+          </div>
+          {% endif %}
+        </div>
+      </article>
+      {% endfor %}
     </div>
-    {% endif %}
   </div>
   {% endfor %}
 </div>
