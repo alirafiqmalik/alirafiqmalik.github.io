@@ -4,7 +4,7 @@
     <a class="nav-logo" href="{{ '/' | relative_url }}" data-scroll-to="landing">{{ site.data.personal.name | split: ' ' | first | upcase }}<span class="dot">.</span></a>
     <div class="nav-links">
       <a href="{{ '/' | relative_url }}#about" class="nav-link" data-scroll-to="about" data-nav-section="about">About</a>
-      <a href="{{ '/' | relative_url }}#research" class="nav-link" data-scroll-to="research" data-nav-section="research">Research</a>
+      <a href="{{ '/' | relative_url }}#publications" class="nav-link" data-scroll-to="publications" data-nav-section="research">Research</a>
       <button type="button" class="nav-link" data-scroll-to="contact" data-nav-section="contact">Contact</button>
 
       <div class="nav-dropdown">
@@ -46,7 +46,7 @@
   <!-- Mobile Menu -->
   <div class="mobile-menu">
     <a href="{{ '/' | relative_url }}#about" class="nav-link" data-scroll-to="about" data-nav-section="about">About</a>
-    <a href="{{ '/' | relative_url }}#research" class="nav-link" data-scroll-to="research" data-nav-section="research">Research</a>
+    <a href="{{ '/' | relative_url }}#publications" class="nav-link" data-scroll-to="publications" data-nav-section="research">Research</a>
     <button type="button" class="nav-link" data-scroll-to="contact" data-nav-section="contact">Contact</button>
 
     <div class="mobile-more-group">
@@ -60,5 +60,8 @@
       <span class="mobile-more-label mobile-tools-label">Tools</span>
       <a href="https://alihamzamalik.me/sec-deadlines/" class="nav-link mobile-tools-link">Deadlines</a>
     </div>
+  </div>
+  <div class="nav-progress-container" aria-hidden="true">
+    <div class="nav-progress-bar" id="nav-progress-bar"></div>
   </div>
 </nav>
