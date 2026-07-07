@@ -138,6 +138,22 @@ html.one-page-scroll-root body.one-page-scroll {
   flex-shrink: 0;
 }
 
+.page-panel-tall {
+  height: auto;
+  min-height: 100vh;
+  min-height: 100dvh;
+  max-height: none;
+  scroll-snap-stop: normal;
+  overflow: visible;
+}
+
+.page-panel-tall .page-panel-inner {
+  overflow: visible;
+  justify-content: flex-start;
+  padding-top: 0.5rem;
+  padding-bottom: 2rem;
+}
+
 .page-panel-inner {
   width: 100%;
   flex: 1;
@@ -184,6 +200,15 @@ html.one-page-scroll-root body.one-page-scroll {
 .page-panel-publications .publication-list {
   overflow: hidden;
   gap: 0;
+}
+
+.page-panel-publications {
+  justify-content: flex-start;
+}
+
+.page-panel-publications .page-panel-inner {
+  justify-content: flex-start;
+  padding-top: 1rem;
 }
 
 .page-panel-landing.landing-hero {
@@ -237,11 +262,25 @@ html.one-page-scroll-root body.one-page-scroll {
   margin-bottom: 1.25rem;
 }
 
+.page-panel-experience {
+  height: auto;
+  min-height: 100dvh;
+  max-height: none;
+  scroll-snap-stop: normal;
+  overflow: visible;
+}
+
+.page-panel-experience .page-panel-inner {
+  overflow: visible;
+  justify-content: flex-start;
+  padding-bottom: 2rem;
+}
+
 .page-panel-experience .experience-list {
   display: flex;
   flex-direction: column;
   gap: 0;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .page-panel-experience .cv-item {
@@ -328,11 +367,10 @@ html.one-page-scroll-root body.one-page-scroll {
   box-sizing: border-box;
   overflow: hidden;
   flex-shrink: 0;
-  padding-bottom: 1.5rem;
   border-top: none;
 }
 
-.footer-snap-panel .footer-top-divider {
+.footer-top-divider {
   width: 100%;
   border-top: 1px solid var(--border);
   flex-shrink: 0;
@@ -341,13 +379,6 @@ html.one-page-scroll-root body.one-page-scroll {
 .footer-snap-panel .footer-content {
   flex: 0 0 auto;
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-}
-
-.footer-snap-panel .footer-contact-inner {
-  padding-top: 3rem;
 }
 
 .footer-snap-panel .footer-contact {
@@ -383,6 +414,66 @@ html.one-page-scroll-root body.one-page-scroll {
   background-color: rgba(17, 17, 17, 0.95);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--border);
+}
+
+.nav-progress-container {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  background: rgba(51, 51, 51, 0.6);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.nav.scrolled .nav-progress-container {
+  opacity: 1;
+}
+
+.nav-progress-bar {
+  height: 100%;
+  width: 0%;
+  background: var(--accent);
+  transition: width 0.12s ease-out;
+}
+
+.panel-scroll-hint {
+  position: fixed;
+  left: 50%;
+  bottom: 1.75rem;
+  z-index: 40;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--text-secondary);
+  background: rgba(17, 17, 17, 0.85);
+  backdrop-filter: blur(8px);
+  transition: color 0.3s, border-color 0.3s, opacity 0.3s, visibility 0.3s;
+  animation: panel-scroll-hint-bounce 2s ease-in-out infinite;
+}
+
+.panel-scroll-hint:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.panel-scroll-hint.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  animation: none;
+}
+
+@keyframes panel-scroll-hint-bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(6px); }
 }
 
 .nav-content {
@@ -1201,6 +1292,140 @@ html.one-page-scroll-root body.one-page-scroll {
 }
 
 /* === PUBLICATIONS === */
+.publications-showcase {
+  width: 100%;
+}
+
+.publications-showcase-header {
+  margin-bottom: 2rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.publications-showcase-title {
+  font-size: clamp(2rem, 5vw, 2.75rem);
+  font-weight: 700;
+  text-transform: lowercase;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.35rem;
+}
+
+.publications-showcase-subtitle {
+  color: var(--text-secondary);
+  font-size: 0.9375rem;
+}
+
+.publication-year-group {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  padding: 2rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.publication-year-group:last-child {
+  border-bottom: none;
+}
+
+.publication-year-marker {
+  position: absolute;
+  top: 2rem;
+  right: 0;
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 700;
+  color: rgba(245, 245, 245, 0.06);
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+}
+
+.publication-year-entries {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.publication-entry {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.publication-badge {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 5.5rem;
+  padding: 0.45rem 0.65rem;
+  border-radius: 0.35rem;
+  background: rgba(204, 255, 0, 0.14);
+  border: 1px solid rgba(204, 255, 0, 0.35);
+  color: var(--accent);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-align: center;
+}
+
+.publication-entry-body {
+  min-width: 0;
+}
+
+.publication-entry-title {
+  font-size: 1.0625rem;
+  font-weight: 700;
+  line-height: 1.45;
+  margin-bottom: 0.5rem;
+}
+
+.publication-entry-authors {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  margin-bottom: 0.35rem;
+}
+
+.publication-author-self {
+  color: #d8ff66;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.publication-entry-venue {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 0.75rem;
+}
+
+.publication-entry-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.publication-link-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.35rem 0.85rem;
+  border: 1px solid var(--border);
+  border-radius: 0.25rem;
+  color: var(--text-primary);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.publication-link-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
 .publication-list {
   display: flex;
   flex-direction: column;
@@ -2114,7 +2339,6 @@ html.one-page-scroll-root body.one-page-scroll {
 
 /* === FOOTER === */
 .footer {
-  border-top: 1px solid var(--border);
   margin-top: 4rem;
   flex-shrink: 0;
 }

@@ -5,12 +5,47 @@ document.addEventListener('DOMContentLoaded', () => {
   const mobileMenu = document.querySelector('.mobile-menu');
   const scrollContainer = document.getElementById('page-scroll-container');
   const isOnePageScroll = Boolean(scrollContainer);
+  const progressBar = document.getElementById('nav-progress-bar');
+  const scrollHint = document.querySelector('.panel-scroll-hint');
+
+  const SECTION_ORDER = ['landing', 'about', 'research', 'experience', 'publications', 'explore', 'contact'];
 
   const getScrollTop = () => scrollContainer ? scrollContainer.scrollTop : window.scrollY;
 
-  // Scroll effect for nav
+  const updateScrollHintVisibility = () => {
+    if (!scrollHint || !isOnePageScroll || !scrollContainer) return;
+    const sections = ['landing', 'about', 'research', 'experience', 'publications', 'explore', 'contact'];
+    const scrollTop = scrollContainer.scrollTop;
+    const viewportMid = scrollTop + scrollContainer.clientHeight * 0.35;
+    let currentId = sections[0];
+
+    sections.forEach(id => {
+      const section = document.getElementById(id);
+      if (!section) return;
+      const panelRect = section.getBoundingClientRect();
+      const containerRect = scrollContainer.getBoundingClientRect();
+      const top = panelRect.top - containerRect.top + scrollContainer.scrollTop;
+      if (top <= viewportMid) currentId = id;
+    });
+
+    const isLast = currentId === sections[sections.length - 1];
+    scrollHint.classList.toggle('hidden', isLast);
+  };
+
+  const updateProgressBar = () => {
+    if (!progressBar) return;
+    const container = scrollContainer || document.documentElement;
+    const scrollTop = scrollContainer ? scrollContainer.scrollTop : window.scrollY;
+    const scrollHeight = container.scrollHeight - container.clientHeight;
+    const pct = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
+    progressBar.style.width = `${pct}%`;
+  };
+
+  // Scroll effect for nav + progress bar
   const onScroll = () => {
-    nav.classList.toggle('scrolled', getScrollTop() > 20);
+    nav?.classList.toggle('scrolled', getScrollTop() > 20);
+    updateProgressBar();
+    updateScrollHintVisibility();
   };
 
   if (scrollContainer) {
@@ -42,8 +77,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!target) return false;
 
     if (scrollContainer) {
+      const snapPanel = target.closest('.footer-snap-panel') || target;
       scrollContainer.scrollTo({
-        top: getPanelScrollTop(target),
+        top: getPanelScrollTop(snapPanel),
         behavior: 'smooth'
       });
     } else {
@@ -54,14 +90,34 @@ document.addEventListener('DOMContentLoaded', () => {
     return true;
   };
 
+  const scrollToAnchor = (id) => {
+    const target = document.getElementById(id);
+    if (!target) return false;
+
+    if (scrollContainer) {
+      return scrollToSection(id);
+    }
+
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    history.replaceState(null, '', `#${id}`);
+    return true;
+  };
+
   // Scroll to in-page sections (Landing, Publications, Contact, etc.)
   document.querySelectorAll('[data-scroll-to]').forEach(btn => {
     btn.addEventListener('click', (e) => {
       const sectionId = btn.dataset.scrollTo;
       const onHomePage = isOnePageScroll || window.location.pathname === '/' || window.location.pathname.endsWith('/index.html');
-      if (!onHomePage) return;
 
-      if (scrollToSection(sectionId)) {
+      if (onHomePage) {
+        if (scrollToSection(sectionId)) {
+          e.preventDefault();
+          if (mobileMenu) mobileMenu.classList.remove('open');
+        }
+        return;
+      }
+
+      if (scrollToAnchor(sectionId)) {
         e.preventDefault();
         if (mobileMenu) mobileMenu.classList.remove('open');
       }
@@ -74,7 +130,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (id === 'landing') {
       updateUrlForSection('landing');
     }
-    requestAnimationFrame(() => scrollToSection(id));
+    requestAnimationFrame(() => {
+      if (isOnePageScroll) {
+        scrollToSection(id);
+      } else {
+        scrollToAnchor(id);
+      }
+    });
   };
 
   if (window.location.hash) {
@@ -83,12 +145,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.addEventListener('hashchange', scrollToHashTarget);
 
-  // Highlight active section in nav during one-page scroll
   if (isOnePageScroll) {
     const sectionNavMap = {
       landing: null,
       about: 'about',
-      research: 'research',
+      research: null,
       experience: 'about',
       explore: null,
       publications: 'research',
@@ -96,7 +157,6 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const canonicalHashForSection = (sectionId) => {
-      // Experience is part of the About zone; keep hash stable instead of #experience.
       if (sectionId === 'experience') return 'about';
       return sectionId;
     };
@@ -120,15 +180,111 @@ document.addEventListener('DOMContentLoaded', () => {
       const sectionId = visible[0].target.id;
       setActiveSection(sectionId);
       syncHashToSection(sectionId);
+      updateScrollHintVisibility();
     }, {
       root: scrollContainer,
       threshold: [0.6, 0.75, 0.9]
     });
 
-    ['landing', 'about', 'research', 'experience', 'publications', 'explore', 'contact'].forEach(id => {
+    SECTION_ORDER.forEach(id => {
       const section = document.getElementById(id);
       if (section) sectionObserver.observe(section);
     });
+
+    const getPanelInner = (panel) => panel?.querySelector('.page-panel-inner');
+
+    const panelContentOverflows = (panel) => {
+      return panel?.classList.contains('page-panel-tall')
+        || panel?.classList.contains('page-panel-experience');
+    };
+
+    const markOverflowPanels = () => {
+      document.querySelectorAll('.page-panel').forEach(panel => {
+        const inner = getPanelInner(panel);
+        if (!inner) return;
+
+        panel.classList.remove('page-panel-tall');
+
+        const availableHeight = inner.clientHeight;
+        const previousOverflow = inner.style.overflow;
+        const previousMaxHeight = inner.style.maxHeight;
+        inner.style.overflow = 'visible';
+        inner.style.maxHeight = 'none';
+        const contentHeight = inner.scrollHeight;
+        inner.style.overflow = previousOverflow;
+        inner.style.maxHeight = previousMaxHeight;
+
+        const overflows = contentHeight > availableHeight + 2;
+        panel.classList.toggle('page-panel-tall', overflows);
+      });
+    };
+
+    const getCurrentSection = () => {
+      const scrollTop = scrollContainer.scrollTop;
+      const viewportMid = scrollTop + scrollContainer.clientHeight * 0.35;
+      let current = document.getElementById(SECTION_ORDER[0]);
+
+      SECTION_ORDER.forEach(id => {
+        const section = document.getElementById(id);
+        if (!section) return;
+        if (getPanelScrollTop(section) <= viewportMid) {
+          current = section;
+        }
+      });
+
+      return current;
+    };
+
+    const handlePanelScroll = (direction) => {
+      const current = getCurrentSection();
+      if (!current) return;
+
+      const currentIndex = SECTION_ORDER.indexOf(current.id);
+      const panelTop = getPanelScrollTop(current);
+      const panelBottom = panelTop + current.offsetHeight;
+      const scrollTop = scrollContainer.scrollTop;
+      const scrollBottom = scrollTop + scrollContainer.clientHeight;
+
+      if (direction === 'down') {
+        if (panelContentOverflows(current) && scrollBottom < panelBottom - 12) {
+          scrollContainer.scrollBy({
+            top: scrollContainer.clientHeight * 0.85,
+            behavior: 'smooth'
+          });
+          return;
+        }
+
+        if (currentIndex < SECTION_ORDER.length - 1) {
+          scrollToSection(SECTION_ORDER[currentIndex + 1]);
+        }
+        return;
+      }
+
+      if (panelContentOverflows(current) && scrollTop > panelTop + 12) {
+        scrollContainer.scrollBy({
+          top: -scrollContainer.clientHeight * 0.85,
+          behavior: 'smooth'
+        });
+        return;
+      }
+
+      if (currentIndex > 0) {
+        scrollToSection(SECTION_ORDER[currentIndex - 1]);
+      }
+    };
+
+    document.querySelectorAll('[data-scroll-direction]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        handlePanelScroll(btn.dataset.scrollDirection);
+      });
+    });
+
+    markOverflowPanels();
+    window.addEventListener('resize', markOverflowPanels);
+    window.addEventListener('load', markOverflowPanels);
+    updateScrollHintVisibility();
+    updateProgressBar();
   }
 
   // More dropdown toggle
@@ -232,6 +388,7 @@ document.addEventListener('DOMContentLoaded', () => {
         link.classList.add('active');
       }
     });
+    updateProgressBar();
   }
 
   // Scroll animations via IntersectionObserver
