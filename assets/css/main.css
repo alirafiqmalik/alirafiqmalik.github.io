@@ -205,21 +205,25 @@ html.one-page-scroll-root body.one-page-scroll {
   padding: 1.5rem 1rem;
   background: transparent;
   border: none;
-  border-bottom: 1px solid var(--border);
+  border-top: 1px solid var(--border);
   border-radius: 0;
   transition: border-color 0.3s;
 }
 
-.page-panel-research .skills-grid > .skill-category:first-child {
-  border-top: 1px solid var(--border);
+.page-panel-research .skills-grid > .skill-category:last-child {
+  border-bottom: 1px solid var(--border);
 }
 
 .page-panel-research .skill-category:hover {
-  border-bottom-color: rgba(204, 255, 0, 0.35);
+  border-top-color: rgba(204, 255, 0, 0.35);
 }
 
-.page-panel-research .skills-grid > .skill-category:first-child:hover {
+.page-panel-research .skill-category:hover + .skill-category {
   border-top-color: rgba(204, 255, 0, 0.35);
+}
+
+.page-panel-research .skills-grid > .skill-category:last-child:hover {
+  border-bottom-color: rgba(204, 255, 0, 0.35);
 }
 
 .page-panel-research .skill-category-description {
@@ -245,21 +249,25 @@ html.one-page-scroll-root body.one-page-scroll {
   margin-bottom: 0;
   background: transparent;
   border: none;
-  border-bottom: 1px solid var(--border);
+  border-top: 1px solid var(--border);
   border-radius: 0;
   transition: border-color 0.3s;
 }
 
-.page-panel-experience .experience-list > .cv-item:first-child {
-  border-top: 1px solid var(--border);
+.page-panel-experience .experience-list > .cv-item:last-child {
+  border-bottom: 1px solid var(--border);
 }
 
 .page-panel-experience .cv-item:hover {
-  border-bottom-color: rgba(204, 255, 0, 0.35);
+  border-top-color: rgba(204, 255, 0, 0.35);
 }
 
-.page-panel-experience .experience-list > .cv-item:first-child:hover {
+.page-panel-experience .cv-item:hover + .cv-item {
   border-top-color: rgba(204, 255, 0, 0.35);
+}
+
+.page-panel-experience .experience-list > .cv-item:last-child:hover {
+  border-bottom-color: rgba(204, 255, 0, 0.35);
 }
 
 .page-panel-experience .cv-item-title {
