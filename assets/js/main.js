@@ -77,8 +77,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!target) return false;
 
     if (scrollContainer) {
+      const snapPanel = target.closest('.footer-snap-panel') || target;
       scrollContainer.scrollTo({
-        top: getPanelScrollTop(target),
+        top: getPanelScrollTop(snapPanel),
         behavior: 'smooth'
       });
     } else {
@@ -89,14 +90,34 @@ document.addEventListener('DOMContentLoaded', () => {
     return true;
   };
 
+  const scrollToAnchor = (id) => {
+    const target = document.getElementById(id);
+    if (!target) return false;
+
+    if (scrollContainer) {
+      return scrollToSection(id);
+    }
+
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    history.replaceState(null, '', `#${id}`);
+    return true;
+  };
+
   // Scroll to in-page sections (Landing, Publications, Contact, etc.)
   document.querySelectorAll('[data-scroll-to]').forEach(btn => {
     btn.addEventListener('click', (e) => {
       const sectionId = btn.dataset.scrollTo;
       const onHomePage = isOnePageScroll || window.location.pathname === '/' || window.location.pathname.endsWith('/index.html');
-      if (!onHomePage) return;
 
-      if (scrollToSection(sectionId)) {
+      if (onHomePage) {
+        if (scrollToSection(sectionId)) {
+          e.preventDefault();
+          if (mobileMenu) mobileMenu.classList.remove('open');
+        }
+        return;
+      }
+
+      if (scrollToAnchor(sectionId)) {
         e.preventDefault();
         if (mobileMenu) mobileMenu.classList.remove('open');
       }
@@ -109,7 +130,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (id === 'landing') {
       updateUrlForSection('landing');
     }
-    requestAnimationFrame(() => scrollToSection(id));
+    requestAnimationFrame(() => {
+      if (isOnePageScroll) {
+        scrollToSection(id);
+      } else {
+        scrollToAnchor(id);
+      }
+    });
   };
 
   if (window.location.hash) {

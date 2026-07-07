@@ -1,10 +1,8 @@
 <!-- Footer -->
-<footer class="footer{% if page.layout == 'home' %} footer-one-page footer-snap-panel{% endif %}"{% if page.layout == 'home' %} id="contact"{% endif %}>
-  {% if page.layout == 'home' %}
-  <div class="footer-top-divider" aria-hidden="true"></div>
-  {% endif %}
+<footer class="footer{% if page.layout == 'home' %} footer-one-page footer-snap-panel{% endif %}">
   <div class="footer-content">
-    <div class="footer-contact"{% unless page.layout == 'home' %} id="contact"{% endunless %}>
+    <div class="footer-contact" id="contact">
+      <div class="footer-top-divider" aria-hidden="true"></div>
       <div class="footer-contact-inner">
         <h2 class="footer-heading">Get in <span class="highlight">Touch</span></h2>
 
