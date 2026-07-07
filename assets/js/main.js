@@ -12,6 +12,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const getScrollTop = () => scrollContainer ? scrollContainer.scrollTop : window.scrollY;
 
+  const updateScrollHintVisibility = () => {
+    if (!scrollHint || !isOnePageScroll || !scrollContainer) return;
+    const sections = ['landing', 'about', 'research', 'experience', 'publications', 'explore', 'contact'];
+    const scrollTop = scrollContainer.scrollTop;
+    const viewportMid = scrollTop + scrollContainer.clientHeight * 0.35;
+    let currentId = sections[0];
+
+    sections.forEach(id => {
+      const section = document.getElementById(id);
+      if (!section) return;
+      const panelRect = section.getBoundingClientRect();
+      const containerRect = scrollContainer.getBoundingClientRect();
+      const top = panelRect.top - containerRect.top + scrollContainer.scrollTop;
+      if (top <= viewportMid) currentId = id;
+    });
+
+    const isLast = currentId === sections[sections.length - 1];
+    scrollHint.classList.toggle('hidden', isLast);
+  };
+
   const updateProgressBar = () => {
     if (!progressBar) return;
     const container = scrollContainer || document.documentElement;
@@ -146,7 +166,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const getPanelInner = (panel) => panel?.querySelector('.page-panel-inner');
 
-    const panelContentOverflows = (panel) => panel?.classList.contains('page-panel-tall');
+    const panelContentOverflows = (panel) => {
+      return panel?.classList.contains('page-panel-tall')
+        || panel?.classList.contains('page-panel-experience');
+    };
 
     const markOverflowPanels = () => {
       document.querySelectorAll('.page-panel').forEach(panel => {
@@ -223,13 +246,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     };
 
-    function updateScrollHintVisibility() {
-      if (!scrollHint) return;
-      const current = getCurrentSection();
-      const isLast = current?.id === SECTION_ORDER[SECTION_ORDER.length - 1];
-      scrollHint.classList.toggle('hidden', Boolean(isLast));
-    }
-
     document.querySelectorAll('[data-scroll-direction]').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
@@ -239,6 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     markOverflowPanels();
     window.addEventListener('resize', markOverflowPanels);
+    window.addEventListener('load', markOverflowPanels);
     updateScrollHintVisibility();
     updateProgressBar();
   }
