@@ -1,7 +1,7 @@
 ---
 title: "Beyond the Quantum Promise: A Security Analysis of Classical Control in QKD"
 authors: "Ali Hamza Malik, Raja Hasnain Anwar, Muhammad Taqi Raza"
-venue: "IEEE QEC 2026"
+venue: "2026 IEEE International Conference on Quantum Computing and Engineering"
 year: 2026
 badge: QEC'26
 links:
