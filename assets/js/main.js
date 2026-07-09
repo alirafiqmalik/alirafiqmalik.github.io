@@ -78,10 +78,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (scrollContainer) {
       const snapPanel = target.closest('.footer-snap-panel') || target;
-      scrollContainer.scrollTo({
-        top: getPanelScrollTop(snapPanel),
-        behavior: 'smooth'
-      });
+      const top = getPanelScrollTop(snapPanel);
+
+      scrollContainer.style.scrollSnapType = 'none';
+      scrollContainer.scrollTo({ top, behavior: 'smooth' });
+
+      let restored = false;
+      const restoreSnap = () => {
+        if (restored) return;
+        restored = true;
+        scrollContainer.style.scrollSnapType = '';
+      };
+      scrollContainer.addEventListener('scrollend', restoreSnap, { once: true });
+      setTimeout(restoreSnap, 900);
     } else {
       target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
@@ -193,41 +202,59 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const getPanelInner = (panel) => panel?.querySelector('.page-panel-inner');
 
-    const panelContentOverflows = (panel) => {
-      return panel?.classList.contains('page-panel-tall')
-        || panel?.classList.contains('page-panel-experience');
+    const getPanelAvailableHeight = (panel) => {
+      if (!panel || !scrollContainer) return 0;
+      const styles = getComputedStyle(panel);
+      const paddingY = parseFloat(styles.paddingTop) + parseFloat(styles.paddingBottom);
+      return scrollContainer.clientHeight - paddingY;
     };
 
-    const markOverflowPanels = () => {
-      document.querySelectorAll('.page-panel').forEach(panel => {
-        const inner = getPanelInner(panel);
-        if (!inner) return;
+    const measurePanelContentHeight = (panel) => {
+      const inner = getPanelInner(panel);
+      if (!inner) return 0;
 
-        panel.classList.remove('page-panel-tall');
+      const previous = {
+        overflow: inner.style.overflow,
+        maxHeight: inner.style.maxHeight,
+        height: inner.style.height
+      };
 
-        const availableHeight = inner.clientHeight;
-        const previousOverflow = inner.style.overflow;
-        const previousMaxHeight = inner.style.maxHeight;
-        inner.style.overflow = 'visible';
-        inner.style.maxHeight = 'none';
-        const contentHeight = inner.scrollHeight;
-        inner.style.overflow = previousOverflow;
-        inner.style.maxHeight = previousMaxHeight;
+      inner.style.overflow = 'visible';
+      inner.style.maxHeight = 'none';
+      inner.style.height = 'auto';
+      const height = inner.scrollHeight;
 
-        const overflows = contentHeight > availableHeight + 2;
-        panel.classList.toggle('page-panel-tall', overflows);
-      });
+      inner.style.overflow = previous.overflow;
+      inner.style.maxHeight = previous.maxHeight;
+      inner.style.height = previous.height;
+
+      return height;
+    };
+
+    const panelNeedsInternalScroll = (panel) => {
+      if (!panel || !scrollContainer) return false;
+
+      if (panel.offsetHeight > scrollContainer.clientHeight + 12) {
+        return true;
+      }
+
+      const contentHeight = measurePanelContentHeight(panel);
+      const availableHeight = getPanelAvailableHeight(panel);
+      return contentHeight > availableHeight + 8;
     };
 
     const getCurrentSection = () => {
       const scrollTop = scrollContainer.scrollTop;
-      const viewportMid = scrollTop + scrollContainer.clientHeight * 0.35;
       let current = document.getElementById(SECTION_ORDER[0]);
+      let closestDistance = Infinity;
 
       SECTION_ORDER.forEach(id => {
         const section = document.getElementById(id);
         if (!section) return;
-        if (getPanelScrollTop(section) <= viewportMid) {
+
+        const distance = Math.abs(getPanelScrollTop(section) - scrollTop);
+        if (distance < closestDistance) {
+          closestDistance = distance;
           current = section;
         }
       });
@@ -244,13 +271,18 @@ document.addEventListener('DOMContentLoaded', () => {
       const panelBottom = panelTop + current.offsetHeight;
       const scrollTop = scrollContainer.scrollTop;
       const scrollBottom = scrollTop + scrollContainer.clientHeight;
+      const canScrollInsidePanel = panelNeedsInternalScroll(current);
 
       if (direction === 'down') {
-        if (panelContentOverflows(current) && scrollBottom < panelBottom - 12) {
+        if (canScrollInsidePanel && scrollBottom < panelBottom - 12) {
+          scrollContainer.style.scrollSnapType = 'none';
           scrollContainer.scrollBy({
             top: scrollContainer.clientHeight * 0.85,
             behavior: 'smooth'
           });
+          setTimeout(() => {
+            scrollContainer.style.scrollSnapType = '';
+          }, 900);
           return;
         }
 
@@ -260,11 +292,15 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      if (panelContentOverflows(current) && scrollTop > panelTop + 12) {
+      if (canScrollInsidePanel && scrollTop > panelTop + 12) {
+        scrollContainer.style.scrollSnapType = 'none';
         scrollContainer.scrollBy({
           top: -scrollContainer.clientHeight * 0.85,
           behavior: 'smooth'
         });
+        setTimeout(() => {
+          scrollContainer.style.scrollSnapType = '';
+        }, 900);
         return;
       }
 
@@ -280,9 +316,6 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
 
-    markOverflowPanels();
-    window.addEventListener('resize', markOverflowPanels);
-    window.addEventListener('load', markOverflowPanels);
     updateScrollHintVisibility();
     updateProgressBar();
   }
