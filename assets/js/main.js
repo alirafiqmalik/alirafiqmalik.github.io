@@ -54,6 +54,26 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('scroll', onScroll, { passive: true });
   }
 
+  const syncSnapPanelHeight = () => {
+    if (!scrollContainer) return;
+    const height = scrollContainer.clientHeight;
+    if (height > 0) {
+      document.documentElement.style.setProperty('--snap-panel-height', `${height}px`);
+    }
+  };
+
+  if (scrollContainer) {
+    syncSnapPanelHeight();
+    requestAnimationFrame(syncSnapPanelHeight);
+    window.addEventListener('load', syncSnapPanelHeight);
+    window.addEventListener('resize', syncSnapPanelHeight);
+  }
+
+  const getSnapPanel = (element) => {
+    if (!element) return null;
+    return element.closest('.footer-snap-panel, .page-panel') || element;
+  };
+
   const getPanelScrollTop = (panel) => {
     if (!scrollContainer || !panel) return 0;
     const panelRect = panel.getBoundingClientRect();
@@ -72,25 +92,26 @@ document.addEventListener('DOMContentLoaded', () => {
     history.replaceState(null, '', `#${id}`);
   };
 
-  const scrollToSection = (id) => {
+  const scrollToSection = (id, { smooth = false } = {}) => {
     const target = document.getElementById(id);
     if (!target) return false;
 
+    const panel = getSnapPanel(target);
+
     if (scrollContainer) {
-      const snapPanel = target.closest('.footer-snap-panel') || target;
-      const top = getPanelScrollTop(snapPanel);
-
-      scrollContainer.style.scrollSnapType = 'none';
-      scrollContainer.scrollTo({ top, behavior: 'auto' });
-
-      requestAnimationFrame(() => {
-        scrollContainer.style.scrollSnapType = '';
+      const top = getPanelScrollTop(panel);
+      scrollContainer.scrollTo({
+        top,
+        behavior: smooth ? 'smooth' : 'auto'
       });
     } else {
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      target.scrollIntoView({
+        behavior: smooth ? 'smooth' : 'auto',
+        block: 'start'
+      });
+      updateUrlForSection(id);
     }
 
-    updateUrlForSection(id);
     return true;
   };
 
@@ -114,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const onHomePage = isOnePageScroll || window.location.pathname === '/' || window.location.pathname.endsWith('/index.html');
 
       if (onHomePage) {
-        if (scrollToSection(sectionId)) {
+        if (scrollToSection(sectionId, { smooth: true })) {
           e.preventDefault();
           if (mobileMenu) mobileMenu.classList.remove('open');
         }
@@ -136,7 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     requestAnimationFrame(() => {
       if (isOnePageScroll) {
-        scrollToSection(id);
+        scrollToSection(id, { smooth: false });
       } else {
         scrollToAnchor(id);
       }
@@ -165,10 +186,35 @@ document.addEventListener('DOMContentLoaded', () => {
       return sectionId;
     };
 
+    const panelSectionMap = new Map();
+    let activeSectionId = SECTION_ORDER[0];
+    let isNavigating = false;
+
+    const releaseNavigationLock = () => {
+      isNavigating = false;
+    };
+
+    const lockNavigation = (smooth) => {
+      isNavigating = true;
+      if (smooth) {
+        window.setTimeout(releaseNavigationLock, 700);
+      } else {
+        requestAnimationFrame(() => requestAnimationFrame(releaseNavigationLock));
+      }
+    };
+
+    const setActivePanel = (sectionId) => {
+      activeSectionId = sectionId;
+      panelSectionMap.forEach((id, panel) => {
+        panel.classList.toggle('is-active', id === sectionId);
+      });
+    };
+
     const setActiveSection = (sectionId) => {
       document.querySelectorAll('[data-nav-section]').forEach(link => {
         link.classList.toggle('active', link.dataset.navSection === sectionNavMap[sectionId]);
       });
+      setActivePanel(sectionId);
     };
 
     const syncHashToSection = (sectionId) => {
@@ -176,95 +222,81 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const sectionObserver = new IntersectionObserver((entries) => {
-      const visible = entries
-        .filter(entry => entry.isIntersecting)
-        .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-
-      if (!visible.length) return;
-      const sectionId = visible[0].target.id;
-      setActiveSection(sectionId);
-      syncHashToSection(sectionId);
-      updateScrollHintVisibility();
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting || entry.intersectionRatio < 0.6) return;
+        const sectionId = panelSectionMap.get(entry.target);
+        if (!sectionId) return;
+        setActiveSection(sectionId);
+        syncHashToSection(sectionId);
+        updateScrollHintVisibility();
+      });
     }, {
       root: scrollContainer,
-      threshold: [0.6, 0.75, 0.9]
+      threshold: 0.6
     });
 
     SECTION_ORDER.forEach(id => {
-      const section = document.getElementById(id);
-      if (section) sectionObserver.observe(section);
+      const element = document.getElementById(id);
+      const panel = getSnapPanel(element);
+      if (panel) {
+        panelSectionMap.set(panel, id);
+        sectionObserver.observe(panel);
+      }
     });
 
     const panelNeedsInternalScroll = (panel) => {
       if (!panel || !scrollContainer) return false;
-      // Only panels physically taller than one viewport need in-panel scrolling.
-      // Fixed-height panels like About always advance to the next section.
       return panel.offsetHeight > scrollContainer.clientHeight + 12;
     };
 
-    const getCurrentSection = () => {
-      const scrollTop = scrollContainer.scrollTop;
-      let current = document.getElementById(SECTION_ORDER[0]);
-      let closestDistance = Infinity;
-
-      SECTION_ORDER.forEach(id => {
-        const section = document.getElementById(id);
-        if (!section) return;
-
-        const distance = Math.abs(getPanelScrollTop(section) - scrollTop);
-        if (distance < closestDistance) {
-          closestDistance = distance;
-          current = section;
-        }
-      });
-
-      return current;
+    const scrollWithinPanel = (panel, delta) => {
+      scrollContainer.style.scrollSnapType = 'none';
+      scrollContainer.scrollBy({ top: delta, behavior: 'smooth' });
+      window.setTimeout(() => {
+        scrollContainer.style.scrollSnapType = '';
+      }, 900);
     };
 
     const handlePanelScroll = (direction) => {
-      const current = getCurrentSection();
-      if (!current) return;
+      if (isNavigating) return;
 
-      const currentIndex = SECTION_ORDER.indexOf(current.id);
-      const panelTop = getPanelScrollTop(current);
-      const panelBottom = panelTop + current.offsetHeight;
+      const currentId = activeSectionId;
+      const currentIndex = SECTION_ORDER.indexOf(currentId);
+      if (currentIndex === -1) return;
+
+      const element = document.getElementById(currentId);
+      const panel = getSnapPanel(element);
+      if (!panel) return;
+
+      const panelTop = getPanelScrollTop(panel);
+      const panelBottom = panelTop + panel.offsetHeight;
       const scrollTop = scrollContainer.scrollTop;
       const scrollBottom = scrollTop + scrollContainer.clientHeight;
-      const canScrollInsidePanel = panelNeedsInternalScroll(current);
+      const canScrollInsidePanel = panelNeedsInternalScroll(panel);
 
       if (direction === 'down') {
         if (canScrollInsidePanel && scrollBottom < panelBottom - 12) {
-          scrollContainer.style.scrollSnapType = 'none';
-          scrollContainer.scrollBy({
-            top: scrollContainer.clientHeight * 0.85,
-            behavior: 'smooth'
-          });
-          setTimeout(() => {
-            scrollContainer.style.scrollSnapType = '';
-          }, 900);
+          lockNavigation(true);
+          scrollWithinPanel(panel, scrollContainer.clientHeight * 0.85);
           return;
         }
 
         if (currentIndex < SECTION_ORDER.length - 1) {
-          scrollToSection(SECTION_ORDER[currentIndex + 1]);
+          lockNavigation(false);
+          scrollToSection(SECTION_ORDER[currentIndex + 1], { smooth: false });
         }
         return;
       }
 
       if (canScrollInsidePanel && scrollTop > panelTop + 12) {
-        scrollContainer.style.scrollSnapType = 'none';
-        scrollContainer.scrollBy({
-          top: -scrollContainer.clientHeight * 0.85,
-          behavior: 'smooth'
-        });
-        setTimeout(() => {
-          scrollContainer.style.scrollSnapType = '';
-        }, 900);
+        lockNavigation(true);
+        scrollWithinPanel(panel, -scrollContainer.clientHeight * 0.85);
         return;
       }
 
       if (currentIndex > 0) {
-        scrollToSection(SECTION_ORDER[currentIndex - 1]);
+        lockNavigation(false);
+        scrollToSection(SECTION_ORDER[currentIndex - 1], { smooth: false });
       }
     };
 
@@ -275,8 +307,40 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
 
+    const isTypingTarget = (target) => {
+      if (!target) return false;
+      const tag = target.tagName;
+      return tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || target.isContentEditable;
+    };
+
+    const handleSectionKeydown = (e) => {
+      if (isTypingTarget(e.target)) return;
+      if (e.target.closest('button, a')) return;
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      if (mobileMenu?.classList.contains('open')) return;
+
+      const directionByKey = {
+        ArrowDown: 'down',
+        ArrowUp: 'up',
+        PageDown: 'down',
+        PageUp: 'up',
+        ' ': 'down'
+      };
+
+      const direction = directionByKey[e.key];
+      if (!direction) return;
+
+      e.preventDefault();
+      handlePanelScroll(direction);
+    };
+
+    document.addEventListener('keydown', handleSectionKeydown);
+    scrollContainer.focus({ preventScroll: true });
+
     updateScrollHintVisibility();
     updateProgressBar();
+    syncSnapPanelHeight();
+    setActiveSection(activeSectionId);
   }
 
   // More dropdown toggle
