@@ -17,6 +17,7 @@
   --text-secondary: #A0A0A0;
   --radius: 0.5rem;
   --radius-lg: 0.75rem;
+  --snap-panel-height: 100dvh;
 }
 
 html {
@@ -100,13 +101,12 @@ html.one-page-scroll-root body.one-page-scroll {
 }
 
 .site-wrapper-scroll {
-  height: 100vh;
+  height: var(--snap-panel-height);
   overflow: hidden;
 }
 
 .page-scroll-container {
-  height: 100vh;
-  height: 100dvh;
+  height: var(--snap-panel-height);
   overflow-y: auto;
   overflow-x: hidden;
   scroll-snap-type: y mandatory;
@@ -120,12 +120,9 @@ html.one-page-scroll-root body.one-page-scroll {
 }
 
 .page-panel {
-  height: 100vh;
-  height: 100dvh;
-  min-height: 100vh;
-  min-height: 100dvh;
-  max-height: 100vh;
-  max-height: 100dvh;
+  height: var(--snap-panel-height);
+  min-height: var(--snap-panel-height);
+  max-height: var(--snap-panel-height);
   scroll-snap-align: start;
   scroll-snap-stop: always;
   display: flex;
@@ -138,25 +135,10 @@ html.one-page-scroll-root body.one-page-scroll {
   flex-shrink: 0;
 }
 
-.page-panel-tall {
-  height: auto;
-  min-height: 100vh;
-  min-height: 100dvh;
-  max-height: none;
-  scroll-snap-stop: normal;
-  overflow: visible;
-}
-
-.page-panel-tall .page-panel-inner {
-  overflow: visible;
-  justify-content: flex-start;
-  padding-top: 0.5rem;
-  padding-bottom: 2rem;
-}
-
 .page-panel-inner {
   width: 100%;
-  flex: 1;
+  flex: 1 1 auto;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -181,18 +163,48 @@ html.one-page-scroll-root body.one-page-scroll {
   font-size: 1rem;
 }
 
-.page-panel-about .about-grid {
+.page-panel-about .page-panel-inner {
+  justify-content: center;
+}
+
+.page-panel-about .about-panel {
+  width: 100%;
+  min-height: 0;
+  max-height: 100%;
+  display: flex;
   align-items: center;
 }
 
+.page-panel-about .about-grid {
+  align-items: center;
+  width: 100%;
+  min-height: 0;
+  max-height: 100%;
+  gap: clamp(1rem, 2.5vh, 2rem);
+}
+
+.page-panel-about .about-text {
+  min-height: 0;
+}
+
+.page-panel-about .about-text h2 {
+  font-size: clamp(1.5rem, 3vw, 1.875rem);
+  margin-bottom: clamp(0.75rem, 2vh, 1.25rem);
+}
+
 .page-panel-about .about-text p {
-  font-size: 0.9375rem;
-  line-height: 1.65;
+  font-size: clamp(0.8125rem, 1.4vw, 0.9375rem);
+  line-height: 1.55;
+  margin-bottom: clamp(0.5rem, 1.5vh, 0.875rem);
+}
+
+.page-panel-about .about-text p:last-child {
+  margin-bottom: 0;
 }
 
 .page-panel-about .about-portrait img,
 .page-panel-about .about-placeholder {
-  max-height: min(52vh, 22rem);
+  max-height: min(40dvh, 20rem);
   width: auto;
   object-fit: cover;
 }
@@ -264,7 +276,7 @@ html.one-page-scroll-root body.one-page-scroll {
 
 .page-panel-experience {
   height: auto;
-  min-height: 100dvh;
+  min-height: var(--snap-panel-height);
   max-height: none;
   scroll-snap-stop: normal;
   overflow: visible;
@@ -353,12 +365,9 @@ html.one-page-scroll-root body.one-page-scroll {
 }
 
 .footer-snap-panel {
-  height: 100vh;
-  height: 100dvh;
-  min-height: 100vh;
-  min-height: 100dvh;
-  max-height: 100vh;
-  max-height: 100dvh;
+  height: var(--snap-panel-height);
+  min-height: var(--snap-panel-height);
+  max-height: var(--snap-panel-height);
   scroll-snap-align: start;
   scroll-snap-stop: always;
   display: flex;
