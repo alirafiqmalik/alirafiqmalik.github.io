@@ -81,16 +81,11 @@ document.addEventListener('DOMContentLoaded', () => {
       const top = getPanelScrollTop(snapPanel);
 
       scrollContainer.style.scrollSnapType = 'none';
-      scrollContainer.scrollTo({ top, behavior: 'smooth' });
+      scrollContainer.scrollTo({ top, behavior: 'auto' });
 
-      let restored = false;
-      const restoreSnap = () => {
-        if (restored) return;
-        restored = true;
+      requestAnimationFrame(() => {
         scrollContainer.style.scrollSnapType = '';
-      };
-      scrollContainer.addEventListener('scrollend', restoreSnap, { once: true });
-      setTimeout(restoreSnap, 900);
+      });
     } else {
       target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
@@ -200,47 +195,11 @@ document.addEventListener('DOMContentLoaded', () => {
       if (section) sectionObserver.observe(section);
     });
 
-    const getPanelInner = (panel) => panel?.querySelector('.page-panel-inner');
-
-    const getPanelAvailableHeight = (panel) => {
-      if (!panel || !scrollContainer) return 0;
-      const styles = getComputedStyle(panel);
-      const paddingY = parseFloat(styles.paddingTop) + parseFloat(styles.paddingBottom);
-      return scrollContainer.clientHeight - paddingY;
-    };
-
-    const measurePanelContentHeight = (panel) => {
-      const inner = getPanelInner(panel);
-      if (!inner) return 0;
-
-      const previous = {
-        overflow: inner.style.overflow,
-        maxHeight: inner.style.maxHeight,
-        height: inner.style.height
-      };
-
-      inner.style.overflow = 'visible';
-      inner.style.maxHeight = 'none';
-      inner.style.height = 'auto';
-      const height = inner.scrollHeight;
-
-      inner.style.overflow = previous.overflow;
-      inner.style.maxHeight = previous.maxHeight;
-      inner.style.height = previous.height;
-
-      return height;
-    };
-
     const panelNeedsInternalScroll = (panel) => {
       if (!panel || !scrollContainer) return false;
-
-      if (panel.offsetHeight > scrollContainer.clientHeight + 12) {
-        return true;
-      }
-
-      const contentHeight = measurePanelContentHeight(panel);
-      const availableHeight = getPanelAvailableHeight(panel);
-      return contentHeight > availableHeight + 8;
+      // Only panels physically taller than one viewport need in-panel scrolling.
+      // Fixed-height panels like About always advance to the next section.
+      return panel.offsetHeight > scrollContainer.clientHeight + 12;
     };
 
     const getCurrentSection = () => {
