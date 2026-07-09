@@ -78,14 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (scrollContainer) {
       const snapPanel = target.closest('.footer-snap-panel') || target;
-      const top = getPanelScrollTop(snapPanel);
-
-      scrollContainer.style.scrollSnapType = 'none';
-      scrollContainer.scrollTo({ top, behavior: 'auto' });
-
-      requestAnimationFrame(() => {
-        scrollContainer.style.scrollSnapType = '';
-      });
+      scrollContainer.scrollTop = getPanelScrollTop(snapPanel);
     } else {
       target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
@@ -195,25 +188,17 @@ document.addEventListener('DOMContentLoaded', () => {
       if (section) sectionObserver.observe(section);
     });
 
-    const panelNeedsInternalScroll = (panel) => {
-      if (!panel || !scrollContainer) return false;
-      // Only panels physically taller than one viewport need in-panel scrolling.
-      // Fixed-height panels like About always advance to the next section.
-      return panel.offsetHeight > scrollContainer.clientHeight + 12;
-    };
-
     const getCurrentSection = () => {
       const scrollTop = scrollContainer.scrollTop;
+      const viewportMid = scrollTop + scrollContainer.clientHeight * 0.5;
       let current = document.getElementById(SECTION_ORDER[0]);
-      let closestDistance = Infinity;
 
       SECTION_ORDER.forEach(id => {
         const section = document.getElementById(id);
         if (!section) return;
-
-        const distance = Math.abs(getPanelScrollTop(section) - scrollTop);
-        if (distance < closestDistance) {
-          closestDistance = distance;
+        const sectionTop = getPanelScrollTop(section);
+        const sectionBottom = sectionTop + section.offsetHeight;
+        if (viewportMid >= sectionTop && viewportMid < sectionBottom) {
           current = section;
         }
       });
@@ -226,40 +211,11 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!current) return;
 
       const currentIndex = SECTION_ORDER.indexOf(current.id);
-      const panelTop = getPanelScrollTop(current);
-      const panelBottom = panelTop + current.offsetHeight;
-      const scrollTop = scrollContainer.scrollTop;
-      const scrollBottom = scrollTop + scrollContainer.clientHeight;
-      const canScrollInsidePanel = panelNeedsInternalScroll(current);
 
       if (direction === 'down') {
-        if (canScrollInsidePanel && scrollBottom < panelBottom - 12) {
-          scrollContainer.style.scrollSnapType = 'none';
-          scrollContainer.scrollBy({
-            top: scrollContainer.clientHeight * 0.85,
-            behavior: 'smooth'
-          });
-          setTimeout(() => {
-            scrollContainer.style.scrollSnapType = '';
-          }, 900);
-          return;
-        }
-
         if (currentIndex < SECTION_ORDER.length - 1) {
           scrollToSection(SECTION_ORDER[currentIndex + 1]);
         }
-        return;
-      }
-
-      if (canScrollInsidePanel && scrollTop > panelTop + 12) {
-        scrollContainer.style.scrollSnapType = 'none';
-        scrollContainer.scrollBy({
-          top: -scrollContainer.clientHeight * 0.85,
-          behavior: 'smooth'
-        });
-        setTimeout(() => {
-          scrollContainer.style.scrollSnapType = '';
-        }, 900);
         return;
       }
 

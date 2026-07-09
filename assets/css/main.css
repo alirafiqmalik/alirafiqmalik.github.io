@@ -109,13 +109,13 @@ html.one-page-scroll-root body.one-page-scroll {
   height: var(--snap-panel-height);
   overflow-y: auto;
   overflow-x: hidden;
-  scroll-snap-type: y mandatory;
-  scroll-behavior: smooth;
+  scroll-snap-type: none;
+  scroll-behavior: auto;
   overscroll-behavior-y: contain;
   -webkit-overflow-scrolling: touch;
 }
 
-.main-content-scroll {
+.main-content.main-content-scroll {
   padding-top: 0;
 }
 
@@ -123,8 +123,6 @@ html.one-page-scroll-root body.one-page-scroll {
   height: var(--snap-panel-height);
   min-height: var(--snap-panel-height);
   max-height: var(--snap-panel-height);
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -163,16 +161,34 @@ html.one-page-scroll-root body.one-page-scroll {
   font-size: 1rem;
 }
 
+.page-panel-about {
+  justify-content: center;
+  padding-bottom: 5rem;
+}
+
 .page-panel-about .page-panel-inner {
+  flex: 0 1 auto;
+  height: auto;
+  max-height: calc(var(--snap-panel-height) - 6.5rem);
   justify-content: center;
 }
 
 .page-panel-about .about-panel {
   width: 100%;
-  min-height: 0;
-  max-height: 100%;
   display: flex;
   align-items: center;
+  justify-content: center;
+}
+
+.page-panel-about .about-panel.animate-on-scroll {
+  opacity: 0;
+  transform: none;
+  transition: opacity 0.6s ease;
+}
+
+.page-panel-about .about-panel.animate-on-scroll.visible {
+  opacity: 1;
+  transform: none;
 }
 
 .page-panel-about .about-grid {
@@ -368,8 +384,6 @@ html.one-page-scroll-root body.one-page-scroll {
   height: var(--snap-panel-height);
   min-height: var(--snap-panel-height);
   max-height: var(--snap-panel-height);
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
