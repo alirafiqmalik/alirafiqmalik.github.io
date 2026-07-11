@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Source+Sans+3:wght@300;400;500;600;700;800&display=swap');
 
 /* === RESET & BASE === */
 *, *::before, *::after {
@@ -8,17 +8,25 @@
 }
 
 :root {
-  --bg: #111111;
-  --bg-card: #1A1A1A;
-  --border: #333333;
-  --accent: #CCFF00;
-  --accent-dim: rgba(204, 255, 0, 0.1);
-  --text-primary: #F5F5F5;
-  --text-secondary: #A0A0A0;
+  /* Astro Haze–inspired dark palette, lime accent retained */
+  --bg: #101318;
+  --bg-card: #181e28;
+  --nav-bg: #0b0f14;
+  --border: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.16);
+  --accent: #ccff00;
+  --accent-text: #d8ff4a;
+  --accent-dim: rgba(204, 255, 0, 0.12);
+  --text-primary: #f0f1f5;
+  --text-secondary: #98a1b3;
+  --text-inverse: #14181f;
   --radius: 0.5rem;
   --radius-lg: 0.75rem;
   --snap-panel-height: 100dvh;
-  /* Astro Haze–inspired aurora, tuned to the site lime accent */
+  --font-sans: 'Source Sans 3', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-mono: ui-monospace, 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', monospace;
+  /* Aurora layers tuned to lime/mint */
   --aurora-1: #d4ff1a;
   --aurora-2: #3dffb0;
   --aurora-3: #a8ff2e;
@@ -36,12 +44,13 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
 }
 
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-sans);
   background-color: var(--bg);
   color: var(--text-primary);
-  line-height: 1.6;
+  line-height: 1.65;
   overflow-x: hidden;
   position: relative;
+  letter-spacing: 0.01em;
 }
 
 /* === AURORA / HAZE BACKGROUND (Astro Haze–inspired) === */
@@ -50,7 +59,7 @@ body {
   pointer-events: none;
   width: 100%;
   height: 100%;
-  opacity: var(--opacity, 0.7);
+  opacity: var(--opacity, 0.58);
   position: fixed;
   top: 0;
   left: 0;
@@ -567,13 +576,14 @@ body.one-page-scroll .main-content.main-content-scroll {
   left: 0;
   right: 0;
   z-index: 50;
-  transition: all 0.3s ease;
+  background-color: var(--nav-bg);
+  border-bottom: 1px solid var(--border);
+  transition: box-shadow 0.3s ease;
 }
 
 .nav.scrolled {
-  background-color: rgba(17, 17, 17, 0.95);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--border);
+  background-color: var(--nav-bg);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
 }
 
 .nav-progress-container {
@@ -581,8 +591,8 @@ body.one-page-scroll .main-content.main-content-scroll {
   left: 0;
   right: 0;
   bottom: 0;
-  height: 3px;
-  background: rgba(51, 51, 51, 0.6);
+  height: 2px;
+  background: rgba(255, 255, 255, 0.06);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s ease;
@@ -610,11 +620,10 @@ body.one-page-scroll .main-content.main-content-scroll {
   justify-content: center;
   width: 2.75rem;
   height: 2.75rem;
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-strong);
   border-radius: 999px;
   color: var(--text-secondary);
-  background: rgba(17, 17, 17, 0.85);
-  backdrop-filter: blur(8px);
+  background: var(--nav-bg);
   transition: color 0.3s, border-color 0.3s, opacity 0.3s, visibility 0.3s;
   animation: panel-scroll-hint-bounce 2s ease-in-out infinite;
 }
@@ -647,15 +656,16 @@ body.one-page-scroll .main-content.main-content-scroll {
 }
 
 .nav-logo {
-  font-size: 1.25rem;
-  font-weight: 700;
-  letter-spacing: -0.025em;
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 600;
+  letter-spacing: -0.03em;
   color: var(--text-primary);
   transition: color 0.3s;
 }
 
 .nav-logo:hover {
-  color: var(--accent);
+  color: var(--accent-text);
 }
 
 .nav-logo .dot {
@@ -669,7 +679,7 @@ body.one-page-scroll .main-content.main-content-scroll {
 }
 
 .nav-link {
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
   font-weight: 500;
   color: var(--text-secondary);
   transition: color 0.3s;
@@ -687,15 +697,16 @@ body.one-page-scroll .main-content.main-content-scroll {
 .nav-cta {
   padding: 0.625rem 1.5rem;
   background-color: var(--accent);
-  color: black;
-  border-radius: 4px;
+  color: var(--text-inverse);
+  border-radius: var(--radius);
   font-weight: 600;
   font-size: 0.875rem;
-  transition: filter 0.2s;
+  transition: filter 0.2s, box-shadow 0.2s;
 }
 
 .nav-cta:hover {
-  filter: brightness(1.1);
+  filter: brightness(1.08);
+  box-shadow: 0 4px 18px rgba(204, 255, 0, 0.25);
 }
 
 .nav-dropdown {
@@ -723,10 +734,10 @@ body.one-page-scroll .main-content.main-content-scroll {
   right: 0;
   min-width: 10rem;
   padding: 0.5rem;
-  background: rgba(26, 26, 26, 0.98);
-  border: 1px solid var(--border);
+  background: var(--nav-bg);
+  border: 1px solid var(--border-strong);
   border-radius: var(--radius);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
   opacity: 0;
   visibility: hidden;
   transform: translateY(-0.5rem);
@@ -787,10 +798,10 @@ body.one-page-scroll .main-content.main-content-scroll {
   right: calc(100% + 0.5rem);
   min-width: 9rem;
   padding: 0.5rem;
-  background: rgba(26, 26, 26, 0.98);
-  border: 1px solid var(--border);
+  background: var(--nav-bg);
+  border: 1px solid var(--border-strong);
   border-radius: var(--radius);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
   opacity: 0;
   visibility: hidden;
   transform: translateX(0.5rem);
@@ -849,8 +860,7 @@ body.one-page-scroll .main-content.main-content-scroll {
   top: 5rem;
   left: 0;
   right: 0;
-  background: rgba(17, 17, 17, 0.98);
-  backdrop-filter: blur(20px);
+  background: var(--nav-bg);
   border-bottom: 1px solid var(--border);
   padding: 1.5rem;
   z-index: 49;
@@ -876,7 +886,7 @@ body.one-page-scroll .main-content.main-content-scroll {
 }
 
 .highlight {
-  color: var(--accent);
+  color: var(--accent-text);
 }
 
 /* === LANDING HERO === */
@@ -903,7 +913,7 @@ body.one-page-scroll .main-content.main-content-scroll {
 }
 
 .landing-name {
-  font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  font-family: var(--font-display);
   font-size: clamp(3rem, 10vw, 6.5rem);
   font-weight: 400;
   line-height: 1.05;
@@ -914,14 +924,14 @@ body.one-page-scroll .main-content.main-content-scroll {
 }
 
 .landing-tagline {
-  font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  font-family: var(--font-display);
   font-size: clamp(1.5rem, 5vw, 3.25rem);
   font-weight: 400;
   line-height: 1.1;
   letter-spacing: -0.02em;
   margin: 0;
   text-align: center;
-  color: var(--accent);
+  color: var(--accent-text);
 }
 
 .landing-bio {
@@ -1028,7 +1038,7 @@ body.one-page-scroll .main-content.main-content-scroll {
 .hero-bg {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 50% 30%, #1A1A1A 0%, #111111 70%);
+  background: radial-gradient(circle at 50% 30%, var(--bg-card) 0%, var(--bg) 70%);
 }
 
 .hero-content {
@@ -1117,7 +1127,7 @@ body.one-page-scroll .main-content.main-content-scroll {
   gap: 0.5rem;
   padding: 0.875rem 2rem;
   background-color: var(--accent);
-  color: black;
+  color: var(--text-inverse);
   border-radius: 4px;
   font-weight: 700;
   font-size: 1rem;
@@ -1254,13 +1264,16 @@ body.one-page-scroll .main-content.main-content-scroll {
 }
 
 .section-title-row h2 {
-  font-size: 1.5rem;
-  font-weight: 700;
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
 }
 
 .section-title-link {
   font-size: 0.875rem;
-  color: var(--accent);
+  color: var(--accent-text);
   font-weight: 500;
   transition: gap 0.3s;
   display: inline-flex;
@@ -1463,11 +1476,13 @@ body.one-page-scroll .main-content.main-content-scroll {
 }
 
 .publications-showcase-title {
+  font-family: var(--font-display);
   font-size: clamp(2rem, 5vw, 2.75rem);
-  font-weight: 700;
+  font-weight: 600;
   text-transform: lowercase;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
   margin-bottom: 0.35rem;
+  color: var(--text-primary);
 }
 
 .publications-showcase-subtitle {
@@ -1673,9 +1688,12 @@ body.one-page-scroll .main-content.main-content-scroll {
 }
 
 .page-hero h1 {
+  font-family: var(--font-display);
   font-size: clamp(2rem, 5vw, 3.5rem);
-  font-weight: 700;
+  font-weight: 600;
+  letter-spacing: -0.03em;
   margin-bottom: 1rem;
+  color: var(--text-primary);
 }
 
 .page-hero .subtitle {
@@ -1862,7 +1880,7 @@ body.one-page-scroll .main-content.main-content-scroll {
 .category-pill.active {
   border-color: var(--accent);
   background-color: var(--accent);
-  color: black;
+  color: var(--text-inverse);
   font-weight: 600;
 }
 
@@ -1919,7 +1937,7 @@ body.one-page-scroll .main-content.main-content-scroll {
   right: 0.75rem;
   padding: 0.25rem 0.75rem;
   background: var(--accent);
-  color: black;
+  color: var(--text-inverse);
   font-size: 0.75rem;
   font-weight: 600;
   border-radius: 999px;
@@ -2394,9 +2412,12 @@ body.one-page-scroll .main-content.main-content-scroll {
 }
 
 .post-title {
+  font-family: var(--font-display);
   font-size: clamp(2rem, 4vw, 2.5rem);
-  font-weight: 700;
+  font-weight: 600;
+  letter-spacing: -0.03em;
   margin-bottom: 1rem;
+  color: var(--text-primary);
 }
 
 .post-meta {
@@ -2714,7 +2735,7 @@ body.one-page-scroll .main-content.main-content-scroll {
   gap: 0.5rem;
   padding: 0.75rem 1.5rem;
   background: var(--accent);
-  color: black;
+  color: var(--text-inverse);
   border-radius: 4px;
   font-weight: 700;
   font-size: 0.875rem;
