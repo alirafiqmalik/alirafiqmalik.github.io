@@ -142,6 +142,25 @@ html.has-smooth-scroll-nested .page-panel-experience {
   scroll-snap-stop: normal;
 }
 
+/* Sticky pin sequence: Research holds while scroll continues (works with Lenis) */
+html.has-smooth-scroll-nested .page-panel-research {
+  height: auto;
+  min-height: calc(var(--snap-panel-height) * 1.55);
+  max-height: none;
+  overflow: visible;
+  justify-content: flex-start;
+  padding-bottom: 4rem;
+}
+
+html.has-smooth-scroll-nested .page-panel-research .page-panel-inner {
+  position: sticky;
+  top: 5rem;
+  height: calc(var(--snap-panel-height) - 6.5rem);
+  max-height: calc(var(--snap-panel-height) - 6.5rem);
+  overflow: hidden;
+  justify-content: center;
+}
+
 .page-scroll-container::-webkit-scrollbar {
   display: none;
 }

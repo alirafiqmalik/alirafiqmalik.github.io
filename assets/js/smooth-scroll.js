@@ -238,33 +238,23 @@
     const categories = gsap.utils.toArray('.page-panel-research .skill-category');
     if (!section || !categories.length) return;
 
-    // Reveal on enter (safe), then scrub horizontal depth while in view
-    gsap.from(categories, {
-      opacity: 0,
-      x: -36,
-      duration: 0.7,
-      stagger: 0.1,
-      ease: 'power2.out',
-      immediateRender: false,
-      scrollTrigger: {
-        trigger: section,
-        start: 'top 75%',
-        toggleActions: 'play none none reverse'
-      }
-    });
-
+    // Scrub while the sticky-pinned research panel is held
     categories.forEach((cat, i) => {
-      const dir = i % 2 === 0 ? 1 : -1;
-      gsap.to(cat, {
-        x: dir * 20,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: section,
-          start: 'top bottom',
-          end: 'bottom top',
-          scrub: true
+      gsap.fromTo(
+        cat,
+        { opacity: 0.25, x: i % 2 === 0 ? -32 : 32 },
+        {
+          opacity: 1,
+          x: 0,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: section,
+            start: 'top 80%',
+            end: 'bottom bottom',
+            scrub: 0.75
+          }
         }
-      });
+      );
     });
   }
 
