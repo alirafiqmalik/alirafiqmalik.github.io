@@ -30,8 +30,6 @@
     document.documentElement.classList.add('has-smooth-scroll-nested');
   }
 
-  const scroller = isOnePageScroll ? scrollContainer : window;
-
   // --- Lenis ---
   const lenisOptions = {
     lerp: 0.09,
@@ -55,27 +53,11 @@
   window.__siteScroll.lenis = lenis;
   window.__lenis = lenis;
 
+  // Lenis writes real scrollTop on the wrapper — ScrollTrigger can read it directly.
+  // Keep ST in sync on every Lenis frame; avoid scrollerProxy (it broke nested pin/scrub).
   lenis.on('scroll', ScrollTrigger.update);
 
   if (isOnePageScroll) {
-    ScrollTrigger.scrollerProxy(scrollContainer, {
-      scrollTop(value) {
-        if (arguments.length) {
-          lenis.scrollTo(value, { immediate: true });
-        }
-        return lenis.scroll;
-      },
-      getBoundingClientRect() {
-        return {
-          top: 0,
-          left: 0,
-          width: window.innerWidth,
-          height: window.innerHeight
-        };
-      },
-      pinType: scrollContainer.style.transform ? 'transform' : 'fixed'
-    });
-
     ScrollTrigger.defaults({ scroller: scrollContainer });
   }
 
@@ -118,7 +100,6 @@
     return () => lenis.off('scroll', callback);
   };
 
-  // Keep ScrollTrigger measurements correct after fonts/images settle
   window.addEventListener('load', () => {
     ScrollTrigger.refresh();
     lenis.resize();
@@ -132,12 +113,14 @@
     setupSectionReveals();
     setupParallax();
     setupResearchScrub();
-    setupExperiencePin();
+    setupExperienceMotion();
     setupExploreDrift();
     setupHeadingTypography();
     setupPublicationsScrub();
     setupSocialBob();
     setupFooterMotion();
+
+    requestAnimationFrame(() => ScrollTrigger.refresh());
 
     return () => {
       ScrollTrigger.getAll().forEach((t) => t.kill());
@@ -152,7 +135,6 @@
     const landing = document.getElementById('landing');
     if (!landing || !name) return;
 
-    // Entrance without pre-hiding (avoids FOUC with deferred scripts)
     gsap.from([name, tagline, bio, footerRow].filter(Boolean), {
       y: 28,
       autoAlpha: 0,
@@ -163,11 +145,11 @@
       clearProps: 'transform'
     });
 
-    // Scrub: name scales / fades as you leave the hero
+    // Scrub tied to scroll progress (reverses when scrolling up)
     gsap.to(name, {
       yPercent: -18,
       scale: 0.92,
-      opacity: 0.35,
+      opacity: 0.45,
       ease: 'none',
       scrollTrigger: {
         trigger: landing,
@@ -179,8 +161,8 @@
 
     if (tagline) {
       gsap.to(tagline, {
-        yPercent: -40,
-        opacity: 0,
+        yPercent: -36,
+        opacity: 0.15,
         ease: 'none',
         scrollTrigger: {
           trigger: landing,
@@ -201,16 +183,17 @@
 
     document.querySelectorAll('.animate-on-scroll').forEach((el) => {
       if (skip.has(el)) return;
-      gsap.set(el, { opacity: 0, y: 28 });
-      gsap.to(el, {
-        opacity: 1,
-        y: 0,
-        ease: 'none',
+      // Play/reverse on enter — content always reaches full opacity
+      gsap.from(el, {
+        opacity: 0,
+        y: 28,
+        duration: 0.75,
+        ease: 'power2.out',
+        immediateRender: false,
         scrollTrigger: {
           trigger: el,
           start: 'top 88%',
-          end: 'top 55%',
-          scrub: 0.7
+          toggleActions: 'play none none reverse'
         }
       });
     });
@@ -221,9 +204,9 @@
     if (portrait) {
       gsap.fromTo(
         portrait,
-        { yPercent: 12 },
+        { yPercent: 10 },
         {
-          yPercent: -12,
+          yPercent: -10,
           ease: 'none',
           scrollTrigger: {
             trigger: '#about',
@@ -253,36 +236,39 @@
   function setupResearchScrub() {
     const section = document.getElementById('research');
     const categories = gsap.utils.toArray('.page-panel-research .skill-category');
-    const inner = section?.querySelector('.page-panel-inner');
     if (!section || !categories.length) return;
 
-    gsap.set(categories, { opacity: 0.25, x: -24 });
-
-    const canPin = isOnePageScroll && inner && categories.length >= 2;
-    if (canPin) {
-      section.classList.add('page-panel-pin-sequence');
-    }
-
-    gsap.to(categories, {
-      opacity: 1,
-      x: 0,
-      ease: 'none',
-      stagger: 0.12,
+    // Reveal on enter (safe), then scrub horizontal depth while in view
+    gsap.from(categories, {
+      opacity: 0,
+      x: -36,
+      duration: 0.7,
+      stagger: 0.1,
+      ease: 'power2.out',
+      immediateRender: false,
       scrollTrigger: {
         trigger: section,
-        start: canPin ? 'top top' : 'top 75%',
-        end: canPin
-          ? () => `+=${Math.round(scrollContainer.clientHeight * 0.85)}`
-          : 'center 40%',
-        scrub: 0.8,
-        pin: canPin ? inner : false,
-        pinSpacing: canPin,
-        anticipatePin: canPin ? 1 : 0
+        start: 'top 75%',
+        toggleActions: 'play none none reverse'
       }
+    });
+
+    categories.forEach((cat, i) => {
+      const dir = i % 2 === 0 ? 1 : -1;
+      gsap.to(cat, {
+        x: dir * 20,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: section,
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: true
+        }
+      });
     });
   }
 
-  function setupExperiencePin() {
+  function setupExperienceMotion() {
     const section = document.getElementById('experience');
     const list = section?.querySelector('.experience-list');
     if (!section || !list) return;
@@ -290,22 +276,35 @@
     const items = gsap.utils.toArray(list.querySelectorAll('.cv-item'));
     if (!items.length) return;
 
-    gsap.set(items, { opacity: 0.2, y: 40 });
-
-    gsap.to(items, {
-      opacity: 1,
-      y: 0,
-      ease: 'none',
-      stagger: 0.15,
+    gsap.from(items, {
+      opacity: 0,
+      y: 36,
+      duration: 0.7,
+      stagger: 0.12,
+      ease: 'power2.out',
+      immediateRender: false,
       scrollTrigger: {
         trigger: section,
         start: 'top 70%',
-        end: 'bottom 55%',
-        scrub: 0.9
+        toggleActions: 'play none none reverse'
       }
     });
 
-    // Pinning is unreliable inside a nested Lenis wrapper; use document scroll only
+    // Soft scrub: items drift at different rates (parallax depth)
+    items.forEach((item, i) => {
+      gsap.to(item, {
+        y: (i % 2 === 0 ? -1 : 1) * 12,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: section,
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: true
+        }
+      });
+    });
+
+    // Element pinning on document-scroll pages only (nested Lenis pin is unreliable)
     if (!isOnePageScroll) {
       const header = section.querySelector('.page-panel-header');
       if (!header) return;
@@ -324,26 +323,22 @@
     const links = gsap.utils.toArray('.explore-quick-links .quick-link');
     if (!links.length) return;
 
-    gsap.set(links, { y: 48, opacity: 0, rotate: -2 });
-
-    gsap.to(links, {
-      y: 0,
-      opacity: 1,
-      rotate: 0,
-      ease: 'none',
-      stagger: {
-        each: 0.1,
-        from: 'start'
-      },
+    gsap.from(links, {
+      y: 40,
+      opacity: 0,
+      rotate: -2,
+      duration: 0.7,
+      stagger: 0.1,
+      ease: 'power2.out',
+      immediateRender: false,
       scrollTrigger: {
         trigger: '#explore',
         start: 'top 80%',
-        end: 'center 50%',
-        scrub: 0.75
+        toggleActions: 'play none none reverse'
       }
     });
 
-    // Multi-directional sway while the section is in view
+    // Multi-directional sway scrubbed to scroll
     links.forEach((link, i) => {
       const dir = i % 2 === 0 ? 1 : -1;
       gsap.to(link, {
@@ -363,15 +358,14 @@
     document.querySelectorAll('.page-panel-header h2, .footer-heading').forEach((heading) => {
       gsap.fromTo(
         heading,
-        { letterSpacing: '0.08em', y: 24, opacity: 0.4 },
+        { letterSpacing: '0.06em', y: 16 },
         {
           letterSpacing: '0em',
           y: 0,
-          opacity: 1,
           ease: 'none',
           scrollTrigger: {
             trigger: heading,
-            start: 'top 90%',
+            start: 'top 92%',
             end: 'top 55%',
             scrub: 0.65
           }
@@ -381,25 +375,24 @@
   }
 
   function setupPublicationsScrub() {
-    const items = gsap.utils.toArray('.page-panel-publications .publication-item, .page-panel-publications .pub-item, .publication-list > *');
+    const items = gsap.utils.toArray(
+      '.page-panel-publications .publication-item, .page-panel-publications .pub-item, .publication-list > *'
+    );
     if (!items.length) return;
 
-    gsap.fromTo(
-      items,
-      { y: 32, opacity: 0.15 },
-      {
-        y: 0,
-        opacity: 1,
-        ease: 'none',
-        stagger: 0.1,
-        scrollTrigger: {
-          trigger: '#publications',
-          start: 'top 75%',
-          end: 'center 45%',
-          scrub: 0.7
-        }
+    gsap.from(items, {
+      y: 28,
+      opacity: 0,
+      duration: 0.65,
+      stagger: 0.08,
+      ease: 'power2.out',
+      immediateRender: false,
+      scrollTrigger: {
+        trigger: '#publications',
+        start: 'top 75%',
+        toggleActions: 'play none none reverse'
       }
-    );
+    });
   }
 
   function setupSocialBob() {
@@ -424,20 +417,17 @@
     const contact = document.querySelector('.footer-contact-inner');
     if (!contact) return;
 
-    gsap.fromTo(
-      contact,
-      { y: 60, opacity: 0.4 },
-      {
-        y: 0,
-        opacity: 1,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: '#contact',
-          start: 'top 85%',
-          end: 'top 40%',
-          scrub: 0.8
-        }
+    gsap.from(contact, {
+      y: 40,
+      opacity: 0,
+      duration: 0.8,
+      ease: 'power2.out',
+      immediateRender: false,
+      scrollTrigger: {
+        trigger: '#contact',
+        start: 'top 85%',
+        toggleActions: 'play none none reverse'
       }
-    );
+    });
   }
 })();

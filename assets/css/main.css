@@ -142,18 +142,6 @@ html.has-smooth-scroll-nested .page-panel-experience {
   scroll-snap-stop: normal;
 }
 
-/* Allow pin sequences to extend past one viewport */
-html.has-smooth-scroll-nested .page-panel.page-panel-pin-sequence {
-  height: auto;
-  min-height: var(--snap-panel-height);
-  max-height: none;
-  overflow: visible;
-}
-
-html.has-smooth-scroll-nested .page-panel.page-panel-pin-sequence .page-panel-inner {
-  overflow: visible;
-}
-
 .page-scroll-container::-webkit-scrollbar {
   display: none;
 }
@@ -2546,12 +2534,16 @@ body.one-page-scroll .main-content.main-content-scroll {
   transform: translateY(0);
 }
 
-/* GSAP owns transforms — disable CSS transition fights */
+/* GSAP owns transforms — disable CSS transition fights; keep content visible by default */
 html.has-smooth-scroll .animate-on-scroll {
+  opacity: 1;
+  transform: none;
   transition: none;
 }
 
 html.has-smooth-scroll .page-panel-about .about-panel.animate-on-scroll {
+  opacity: 1;
+  transform: none;
   transition: none;
 }
 
