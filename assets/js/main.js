@@ -7,6 +7,16 @@ document.addEventListener('DOMContentLoaded', () => {
   const isOnePageScroll = Boolean(scrollContainer);
   const progressBar = document.getElementById('nav-progress-bar');
   const scrollHint = document.querySelector('.panel-scroll-hint');
+  const auroraBackground = document.querySelector('.aurora-background');
+
+  // Pause aurora animation when the tab is hidden (matches Astro Haze behavior)
+  if (auroraBackground) {
+    const syncAuroraPause = () => {
+      auroraBackground.classList.toggle('is-paused', document.hidden);
+    };
+    document.addEventListener('visibilitychange', syncAuroraPause);
+    syncAuroraPause();
+  }
 
   const SECTION_ORDER = ['landing', 'about', 'research', 'experience', 'publications', 'explore', 'contact'];
 
