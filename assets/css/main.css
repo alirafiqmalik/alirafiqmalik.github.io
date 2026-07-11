@@ -19,10 +19,10 @@
   --radius-lg: 0.75rem;
   --snap-panel-height: 100dvh;
   /* Astro Haze–inspired aurora, tuned to the site lime accent */
-  --aurora-1: #ccff00;
-  --aurora-2: #52e099;
-  --aurora-3: #9dff4a;
-  --aurora-4: #2dd4a8;
+  --aurora-1: #d4ff1a;
+  --aurora-2: #3dffb0;
+  --aurora-3: #a8ff2e;
+  --aurora-4: #1ee6a8;
 }
 
 html {
@@ -50,7 +50,7 @@ body {
   pointer-events: none;
   width: 100%;
   height: 100%;
-  opacity: var(--opacity, 0.55);
+  opacity: var(--opacity, 0.7);
   position: fixed;
   top: 0;
   left: 0;
@@ -66,18 +66,18 @@ body {
 }
 
 .aurora-1 {
-  background: radial-gradient(ellipse at top left, var(--aurora-1), transparent 40%);
-  filter: blur(60px);
+  background: radial-gradient(ellipse at top left, color-mix(in srgb, var(--aurora-1) 85%, transparent), transparent 42%);
+  filter: blur(55px);
 }
 
 .aurora-2 {
-  background: radial-gradient(ellipse at bottom right, var(--aurora-2), transparent 40%);
-  filter: blur(80px);
+  background: radial-gradient(ellipse at bottom right, color-mix(in srgb, var(--aurora-2) 80%, transparent), transparent 42%);
+  filter: blur(70px);
 }
 
 .aurora-3 {
-  background: radial-gradient(ellipse at center, var(--aurora-3), transparent 50%);
-  filter: blur(100px);
+  background: radial-gradient(ellipse at center, color-mix(in srgb, var(--aurora-3) 70%, transparent), transparent 48%);
+  filter: blur(90px);
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -114,8 +114,8 @@ body {
   .aurora-background::before,
   .aurora-background::after {
     content: "";
-    filter: blur(120px);
-    opacity: 0.35;
+    filter: blur(110px);
+    opacity: 0.45;
     width: 100%;
     height: 100%;
     position: absolute;
@@ -211,6 +211,8 @@ img {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  position: relative;
+  z-index: 1;
 }
 
 /* === ONE-PAGE SCROLL (home layout) === */
