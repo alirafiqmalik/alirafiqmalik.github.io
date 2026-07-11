@@ -910,6 +910,26 @@ body.one-page-scroll .main-content.main-content-scroll {
   min-height: calc(100dvh - 6.5rem);
   padding: clamp(2rem, 8vh, 5rem) 0;
   text-align: center;
+  position: relative;
+}
+
+.landing-hero-inner::before {
+  content: "";
+  position: absolute;
+  inset: 8% 12%;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(11, 15, 20, 0.55) 0%,
+    rgba(11, 15, 20, 0.2) 45%,
+    transparent 72%
+  );
+}
+
+.landing-hero-inner > * {
+  position: relative;
+  z-index: 1;
 }
 
 .landing-name {
@@ -940,10 +960,11 @@ body.one-page-scroll .main-content.main-content-scroll {
 }
 
 .landing-bio p {
-  color: var(--text-secondary);
+  color: #b7bfcc;
   font-size: clamp(0.95rem, 1.6vw, 1.05rem);
   line-height: 1.75;
   margin-bottom: clamp(0.75rem, 2vh, 1.25rem);
+  text-shadow: 0 1px 18px rgba(11, 15, 20, 0.55);
 }
 
 .landing-bio p:last-child {
@@ -2550,10 +2571,13 @@ body.one-page-scroll .main-content.main-content-scroll {
 }
 
 .footer-heading {
+  font-family: var(--font-display);
   font-size: clamp(2rem, 5vw, 3rem);
-  font-weight: 700;
+  font-weight: 600;
+  letter-spacing: -0.03em;
   margin: 0;
   line-height: 1.1;
+  color: var(--text-primary);
 }
 
 .footer-description {
