@@ -193,7 +193,14 @@
   }
 
   function setupSectionReveals() {
+    const skip = new Set([
+      ...document.querySelectorAll('.skills-grid.animate-on-scroll'),
+      ...document.querySelectorAll('.experience-list.animate-on-scroll'),
+      ...document.querySelectorAll('.explore-quick-links.animate-on-scroll')
+    ]);
+
     document.querySelectorAll('.animate-on-scroll').forEach((el) => {
+      if (skip.has(el)) return;
       gsap.set(el, { opacity: 0, y: 28 });
       gsap.to(el, {
         opacity: 1,
@@ -244,10 +251,17 @@
   }
 
   function setupResearchScrub() {
+    const section = document.getElementById('research');
     const categories = gsap.utils.toArray('.page-panel-research .skill-category');
-    if (!categories.length) return;
+    const inner = section?.querySelector('.page-panel-inner');
+    if (!section || !categories.length) return;
 
     gsap.set(categories, { opacity: 0.25, x: -24 });
+
+    const canPin = isOnePageScroll && inner && categories.length >= 2;
+    if (canPin) {
+      section.classList.add('page-panel-pin-sequence');
+    }
 
     gsap.to(categories, {
       opacity: 1,
@@ -255,10 +269,15 @@
       ease: 'none',
       stagger: 0.12,
       scrollTrigger: {
-        trigger: '#research',
-        start: 'top 75%',
-        end: 'center 40%',
-        scrub: 0.8
+        trigger: section,
+        start: canPin ? 'top top' : 'top 75%',
+        end: canPin
+          ? () => `+=${Math.round(scrollContainer.clientHeight * 0.85)}`
+          : 'center 40%',
+        scrub: 0.8,
+        pin: canPin ? inner : false,
+        pinSpacing: canPin,
+        anticipatePin: canPin ? 1 : 0
       }
     });
   }

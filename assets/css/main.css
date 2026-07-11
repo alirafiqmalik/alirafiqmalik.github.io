@@ -142,6 +142,18 @@ html.has-smooth-scroll-nested .page-panel-experience {
   scroll-snap-stop: normal;
 }
 
+/* Allow pin sequences to extend past one viewport */
+html.has-smooth-scroll-nested .page-panel.page-panel-pin-sequence {
+  height: auto;
+  min-height: var(--snap-panel-height);
+  max-height: none;
+  overflow: visible;
+}
+
+html.has-smooth-scroll-nested .page-panel.page-panel-pin-sequence .page-panel-inner {
+  overflow: visible;
+}
+
 .page-scroll-container::-webkit-scrollbar {
   display: none;
 }
