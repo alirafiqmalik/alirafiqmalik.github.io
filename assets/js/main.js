@@ -10,12 +10,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const SECTION_ORDER = ['landing', 'about', 'research', 'experience', 'publications', 'explore', 'contact'];
 
-  const getScrollTop = () => scrollContainer ? scrollContainer.scrollTop : window.scrollY;
+  const siteScroll = window.__siteScroll || {};
+  const hasLenis = Boolean(siteScroll.lenis);
+
+  const getScrollTop = () => {
+    if (typeof siteScroll.getScrollTop === 'function') return siteScroll.getScrollTop();
+    return scrollContainer ? scrollContainer.scrollTop : window.scrollY;
+  };
 
   const updateScrollHintVisibility = () => {
     if (!scrollHint || !isOnePageScroll || !scrollContainer) return;
     const sections = ['landing', 'about', 'research', 'experience', 'publications', 'explore', 'contact'];
-    const scrollTop = scrollContainer.scrollTop;
+    const scrollTop = getScrollTop();
     const viewportMid = scrollTop + scrollContainer.clientHeight * 0.35;
     let currentId = sections[0];
 
@@ -35,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const updateProgressBar = () => {
     if (!progressBar) return;
     const container = scrollContainer || document.documentElement;
-    const scrollTop = scrollContainer ? scrollContainer.scrollTop : window.scrollY;
+    const scrollTop = getScrollTop();
     const scrollHeight = container.scrollHeight - container.clientHeight;
     const pct = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
     progressBar.style.width = `${pct}%`;
@@ -48,7 +54,9 @@ document.addEventListener('DOMContentLoaded', () => {
     updateScrollHintVisibility();
   };
 
-  if (scrollContainer) {
+  if (typeof siteScroll.onScroll === 'function') {
+    siteScroll.onScroll(onScroll);
+  } else if (scrollContainer) {
     scrollContainer.addEventListener('scroll', onScroll, { passive: true });
   } else {
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -98,6 +106,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const panel = getSnapPanel(target);
 
+    if (hasLenis && typeof siteScroll.scrollTo === 'function') {
+      if (scrollContainer) {
+        const top = getPanelScrollTop(panel);
+        siteScroll.scrollTo(top, { immediate: !smooth });
+      } else {
+        siteScroll.scrollTo(target, { immediate: !smooth });
+        updateUrlForSection(id);
+      }
+      return true;
+    }
+
     if (scrollContainer) {
       const top = getPanelScrollTop(panel);
       scrollContainer.scrollTo({
@@ -120,7 +139,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!target) return false;
 
     if (scrollContainer) {
-      return scrollToSection(id);
+      return scrollToSection(id, { smooth: true });
+    }
+
+    if (hasLenis && typeof siteScroll.scrollTo === 'function') {
+      siteScroll.scrollTo(target, { immediate: false });
+      history.replaceState(null, '', `#${id}`);
+      return true;
     }
 
     target.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -197,7 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const lockNavigation = (smooth) => {
       isNavigating = true;
       if (smooth) {
-        window.setTimeout(releaseNavigationLock, 700);
+        window.setTimeout(releaseNavigationLock, hasLenis ? 1100 : 700);
       } else {
         requestAnimationFrame(() => requestAnimationFrame(releaseNavigationLock));
       }
@@ -250,6 +275,11 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const scrollWithinPanel = (panel, delta) => {
+      const nextTop = scrollContainer.scrollTop + delta;
+      if (hasLenis && typeof siteScroll.scrollTo === 'function') {
+        siteScroll.scrollTo(nextTop, { immediate: false });
+        return;
+      }
       scrollContainer.style.scrollSnapType = 'none';
       scrollContainer.scrollBy({ top: delta, behavior: 'smooth' });
       window.setTimeout(() => {
@@ -270,9 +300,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const panelTop = getPanelScrollTop(panel);
       const panelBottom = panelTop + panel.offsetHeight;
-      const scrollTop = scrollContainer.scrollTop;
+      const scrollTop = getScrollTop();
       const scrollBottom = scrollTop + scrollContainer.clientHeight;
       const canScrollInsidePanel = panelNeedsInternalScroll(panel);
+      // With Lenis, prefer fluid section-to-section easing over hard snaps
+      const useSmoothSectionJump = hasLenis;
 
       if (direction === 'down') {
         if (canScrollInsidePanel && scrollBottom < panelBottom - 12) {
@@ -282,8 +314,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (currentIndex < SECTION_ORDER.length - 1) {
-          lockNavigation(false);
-          scrollToSection(SECTION_ORDER[currentIndex + 1], { smooth: false });
+          lockNavigation(useSmoothSectionJump);
+          scrollToSection(SECTION_ORDER[currentIndex + 1], { smooth: useSmoothSectionJump });
         }
         return;
       }
@@ -295,8 +327,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       if (currentIndex > 0) {
-        lockNavigation(false);
-        scrollToSection(SECTION_ORDER[currentIndex - 1], { smooth: false });
+        lockNavigation(useSmoothSectionJump);
+        scrollToSection(SECTION_ORDER[currentIndex - 1], { smooth: useSmoothSectionJump });
       }
     };
 
@@ -447,17 +479,19 @@ document.addEventListener('DOMContentLoaded', () => {
     updateProgressBar();
   }
 
-  // Scroll animations via IntersectionObserver
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+  // Scroll reveals: GSAP ScrollTrigger owns these when smooth-scroll is active
+  if (!document.documentElement.classList.contains('has-smooth-scroll')) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
 
-  document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
+    document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
+  }
 
   // Project category filter
   const categoryBtns = document.querySelectorAll('.category-pill');

@@ -26,6 +26,15 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Lenis owns smoothing — native smooth scroll fights ScrollTrigger */
+html.has-smooth-scroll {
+  scroll-behavior: auto !important;
+}
+
+html.has-smooth-scroll.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
 html::-webkit-scrollbar, body::-webkit-scrollbar {
   display: none;
 }
@@ -115,6 +124,22 @@ html.one-page-scroll-root body.one-page-scroll {
   overscroll-behavior-y: contain;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
+}
+
+.page-scroll-content {
+  min-height: 100%;
+}
+
+/* Lenis + continuous scroll: drop CSS snap so lerp isn't fighting snap points */
+html.has-smooth-scroll-nested .page-scroll-container {
+  scroll-snap-type: none;
+}
+
+html.has-smooth-scroll-nested .page-panel,
+html.has-smooth-scroll-nested .footer-snap-panel,
+html.has-smooth-scroll-nested .page-panel-experience {
+  scroll-snap-align: none;
+  scroll-snap-stop: normal;
 }
 
 .page-scroll-container::-webkit-scrollbar {
@@ -2507,6 +2532,28 @@ body.one-page-scroll .main-content.main-content-scroll {
 .animate-on-scroll.visible {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* GSAP owns transforms — disable CSS transition fights */
+html.has-smooth-scroll .animate-on-scroll {
+  transition: none;
+}
+
+html.has-smooth-scroll .page-panel-about .about-panel.animate-on-scroll {
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.has-smooth-scroll .animate-on-scroll,
+  .animate-on-scroll {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .panel-scroll-hint {
+    animation: none;
+  }
 }
 
 /* === RESPONSIVE === */
