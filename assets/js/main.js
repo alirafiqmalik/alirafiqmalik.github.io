@@ -10,11 +10,53 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const SECTION_ORDER = ['landing', 'about', 'research', 'experience', 'publications', 'explore', 'contact'];
 
+  const navPromptCwd = document.querySelector('[data-nav-cwd]');
+
+  const SECTION_CWD_MAP = {
+    landing: '',
+    about: 'whoami',
+    research: 'whoami',
+    experience: 'experience',
+    publications: 'publications',
+    explore: 'explore',
+    contact: 'contact',
+    news: 'news'
+  };
+
+  const PATHNAME_CWD_MAP = [
+    { match: /\/blog(?:\/|$)/i, cwd: 'blog' },
+    { match: /\/cv(?:\/|$)/i, cwd: 'cv' },
+    { match: /\/projects(?:\/|$)/i, cwd: 'projects' },
+    { match: /\/history(?:\/|$)/i, cwd: 'history' },
+    { match: /\/experience(?:\/|$)/i, cwd: 'experience' }
+  ];
+
+  const updateNavPromptCwd = (cwd) => {
+    if (!navPromptCwd) return;
+    navPromptCwd.textContent = cwd || '';
+  };
+
+  const cwdFromSection = (sectionId) => SECTION_CWD_MAP[sectionId] ?? '';
+
+  const cwdFromPathname = () => {
+    const path = window.location.pathname;
+    const match = PATHNAME_CWD_MAP.find(({ match }) => match.test(path));
+    if (match) return match.cwd;
+
+    const hash = window.location.hash.replace('#', '');
+    if (hash && Object.prototype.hasOwnProperty.call(SECTION_CWD_MAP, hash)) {
+      return SECTION_CWD_MAP[hash];
+    }
+
+    return '';
+  };
+
   const getScrollTop = () => scrollContainer ? scrollContainer.scrollTop : window.scrollY;
 
   const updateScrollHintVisibility = () => {
     if (!scrollHint || !isOnePageScroll || !scrollContainer) return;
-    const sections = ['landing', 'about', 'research', 'experience', 'publications', 'explore', 'contact'];
+
+    const sections = SECTION_ORDER;
     const scrollTop = scrollContainer.scrollTop;
     const viewportMid = scrollTop + scrollContainer.clientHeight * 0.35;
     let currentId = sections[0];
@@ -28,8 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (top <= viewportMid) currentId = id;
     });
 
-    const isLast = currentId === sections[sections.length - 1];
-    scrollHint.classList.toggle('hidden', isLast);
+    scrollHint.classList.toggle('hidden', currentId === sections[sections.length - 1]);
   };
 
   const updateProgressBar = () => {
@@ -62,16 +103,67 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  if (scrollContainer) {
+  const syncNavOffset = () => {
+    if (!nav) return;
+    const { bottom } = nav.getBoundingClientRect();
+    if (bottom > 0) {
+      document.documentElement.style.setProperty('--nav-float-offset', `${bottom}px`);
+    }
+  };
+
+  // Keep News card sticky just under the floating navbar (content-sized; no stretch).
+  const syncNewsCardMetrics = () => {
+    if (!nav) return;
+    if (window.matchMedia('(max-width: 1023px)').matches) {
+      document.documentElement.style.removeProperty('--news-sticky-top');
+      return;
+    }
+
+    const stickyGap = Number.parseFloat(
+      getComputedStyle(document.documentElement).getPropertyValue('--nav-sticky-gap')
+    ) || 8;
+    const top = nav.getBoundingClientRect().bottom + stickyGap;
+    document.documentElement.style.setProperty('--news-sticky-top', `${top}px`);
+
+    const card = document.querySelector('.landing-aside .news-window-inner, .profile-aside .news-window-inner');
+    if (card) {
+      const height = card.getBoundingClientRect().height;
+      if (height > 0) {
+        document.documentElement.style.setProperty('--news-card-height', `${height}px`);
+      }
+    }
+  };
+
+  const syncLayoutMetrics = () => {
     syncSnapPanelHeight();
-    requestAnimationFrame(syncSnapPanelHeight);
-    window.addEventListener('load', syncSnapPanelHeight);
-    window.addEventListener('resize', syncSnapPanelHeight);
+    syncNavOffset();
+    syncNewsCardMetrics();
+  };
+
+  if (scrollContainer) {
+    syncLayoutMetrics();
+    requestAnimationFrame(syncLayoutMetrics);
+    window.addEventListener('load', syncLayoutMetrics);
+    window.addEventListener('resize', syncLayoutMetrics);
+  } else {
+    syncLayoutMetrics();
+    window.addEventListener('load', syncLayoutMetrics);
+    window.addEventListener('resize', syncLayoutMetrics);
   }
 
   const getSnapPanel = (element) => {
     if (!element) return null;
-    return element.closest('.footer-snap-panel, .page-panel') || element;
+    if (element.id === 'landing') {
+      return document.getElementById('landing-scroll-track') || element;
+    }
+    return element.closest('.footer-snap-panel, .page-panel, .home-section') || element;
+  };
+
+  const getObserveTarget = (element) => {
+    if (!element) return null;
+    if (element.classList.contains('profile-interests')) return element;
+    if (element.id === 'landing') return element;
+    return getSnapPanel(element) || element;
   };
 
   const getPanelScrollTop = (panel) => {
@@ -96,14 +188,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const target = document.getElementById(id);
     if (!target) return false;
 
-    const panel = getSnapPanel(target);
+    // Profile blocks (#research inside #about) scroll to the element itself.
+    const scrollTarget = target.classList.contains('profile-interests')
+      ? target
+      : (getSnapPanel(target) || target);
 
     if (scrollContainer) {
-      const top = getPanelScrollTop(panel);
+      const top = getPanelScrollTop(scrollTarget);
       scrollContainer.scrollTo({
         top,
         behavior: smooth ? 'smooth' : 'auto'
       });
+      updateUrlForSection(id);
     } else {
       target.scrollIntoView({
         behavior: smooth ? 'smooth' : 'auto',
@@ -151,9 +247,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const scrollToHashTarget = () => {
     const id = window.location.hash.replace('#', '');
-    if (!id) return;
+    if (!id) {
+      if (isOnePageScroll) updateNavPromptCwd(cwdFromSection('landing'));
+      return;
+    }
     if (id === 'landing') {
       updateUrlForSection('landing');
+    }
+    if (isOnePageScroll && Object.prototype.hasOwnProperty.call(SECTION_CWD_MAP, id)) {
+      updateNavPromptCwd(cwdFromSection(id));
+    } else if (!isOnePageScroll) {
+      updateNavPromptCwd(cwdFromPathname());
     }
     requestAnimationFrame(() => {
       if (isOnePageScroll) {
@@ -166,6 +270,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (window.location.hash) {
     setTimeout(scrollToHashTarget, 100);
+  } else if (scrollContainer) {
+    // Mandatory snap can settle on the first snappable panel before JS runs.
+    // Pin fresh home loads to the landing hero when there is no hash.
+    scrollContainer.scrollTop = 0;
+    requestAnimationFrame(() => {
+      if (!window.location.hash) scrollContainer.scrollTop = 0;
+    });
   }
 
   window.addEventListener('hashchange', scrollToHashTarget);
@@ -174,17 +285,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const sectionNavMap = {
       landing: null,
       about: 'about',
-      research: null,
-      experience: 'about',
+      research: 'about',
+      experience: null,
+      news: null,
       explore: null,
-      publications: 'research',
+      publications: 'publications',
       contact: 'contact'
     };
 
-    const canonicalHashForSection = (sectionId) => {
-      if (sectionId === 'experience') return 'about';
-      return sectionId;
-    };
+    const canonicalHashForSection = (sectionId) => sectionId;
 
     const panelSectionMap = new Map();
     let activeSectionId = SECTION_ORDER[0];
@@ -215,6 +324,7 @@ document.addEventListener('DOMContentLoaded', () => {
         link.classList.toggle('active', link.dataset.navSection === sectionNavMap[sectionId]);
       });
       setActivePanel(sectionId);
+      updateNavPromptCwd(cwdFromSection(sectionId));
     };
 
     const syncHashToSection = (sectionId) => {
@@ -223,7 +333,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const sectionObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
-        if (!entry.isIntersecting || entry.intersectionRatio < 0.6) return;
+        if (!entry.isIntersecting || entry.intersectionRatio < 0.45) return;
         const sectionId = panelSectionMap.get(entry.target);
         if (!sectionId) return;
         setActiveSection(sectionId);
@@ -232,16 +342,15 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }, {
       root: scrollContainer,
-      threshold: 0.6
+      threshold: [0.45, 0.6]
     });
 
     SECTION_ORDER.forEach(id => {
       const element = document.getElementById(id);
-      const panel = getSnapPanel(element);
-      if (panel) {
-        panelSectionMap.set(panel, id);
-        sectionObserver.observe(panel);
-      }
+      if (!element) return;
+      const observeTarget = getObserveTarget(element);
+      panelSectionMap.set(observeTarget, id);
+      sectionObserver.observe(observeTarget);
     });
 
     const panelNeedsInternalScroll = (panel) => {
@@ -281,9 +390,18 @@ document.addEventListener('DOMContentLoaded', () => {
           return;
         }
 
-        if (currentIndex < SECTION_ORDER.length - 1) {
+        // Skip sibling intro blocks that share the same tall panel.
+        let nextIndex = currentIndex + 1;
+        while (nextIndex < SECTION_ORDER.length) {
+          const nextEl = document.getElementById(SECTION_ORDER[nextIndex]);
+          const nextPanel = getSnapPanel(nextEl);
+          if (nextPanel !== panel) break;
+          nextIndex += 1;
+        }
+
+        if (nextIndex < SECTION_ORDER.length) {
           lockNavigation(false);
-          scrollToSection(SECTION_ORDER[currentIndex + 1], { smooth: false });
+          scrollToSection(SECTION_ORDER[nextIndex], { smooth: false });
         }
         return;
       }
@@ -294,9 +412,17 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      if (currentIndex > 0) {
+      let prevIndex = currentIndex - 1;
+      while (prevIndex >= 0) {
+        const prevEl = document.getElementById(SECTION_ORDER[prevIndex]);
+        const prevPanel = getSnapPanel(prevEl);
+        if (prevPanel !== panel) break;
+        prevIndex -= 1;
+      }
+
+      if (prevIndex >= 0) {
         lockNavigation(false);
-        scrollToSection(SECTION_ORDER[currentIndex - 1], { smooth: false });
+        scrollToSection(SECTION_ORDER[prevIndex], { smooth: false });
       }
     };
 
@@ -444,6 +570,7 @@ document.addEventListener('DOMContentLoaded', () => {
         link.classList.add('active');
       }
     });
+    updateNavPromptCwd(cwdFromPathname());
     updateProgressBar();
   }
 
@@ -494,6 +621,30 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     if (marker) marker.addEventListener('click', toggle);
     if (card) card.addEventListener('click', toggle);
+  });
+
+  // News CTA: scroll to #news and briefly focus the news window
+  const focusNewsWindow = () => {
+    const newsWindows = document.querySelectorAll('.news-window');
+    if (!newsWindows.length) return;
+    let target = newsWindows[0];
+    newsWindows.forEach(win => {
+      const panel = win.closest('.page-panel, .home-section, .landing-aside, .profile-aside');
+      if (!panel) return;
+      const rect = panel.getBoundingClientRect();
+      if (rect.top < window.innerHeight * 0.75 && rect.bottom > window.innerHeight * 0.15) {
+        target = win;
+      }
+    });
+    newsWindows.forEach(win => win.classList.remove('is-focused'));
+    target.classList.add('is-focused');
+    window.setTimeout(() => target.classList.remove('is-focused'), 1600);
+  };
+
+  document.querySelectorAll('[data-focus-news]').forEach(el => {
+    el.addEventListener('click', () => {
+      window.setTimeout(focusNewsWindow, 350);
+    });
   });
 });
 
