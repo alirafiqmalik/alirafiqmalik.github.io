@@ -1,10 +1,10 @@
 researchInterests:
-  - title: Formal Verification
-    description: Symbolic execution, model checking (TLA+, nuXMV, STORM), and theorem proving (Coq, Lean)
-  - title: Security Analysis
-    description: Verification of cryptographic protocols, quantum key distribution, and banking system security
-  - title: Generative AI/ML
-    description: Fine-tuning (SFT, DPO, RLHF), RAG, Agentic AI, and specification-aware approaches
+  - title: Formal methods and security analysis
+    description: Systematic analysis of large-scale deployed systems, modeling protocol stacks against their specifications to uncover access-control and trust-boundary gaps the specification never states
+  - title: Reliability of large language models
+    description: Making behavioral properties verifiable, from whether a thinking trace reflects the computation behind an answer to whether single-call guarantees survive multi-step agentic trajectories
+  - title: Quantum and post-quantum security
+    description: Where quantum and post-quantum deployments break at the classical boundary, in control planes, key management, and migration paths, rather than in the cryptographic primitive itself
 
 selectedPublications: []
   # - title: Automated Verification of Cryptographic Protocols Using SMT Solvers
