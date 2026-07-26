@@ -1,0 +1,33 @@
+---
+layout: default
+title: Experience
+---
+
+<!-- Page Hero -->
+<section class="page-hero">
+  <h1 class="animate-on-scroll">Professional <span class="highlight">Experience</span></h1>
+  <p class="subtitle animate-on-scroll">Research, internships, and industry roles in formal verification, security, and machine learning.</p>
+</section>
+
+<section>
+  <div class="container-sm">
+    <div class="experience-list animate-on-scroll">
+      {% for exp in site.data.cv.experience %}
+      <div class="cv-item">
+        <div class="cv-item-header">
+          <span class="cv-item-title">{{ exp.title }}</span>
+          <span class="cv-item-year">{{ exp.year }}</span>
+        </div>
+        <div class="cv-item-subtitle">{{ exp.company }}{% if exp.location %} &bull; {{ exp.location }}{% endif %}</div>
+        {% if exp.responsibilities %}
+        <ul class="cv-responsibilities">
+          {% for resp in exp.responsibilities %}
+          <li>{{ resp }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>

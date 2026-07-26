@@ -1,8 +1,19 @@
-# News items - uncomment and add when you have news
-news: []
-  # - date: Dec 2025
-  #   title: Paper Accepted at POPL 2026
-  #   description: Our work on automated theorem proving accepted at top-tier conference.
-  # - date: Nov 2025
-  #   title: Invited Talk at MIT
-  #   description: Presented research on formal verification of cryptographic protocols.
+# Selected news shown in the right-side News window.
+# Set selected: true to show an item in the panel.
+news:
+  - date: Jul 2026
+    title: My paper on formal analysis of QKD protocols accepted to IEEE QCE
+    description: >-
+      Beyond the Quantum Promise — A Security Analysis of Classical Control in QKD
+      accepted to the 2026 IEEE International Conference on Quantum Computing and Engineering.
+    selected: true
+    link: https://www.researchgate.net/publication/403682108_Beyond_the_Quantum_Promise_A_Security_Analysis_of_Classical_Control_in_Quantum_Key_Distribution
+  - date: Jun 2023
+    title: Rector's Gold Medal
+    description: Awarded for best senior project on Logic-Locking Security Evaluation at NUST.
+    selected: true
+    link: /history/
+  - date: 2023
+    title: Started PhD at UMass Amherst
+    description: Joined Khwarizmi Lab to work on security of quantum computers and quantum systems.
+    selected: true

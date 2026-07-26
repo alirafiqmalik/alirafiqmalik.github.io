@@ -8,6 +8,7 @@ served as static HTML; there is no backend, database, or automated test suite.
 ### Services / commands
 - **Dev server**: `bundle exec jekyll serve --livereload --host 0.0.0.0 --port 4000` (serves at `http://localhost:4000/`). This is the main thing to run; see `README.md`.
 - **Build**: `bundle exec jekyll build` (CI runs this with `JEKYLL_ENV=production`; see `.github/workflows/jekyll.yml`).
+- **Landing globe (COBE)**: `npm ci && npm run build:globe` bundles `assets/js/globe-src.js` → `assets/js/globe.js` (depends on `cobe`). Re-run after editing the globe source.
 - **Health check (closest thing to lint)**: `bundle exec jekyll doctor`. There is no separate linter or test framework.
 
 ### Non-obvious notes

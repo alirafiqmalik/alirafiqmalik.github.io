@@ -1,0 +1,187 @@
+[
+  {
+    "file": "globe.png",
+    "label": "globe",
+    "bbox": [
+      867,
+      1397,
+      889,
+      865
+    ],
+    "uncertain": true,
+    "note": "not in target list as named, but clear globe"
+  },
+  {
+    "file": "watch.png",
+    "label": "smartwatch",
+    "bbox": [
+      3326,
+      917,
+      664,
+      1378
+    ],
+    "uncertain": false
+  },
+  {
+    "file": "house.png",
+    "label": "smart-home / house",
+    "bbox": [
+      4983,
+      1463,
+      1090,
+      799
+    ],
+    "uncertain": false
+  },
+  {
+    "file": "laptop.png",
+    "label": "laptop",
+    "bbox": [
+      6964,
+      1430,
+      1140,
+      684
+    ],
+    "uncertain": false
+  },
+  {
+    "file": "location-pin.png",
+    "label": "location pin with globe",
+    "bbox": [
+      9261,
+      942,
+      950,
+      1320
+    ],
+    "uncertain": true,
+    "note": "map pin with globe; not in target list"
+  },
+  {
+    "file": "datacenter.png",
+    "label": "server rack / datacenter",
+    "bbox": [
+      705,
+      3047,
+      1216,
+      1329
+    ],
+    "uncertain": false
+  },
+  {
+    "file": "cloud.png",
+    "label": "cloud with gear",
+    "bbox": [
+      2749,
+      3179,
+      1340,
+      1065
+    ],
+    "uncertain": true,
+    "note": "cloud with gear; could be cloud-settings / cluster metaphor"
+  },
+  {
+    "file": "mouse.png",
+    "label": "computer mouse",
+    "bbox": [
+      5222,
+      3459,
+      612,
+      916
+    ],
+    "uncertain": true,
+    "note": "not in target list"
+  },
+  {
+    "file": "wifi.png",
+    "label": "wifi window / hotspot",
+    "bbox": [
+      6964,
+      3253,
+      1329,
+      917
+    ],
+    "uncertain": true,
+    "note": "window/browser chrome with wifi symbol (not a physical router)"
+  },
+  {
+    "file": "phone-signal.png",
+    "label": "phone with signal",
+    "bbox": [
+      9034,
+      3286,
+      551,
+      851
+    ],
+    "uncertain": true,
+    "note": "similar to phone.png; distinguished by signal arcs on screen"
+  },
+  {
+    "file": "phone.png",
+    "label": "phone",
+    "bbox": [
+      9887,
+      3286,
+      552,
+      851
+    ],
+    "uncertain": false
+  },
+  {
+    "file": "gamepad.png",
+    "label": "game controller",
+    "bbox": [
+      680,
+      5630,
+      1266,
+      845
+    ],
+    "uncertain": true,
+    "note": "not in target list"
+  },
+  {
+    "file": "cellular-tower.png",
+    "label": "cellular tower",
+    "bbox": [
+      3101,
+      5342,
+      637,
+      1139
+    ],
+    "uncertain": false
+  },
+  {
+    "file": "phone-location.png",
+    "label": "phone with location pin",
+    "bbox": [
+      4958,
+      5160,
+      1139,
+      1319
+    ],
+    "uncertain": true,
+    "note": "phone + location pin composite"
+  },
+  {
+    "file": "desktop.png",
+    "label": "desktop monitor",
+    "bbox": [
+      6964,
+      5325,
+      1329,
+      981
+    ],
+    "uncertain": false
+  },
+  {
+    "file": "laptops.png",
+    "label": "pair of laptops",
+    "bbox": [
+      8910,
+      5715,
+      1653,
+      508
+    ],
+    "uncertain": true,
+    "note": "two laptops as one connected component; kept as pair"
+  }
+]

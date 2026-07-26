@@ -1,35 +1,40 @@
 <!-- Navigation -->
 <nav class="nav">
   <div class="nav-content">
-    <a class="nav-logo" href="{{ '/' | relative_url }}" data-scroll-to="landing">{{ site.data.personal.name | split: ' ' | first | upcase }}<span class="dot">.</span></a>
+    <a class="nav-logo nav-logo-prompt" href="{{ '/' | relative_url }}" data-scroll-to="landing" aria-label="Home">
+      <span class="nav-prompt-user">alihamza@malik</span><span class="nav-prompt-glyph" aria-hidden="true">❯</span><span class="nav-prompt-path">~/<span class="nav-prompt-cwd" data-nav-cwd></span></span>
+    </a>
     <div class="nav-links">
       <a href="{{ '/' | relative_url }}#about" class="nav-link" data-scroll-to="about" data-nav-section="about">About</a>
-      <a href="{{ '/' | relative_url }}#publications" class="nav-link" data-scroll-to="publications" data-nav-section="research">Research</a>
-      <a href="#contact" class="nav-link" data-scroll-to="contact" data-nav-section="contact">Contact</a>
+      <a href="{{ '/' | relative_url }}#publications" class="nav-link" data-scroll-to="publications" data-nav-section="publications">Publications</a>
+      <a href="#contact" class="nav-link" data-scroll-to="contact" data-nav-section="contact">Contacts</a>
 
-      <div class="nav-dropdown">
-        <button type="button" class="nav-cta nav-dropdown-toggle" aria-expanded="false" aria-haspopup="true">
-          More
-          <svg class="nav-dropdown-chevron" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <polyline points="6 9 12 15 18 9"></polyline>
-          </svg>
-        </button>
-        <div class="nav-dropdown-menu" role="menu">
-          <a href="{{ '/history/' | relative_url }}" class="nav-dropdown-item" role="menuitem">History</a>
-          {% if site.show_blog_in_nav != false %}
-          <a href="{{ '/blog/' | relative_url }}" class="nav-dropdown-item" role="menuitem">Blog</a>
-          {% endif %}
-          <a href="{{ '/cv/' | relative_url }}" class="nav-dropdown-item" role="menuitem">CV</a>
-          <a href="{{ '/projects/' | relative_url }}" class="nav-dropdown-item" role="menuitem">Projects</a>
-          <div class="nav-dropdown-submenu">
-            <button type="button" class="nav-dropdown-item nav-dropdown-submenu-toggle" aria-expanded="false" aria-haspopup="true">
-              Tools
-              <svg class="nav-dropdown-submenu-chevron" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <polyline points="9 18 15 12 9 6"></polyline>
-              </svg>
-            </button>
-            <div class="nav-dropdown-submenu-menu" role="menu">
-              <a href="https://alihamzamalik.me/sec-deadlines/" class="nav-dropdown-item" role="menuitem">Deadlines</a>
+      <div class="nav-actions">
+        <div class="nav-dropdown">
+          <button type="button" class="nav-cta nav-cta-outline nav-dropdown-toggle" aria-expanded="false" aria-haspopup="true">
+            More
+            <svg class="nav-dropdown-chevron" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="nav-dropdown-menu" role="menu">
+            <a href="{{ '/history/' | relative_url }}" class="nav-dropdown-item" role="menuitem">History</a>
+            {% if site.show_blog_in_nav != false %}
+            <a href="{{ '/blog/' | relative_url }}" class="nav-dropdown-item" role="menuitem">Blog</a>
+            {% endif %}
+            <a href="{{ '/cv/' | relative_url }}" class="nav-dropdown-item" role="menuitem">CV</a>
+            <a href="{{ '/' | relative_url }}#experience" class="nav-dropdown-item" role="menuitem" data-scroll-to="experience">Experience</a>
+            <a href="{{ '/projects/' | relative_url }}" class="nav-dropdown-item" role="menuitem">Projects</a>
+            <div class="nav-dropdown-submenu">
+              <button type="button" class="nav-dropdown-item nav-dropdown-submenu-toggle" aria-expanded="false" aria-haspopup="true">
+                Tools
+                <svg class="nav-dropdown-submenu-chevron" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </button>
+              <div class="nav-dropdown-submenu-menu" role="menu">
+                <a href="https://alihamzamalik.me/sec-deadlines/" class="nav-dropdown-item" role="menuitem">Deadlines</a>
+              </div>
             </div>
           </div>
         </div>
@@ -42,12 +47,15 @@
         <line x1="4" x2="20" y1="18" y2="18"></line>
       </svg>
     </button>
+    <div class="nav-progress-container" aria-hidden="true">
+      <div class="nav-progress-bar" id="nav-progress-bar"></div>
+    </div>
   </div>
   <!-- Mobile Menu -->
   <div class="mobile-menu">
     <a href="{{ '/' | relative_url }}#about" class="nav-link" data-scroll-to="about" data-nav-section="about">About</a>
-    <a href="{{ '/' | relative_url }}#publications" class="nav-link" data-scroll-to="publications" data-nav-section="research">Research</a>
-    <a href="#contact" class="nav-link" data-scroll-to="contact" data-nav-section="contact">Contact</a>
+    <a href="{{ '/' | relative_url }}#publications" class="nav-link" data-scroll-to="publications" data-nav-section="publications">Publications</a>
+    <a href="#contact" class="nav-link" data-scroll-to="contact" data-nav-section="contact">Contacts</a>
 
     <div class="mobile-more-group">
       <span class="mobile-more-label">More</span>
@@ -56,12 +64,10 @@
       <a href="{{ '/blog/' | relative_url }}" class="nav-link">Blog</a>
       {% endif %}
       <a href="{{ '/cv/' | relative_url }}" class="nav-link">CV</a>
+      <a href="{{ '/' | relative_url }}#experience" class="nav-link" data-scroll-to="experience">Experience</a>
       <a href="{{ '/projects/' | relative_url }}" class="nav-link">Projects</a>
       <span class="mobile-more-label mobile-tools-label">Tools</span>
       <a href="https://alihamzamalik.me/sec-deadlines/" class="nav-link mobile-tools-link">Deadlines</a>
     </div>
-  </div>
-  <div class="nav-progress-container" aria-hidden="true">
-    <div class="nav-progress-bar" id="nav-progress-bar"></div>
   </div>
 </nav>
