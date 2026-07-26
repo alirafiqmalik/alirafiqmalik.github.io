@@ -7,11 +7,15 @@ Jekyll academic portfolio. Built with vanilla CSS, dark mode, and project filter
 ```bash
 gem install bundler
 bundle install
+npm ci
+npm run build:globe   # bundles COBE landing globe → assets/js/globe.js
 bundle exec jekyll serve --livereload
 # http://localhost:4000
 ```
 
-Requires Ruby 3+. Works on macOS, Linux, and Windows.
+Requires Ruby 3+ and Node 18+. Works on macOS, Linux, and Windows.
+
+The landing globe uses [`cobe`](https://github.com/shuding/cobe) (dark mode). Edit `assets/js/globe-src.js`, then run `npm run build:globe`.
 
 ## Structure
 

@@ -30,6 +30,18 @@ jobs:
           ruby-version: '3.3'
           bundler-cache: true
 
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Install JS dependencies
+        run: npm ci
+
+      - name: Build landing globe bundle
+        run: npm run build:globe
+
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v6
