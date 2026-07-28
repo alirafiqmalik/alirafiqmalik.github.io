@@ -1287,6 +1287,11 @@ body > .landing-globe-slot {
   width: min(22rem, calc(100% - 2rem));
   z-index: 4;
   min-width: 0;
+  /* Never grow into the title block or off the stage; scroll inside if needed */
+  max-height: calc(100% - clamp(10.5rem, 32vh, 16rem));
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   transform: translate3d(0, calc(var(--landing-exit) * -120vh), 0);
   opacity: calc(1 - var(--landing-exit) * 1.2);
   will-change: transform, opacity;
@@ -1295,16 +1300,27 @@ body > .landing-globe-slot {
 .landing-aside .news-window {
   height: auto;
   width: 100%;
+  min-height: 0;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .landing-aside .news-window-inner {
   background: rgba(26, 26, 26, 0.78);
   backdrop-filter: blur(14px);
+  min-height: 0;
+  max-height: 100%;
+  overflow: hidden;
 }
 
 .landing-aside .news-window-list {
+  min-height: 0;
   max-height: none;
-  overflow: visible;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Dimmed interactive-off state — globe remains the site background */
@@ -3262,7 +3278,8 @@ a.news-window-line:hover .news-window-arrow {
     width: 100%;
     max-width: 26rem;
     margin: 0 auto;
-    flex: 0 0 auto;
+    flex: 1 1 auto;
+    max-height: min(42dvh, 18rem);
     z-index: 4;
   }
 
@@ -3274,14 +3291,11 @@ a.news-window-line:hover .news-window-arrow {
     font-size: 1.05rem;
   }
 
-  .landing-aside .news-window-list {
-    max-height: none;
+  .landing-aside .news-window-headline {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
     overflow: hidden;
-  }
-
-  /* Keep the hero compact: show first two news items only */
-  .landing-aside .news-window-item:nth-child(n + 3) {
-    display: none;
   }
 
   .landing-aside .news-window-line {
@@ -3345,8 +3359,12 @@ a.news-window-line:hover .news-window-arrow {
     padding-top: calc(var(--nav-offset) + 0.05rem);
   }
 
-  .landing-aside .news-window-item:nth-child(n + 2) {
-    display: none;
+  .landing-aside {
+    max-height: min(34dvh, 12.5rem);
+  }
+
+  .landing-aside .news-window-headline {
+    -webkit-line-clamp: 3;
   }
 
   .landing-bio p:nth-child(n + 2) {
@@ -3355,6 +3373,12 @@ a.news-window-line:hover .news-window-arrow {
 
   .landing-copy {
     gap: 0.55rem;
+  }
+
+  /* Stickers collide with stacked CTAs on short phones */
+  .globe-sticker-layer {
+    opacity: 0;
+    visibility: hidden;
   }
 
   .panel-scroll-hint {
@@ -3594,10 +3618,20 @@ a.news-window-line:hover .news-window-arrow {
     bottom: clamp(1.35rem, 3vh, 2.25rem);
   }
 
-  /* Prefer compact rows over an inner scrollbar so all 3 entries stay visible */
+  .landing-aside {
+    max-height: calc(100% - clamp(9.5rem, 30vh, 13.5rem));
+  }
+
   .landing-aside .news-window-line {
     padding: 0.7rem 0.9rem;
     gap: 0.3rem;
+  }
+
+  .landing-aside .news-window-headline {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 
   .landing-aside .news-window-blurb {
@@ -3620,6 +3654,7 @@ a.news-window-line:hover .news-window-arrow {
   .landing-aside {
     width: min(18.5rem, calc(42% - 1rem));
     bottom: clamp(1.1rem, 2.5vh, 1.75rem);
+    max-height: calc(100% - clamp(8.5rem, 28vh, 12rem));
   }
 
   .landing-copy {
@@ -3633,6 +3668,10 @@ a.news-window-line:hover .news-window-arrow {
 
   .landing-aside .news-window-line {
     padding: 0.6rem 0.85rem;
+  }
+
+  .landing-aside .news-window-headline {
+    -webkit-line-clamp: 3;
   }
 
   .landing-aside .news-window-blurb {
