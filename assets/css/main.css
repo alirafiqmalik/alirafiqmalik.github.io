@@ -3279,7 +3279,7 @@ a.news-window-line:hover .news-window-arrow {
     max-width: 26rem;
     margin: 0 auto;
     flex: 1 1 auto;
-    max-height: min(42dvh, 18rem);
+    max-height: min(46dvh, 20rem);
     z-index: 4;
   }
 
@@ -3289,13 +3289,6 @@ a.news-window-line:hover .news-window-arrow {
 
   .landing-aside .news-window-title {
     font-size: 1.05rem;
-  }
-
-  .landing-aside .news-window-headline {
-    display: -webkit-box;
-    -webkit-line-clamp: 4;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
   }
 
   .landing-aside .news-window-line {
@@ -3360,11 +3353,7 @@ a.news-window-line:hover .news-window-arrow {
   }
 
   .landing-aside {
-    max-height: min(34dvh, 12.5rem);
-  }
-
-  .landing-aside .news-window-headline {
-    -webkit-line-clamp: 3;
+    max-height: min(38dvh, 14rem);
   }
 
   .landing-bio p:nth-child(n + 2) {
@@ -3627,13 +3616,6 @@ a.news-window-line:hover .news-window-arrow {
     gap: 0.3rem;
   }
 
-  .landing-aside .news-window-headline {
-    display: -webkit-box;
-    -webkit-line-clamp: 4;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
   .landing-aside .news-window-blurb {
     -webkit-line-clamp: 1;
   }
@@ -3668,10 +3650,6 @@ a.news-window-line:hover .news-window-arrow {
 
   .landing-aside .news-window-line {
     padding: 0.6rem 0.85rem;
-  }
-
-  .landing-aside .news-window-headline {
-    -webkit-line-clamp: 3;
   }
 
   .landing-aside .news-window-blurb {
