@@ -20,10 +20,11 @@ served as static HTML; there is no backend, database, or automated test suite.
 ### SOLID CONSTRAINT — multi-device review before signoff
 **Do not sign off, merge, or push landing/UI changes as done until you have visually
 reviewed the live local page across multiple device sizes.** A production Jekyll
-build alone is not sufficient. Layout regressions (overlaps, clipped News, stacked
-vs corner hero breaking) have shipped more than once when agents skipped this.
+build alone is not sufficient. Layout regressions (overlaps, clipped News, clipped
+About bio, stacked vs corner hero breaking) have shipped more than once when agents
+skipped this.
 
-**Required before signoff (landing / CSS / home layout / news / social icons):**
+**Required before signoff (landing / About / CSS / home layout / news / social icons):**
 1. Run the local server and hard-refresh after CSS changes.
 2. Resize (or device-emulate) and screenshot **at least** these viewports:
    - Phone: `390×844`
@@ -38,6 +39,8 @@ vs corner hero breaking) have shipped more than once when agents skipped this.
    - **No overlaps:** name, tagline, nav, bio, and News must not cover each other.
    - **News readable:** every selected news item is reachable (fully visible or
      scrollable inside the News card) — never clipped mid-item with no way to read it.
+   - **About readable:** the full About bio is reachable (fully visible or scrollable
+     inside the About panel) — never clipped mid-paragraph with no way to read it.
    - **≤899px stacks:** title → news → bio/CTAs (not cramped absolute corners).
    - **≥900px corners:** bio bottom-left, News bottom-right, title centered above.
    - **CTAs usable:** social icons + CV/Projects fully on-screen and clickable.

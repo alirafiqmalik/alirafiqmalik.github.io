@@ -208,6 +208,11 @@ body.one-page-scroll .main-content.main-content-scroll {
   height: auto;
   max-height: calc(var(--snap-panel-height) - 6.5rem);
   justify-content: center;
+  /* Bio is taller than the snap panel on phones — scroll, don't clip */
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 .page-panel-about .about-panel {
@@ -3214,6 +3219,37 @@ a.news-window-line:hover .news-window-arrow {
 
   .landing-scroll-track {
     height: 280vh;
+  }
+
+  /* About: fit more bio above the fold; keep inner scroll for remainder */
+  .page-panel-about {
+    justify-content: flex-start;
+    padding-bottom: 3.25rem;
+  }
+
+  .page-panel-about .page-panel-inner {
+    justify-content: flex-start;
+    max-height: calc(var(--snap-panel-height) - 4.75rem);
+  }
+
+  .page-panel-about .about-grid {
+    gap: 1rem;
+  }
+
+  .page-panel-about .about-portrait img,
+  .page-panel-about .about-placeholder {
+    max-height: min(26dvh, 11.5rem);
+    max-width: 11.5rem;
+  }
+
+  .page-panel-about .about-text h2 {
+    margin-bottom: 0.65rem;
+  }
+
+  .page-panel-about .about-text p {
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    margin-bottom: 0.55rem;
   }
 
   /*
