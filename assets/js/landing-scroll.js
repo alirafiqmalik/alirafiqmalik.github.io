@@ -32,6 +32,18 @@
       window.dispatchEvent(new Event('resize'));
     }
 
+    // Nested overflow:auto scrollports (News / About) steal wheel/touch even
+    // when content fits. Only enable scrolling when content actually overflows.
+    const nestedScrollPorts = () =>
+      document.querySelectorAll('.landing-aside, .page-panel-about .page-panel-inner');
+
+    const syncNestedScrollPorts = () => {
+      nestedScrollPorts().forEach((el) => {
+        const needsScroll = el.scrollHeight > el.clientHeight + 1;
+        el.classList.toggle('is-scrollable', needsScroll);
+      });
+    };
+
     const setVars = (p, exit, reveal, fade) => {
       stage.style.setProperty('--landing-p', String(p));
       stage.style.setProperty('--landing-exit', String(exit));
@@ -95,10 +107,12 @@
 
     const syncSnapForProgress = (p, aboutEnter) => {
       if (!scrollRoot) return;
-      // Free scrub through most of the landing track; proximity snap for the
-      // landing→About blend; mandatory snap resumes once About is settled.
+      // Free scrub through most of the landing track; proximity snap only while
+      // blending into About. Once About is settled (aboutEnter >= 0.92), restore
+      // mandatory snap. Keying soft-snap only on landing progress staying at
+      // its max value left soft mode on forever and trapped later sections.
       const inLanding = p > 0.01 && p < 0.88;
-      const inBlend = (p >= 0.88 && p <= 1) || (aboutEnter > 0 && aboutEnter < 0.92);
+      const inBlend = p >= 0.88 && aboutEnter < 0.92;
 
       scrollRoot.classList.toggle('landing-scroll-free', inLanding);
       scrollRoot.classList.toggle('landing-scroll-soft', !inLanding && inBlend);
@@ -122,6 +136,7 @@
       setVars(p, exit, reveal, fade);
       if (about) about.style.setProperty('--about-enter', String(aboutEnter));
       syncSnapForProgress(p, aboutEnter);
+      syncNestedScrollPorts();
 
       const shouldBeBg = fade > 0.2 || p >= 0.85 || aboutEnter > 0.15;
       document.body.classList.toggle('globe-is-bg', shouldBeBg);
@@ -146,6 +161,11 @@
     window.addEventListener('resize', requestUpdate, { passive: true });
 
     update();
+    // Portrait / font layout can change overflow needs after first paint.
+    window.addEventListener('load', () => {
+      syncNestedScrollPorts();
+      update();
+    }, { once: true });
 
     // Re-assert top after layout metrics / snap settle on first paint.
     if (scrollRoot && !window.location.hash) {

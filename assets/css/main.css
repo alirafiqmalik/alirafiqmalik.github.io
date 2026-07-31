@@ -208,11 +208,16 @@ body.one-page-scroll .main-content.main-content-scroll {
   height: auto;
   max-height: calc(var(--snap-panel-height) - 6.5rem);
   justify-content: center;
-  /* Bio is taller than the snap panel on phones — scroll, don't clip */
-  overflow-x: hidden;
-  overflow-y: auto;
-  overscroll-behavior: contain;
+  /* Bio may be taller than the snap panel on phones — scroll only when needed.
+     `.is-scrollable` is toggled by landing-scroll.js. Use overflow-x:clip (not
+     hidden): hidden+visible computes to auto and steals page wheel/touch. */
+  overflow-x: clip;
+  overflow-y: visible;
   -webkit-overflow-scrolling: touch;
+}
+
+.page-panel-about .page-panel-inner.is-scrollable {
+  overflow-y: auto;
 }
 
 .page-panel-about .about-panel {
@@ -1296,13 +1301,17 @@ body > .landing-globe-slot {
      overflow-y must live on the max-height box so a real scrollport forms
      (flex children alone do not resolve percentage height from max-height). */
   max-height: calc(100% - clamp(9.5rem, 28vh, 14.5rem));
-  overflow-x: hidden;
-  overflow-y: auto;
-  overscroll-behavior: contain;
+  /* clip+visible keeps y non-scrollable; hidden+visible would compute to auto */
+  overflow-x: clip;
+  overflow-y: visible;
   -webkit-overflow-scrolling: touch;
   transform: translate3d(0, calc(var(--landing-exit) * -120vh), 0);
   opacity: calc(1 - var(--landing-exit) * 1.2);
   will-change: transform, opacity;
+}
+
+.landing-aside.is-scrollable {
+  overflow-y: auto;
 }
 
 .landing-aside .news-window {
@@ -3308,11 +3317,14 @@ a.news-window-line:hover .news-window-arrow {
     margin: 0 auto;
     flex: 1 1 auto;
     max-height: min(46dvh, 20rem);
-    overflow-x: hidden;
-    overflow-y: auto;
-    overscroll-behavior: contain;
+    overflow-x: clip;
+    overflow-y: visible;
     -webkit-overflow-scrolling: touch;
     z-index: 4;
+  }
+
+  .landing-aside.is-scrollable {
+    overflow-y: auto;
   }
 
   .landing-aside .news-window-header {

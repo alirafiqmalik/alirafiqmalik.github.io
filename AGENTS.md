@@ -21,8 +21,8 @@ served as static HTML; there is no backend, database, or automated test suite.
 **Do not sign off, merge, or push landing/UI changes as done until you have visually
 reviewed the live local page across multiple device sizes.** A production Jekyll
 build alone is not sufficient. Layout regressions (overlaps, clipped News, clipped
-About bio, stacked vs corner hero breaking) have shipped more than once when agents
-skipped this.
+About bio, stacked vs corner hero breaking, scroll traps) have shipped more than
+once when agents skipped this.
 
 **Required before signoff (landing / About / CSS / home layout / news / social icons):**
 1. Run the local server and hard-refresh after CSS changes.
@@ -44,5 +44,11 @@ skipped this.
    - **≤899px stacks:** title → news → bio/CTAs (not cramped absolute corners).
    - **≥900px corners:** bio bottom-left, News bottom-right, title centered above.
    - **CTAs usable:** social icons + CV/Projects fully on-screen and clickable.
+   - **Scroll continuity:** wheel/trackpad can advance landing → About → Research →
+     later sections without getting stuck. Nested News/About scrollports must not
+     trap page scroll (`overscroll-behavior: contain` is unsafe inside
+     `#page-scroll-container`; `overflow-x: hidden` + `overflow-y: visible`
+     computes to a scrollport — use `overflow-x: clip` instead). Soft-snap
+     (`landing-scroll-soft`) must clear once About is settled.
 4. If any viewport fails, fix and re-run the full matrix before signing off.
 5. Prefer browser/computer-use screenshots over guessing from CSS media queries.
