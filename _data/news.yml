@@ -1,10 +1,10 @@
 # Selected news shown in the right-side News window.
 # Set selected: true to show an item in the panel.
-news:
-  - date: July 2026
-    title: >-
-      Paper on U.S. Banking Systems Security, "Model Checking Banking Payment Systems: Access-Control Attacks on the U.S. ACH Network" accepted in ACH CCS 26
-    selected: true
+# news:
+#   - date: July 2026
+#     title: >-
+#       Paper on U.S. Banking Systems Security, "Model Checking Banking Payment Systems: Access-Control Attacks on the U.S. ACH Network" accepted in ACH CCS 26
+#     selected: true
 
   - date: July 2026
     title: >-
