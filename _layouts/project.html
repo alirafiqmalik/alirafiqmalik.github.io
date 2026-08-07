@@ -5,7 +5,7 @@ layout: default
   <header>
     {% if page.img %}
     <div class="project-hero">
-      <img src="{{ page.img }}" alt="{{ page.title }}" class="project-hero-image">
+      <img src="{{ page.img }}" alt="{{ page.title }}" class="project-hero-image{% if page.hero_image_fit == 'contain' %} project-hero-image-contain{% endif %}">
       {% if page.status %}
       <span class="project-status-badge">{{ page.status }}</span>
       {% endif %}

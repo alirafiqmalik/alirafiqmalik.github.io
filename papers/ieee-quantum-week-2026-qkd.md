@@ -6,6 +6,7 @@ venue: IEEE Quantum Week 2026
 category: IEEE Quantum Week 2026
 status: Accepted
 img: /assets/img/papers/ieee-quantum-week-2026-qkd/figure-1-architecture.png
+hero_image_fit: contain
 description: Security analysis of the classical control plane surrounding quantum key distribution protocols.
 technologies: [Quantum Security, QKD, Formal Verification, Model Checking, Tamarin]
 links:

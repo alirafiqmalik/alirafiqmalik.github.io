@@ -2588,6 +2588,11 @@ a.news-window-line:hover .news-window-arrow {
   object-fit: cover;
 }
 
+.project-hero-image-contain {
+  object-fit: contain;
+  background: var(--bg-card);
+}
+
 .project-title {
   font-size: 2.5rem;
   font-weight: 700;
