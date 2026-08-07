@@ -5,16 +5,16 @@
 # - paper_url is optional; when present, the paper title becomes an accent-green link.
 # - venue_url is optional; when present, the conference name becomes an accent-green link.
 news:
-  - date: August 2026
-    kind: paper
-    prefix: "Paper on banking-system security, '"
-    paper_title: "Provable and Operational Attacks on Banking Payment Systems"
-    suffix: "', accepted at "
-    venue: "ACM CCS 2026"
-    venue_url: "https://sigsac.org/ccs/CCS2026/"
-    detail_url: /papers/acm-ccs-2026-banking-payment-systems/
-    paper_url: ""
-    selected: true
+#   - date: August 2026
+#     kind: paper
+#     prefix: "Paper on banking-system security, '"
+#     paper_title: "Provable and Operational Attacks on Banking Payment Systems"
+#     suffix: "', accepted at "
+#     venue: "ACM CCS 2026"
+#     venue_url: "https://sigsac.org/ccs/CCS2026/"
+#     detail_url: /papers/acm-ccs-2026-banking-payment-systems/
+#     paper_url: ""
+#     selected: true
 
   - date: July 2026
     kind: paper

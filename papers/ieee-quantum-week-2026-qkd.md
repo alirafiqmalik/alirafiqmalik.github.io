@@ -1,7 +1,7 @@
 ---
 layout: paper
 permalink: /papers/ieee-quantum-week-2026-qkd/
-title: Beyond the Quantum Promise: A Security Analysis of Classical Control in Quantum Key Distribution
+title: "Beyond the Quantum Promise: A Security Analysis of Classical Control in Quantum Key Distribution"
 venue: IEEE Quantum Week 2026
 status: Accepted
 description: Security analysis of the classical control plane surrounding quantum key distribution protocols.
