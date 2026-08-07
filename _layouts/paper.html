@@ -1,0 +1,62 @@
+---
+layout: default
+---
+<article class="project-detail paper-detail">
+  <header>
+    {% if page.img %}
+    <div class="project-hero">
+      <img src="{{ page.img }}" alt="{{ page.title }}" class="project-hero-image">
+      {% if page.status %}
+      <span class="project-status-badge">{{ page.status }}</span>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    <h1 class="project-title">{{ page.title }}</h1>
+
+    {% if page.venue %}
+    <div class="project-category">{{ page.venue }}</div>
+    {% elsif page.category %}
+    <div class="project-category">{{ page.category }}</div>
+    {% endif %}
+
+    {% if page.description %}
+    <p class="project-description">{{ page.description }}</p>
+    {% endif %}
+  </header>
+
+  {% if page.technologies %}
+  <div class="project-technologies">
+    {% for tech in page.technologies %}
+    <span class="tech-tag">{{ tech }}</span>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if page.links %}
+  <div class="project-links">
+    {% assign paper_url = page.links.paper | strip %}
+    {% if paper_url and paper_url != "" and paper_url != "#" %}
+    <a href="{{ page.links.paper }}" target="_blank" rel="noopener noreferrer" class="project-link">Paper</a>
+    {% endif %}
+
+    {% assign code_url = page.links.code | strip %}
+    {% if code_url and code_url != "" and code_url != "#" %}
+    <a href="{{ page.links.code }}" target="_blank" rel="noopener noreferrer" class="project-link">Code</a>
+    {% endif %}
+
+    {% assign artifact_url = page.links.artifact | strip %}
+    {% if artifact_url and artifact_url != "" and artifact_url != "#" %}
+    <a href="{{ page.links.artifact }}" target="_blank" rel="noopener noreferrer" class="project-link">Artifact</a>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  <div class="project-content paper-content">
+    {{ content }}
+  </div>
+
+  <div class="project-back">
+    <a href="{{ '/' | relative_url }}" class="back-link">&larr; Back to Home</a>
+  </div>
+</article>

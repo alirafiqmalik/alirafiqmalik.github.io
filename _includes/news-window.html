@@ -1,51 +1,59 @@
 {% comment %}
   News feature boxes — selected items from _data/news.yml.
+  Paper items support:
+    - detail_url: local detail page opened by clicking the news row
+    - paper_url: optional external publication URL; when present, only the paper title is accent-green/clickable
+    - venue_url: optional conference URL; when present, conference name is accent-green/clickable
 {% endcomment %}
 {% assign selected_news = site.data.news.news | where: "selected", true %}
 <div class="news-window" aria-label="News">
   <div class="news-window-inner">
     <div class="news-window-header">
-      <h2 class="news-window-title">News</h2>
+      <h2 class="news-window-title"><a class="news-window-title-link" href="{{ '/history/' | relative_url }}">News</a></h2>
     </div>
 
     {% if selected_news and selected_news.size > 0 %}
     <div class="news-window-list" role="list">
       {% for item in selected_news %}
       <div class="news-window-item" role="listitem">
-        {% if item.link %}
-        {% assign news_link = item.link %}
-        {% assign news_external = false %}
-        {% if item.link contains '://' %}
-          {% assign news_external = true %}
-        {% else %}
-          {% assign news_link = item.link | relative_url %}
+        {% assign detail_link = item.detail_url | default: item.link %}
+        {% if detail_link and detail_link != "" %}
+          {% if detail_link contains '://' %}
+            {% assign resolved_detail_link = detail_link %}
+          {% else %}
+            {% assign resolved_detail_link = detail_link | relative_url %}
+          {% endif %}
         {% endif %}
-        <a class="news-window-line" href="{{ news_link }}"{% if news_external %} target="_blank" rel="noopener noreferrer"{% endif %}>
+
+        <div class="news-window-line{% if detail_link and detail_link != '' %} news-window-line--linked{% endif %}">
+          {% if detail_link and detail_link != "" %}
+          <a class="news-window-detail-link" href="{{ resolved_detail_link }}" aria-label="View details: {{ item.paper_title | default: item.title }}"></a>
+          {% endif %}
+
           <div class="news-window-meta">
             {% if item.date %}<span class="news-window-date-tag">{{ item.date }}</span>{% endif %}
+            {% if detail_link and detail_link != "" %}
             <span class="news-window-arrow" aria-hidden="true">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M5 12h14"></path>
                 <path d="m12 5 7 7-7 7"></path>
               </svg>
             </span>
+            {% endif %}
           </div>
-          <div class="news-window-headline">{{ item.title }}</div>
-          {% if item.description %}
-          <p class="news-window-blurb">{{ item.description }}</p>
-          {% endif %}
-        </a>
-        {% else %}
-        <div class="news-window-line">
-          <div class="news-window-meta">
-            {% if item.date %}<span class="news-window-date-tag">{{ item.date }}</span>{% endif %}
+
+          <div class="news-window-headline">
+            {% if item.kind == "paper" and item.paper_title %}
+              {{ item.prefix }}{% if item.paper_url and item.paper_url != "" %}<a class="news-window-paper-link" href="{{ item.paper_url }}" target="_blank" rel="noopener noreferrer">{{ item.paper_title }}</a>{% else %}<span class="news-window-paper-title">{{ item.paper_title }}</span>{% endif %}{{ item.suffix }}{% if item.venue_url and item.venue_url != "" %}<a class="news-window-venue-link" href="{{ item.venue_url }}" target="_blank" rel="noopener noreferrer">{{ item.venue }}</a>{% else %}<strong class="news-window-venue">{{ item.venue }}</strong>{% endif %}
+            {% else %}
+              {{ item.title }}
+            {% endif %}
           </div>
-          <div class="news-window-headline">{{ item.title }}</div>
+
           {% if item.description %}
           <p class="news-window-blurb">{{ item.description }}</p>
           {% endif %}
         </div>
-        {% endif %}
       </div>
       {% endfor %}
     </div>

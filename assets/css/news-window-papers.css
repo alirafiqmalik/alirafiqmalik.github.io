@@ -1,0 +1,95 @@
+/* Paper-aware text/link styling for the landing-page News window. */
+.news-window-title-link {
+  display: inline-block;
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.news-window-title-link:hover,
+.news-window-title-link:focus-visible {
+  color: var(--accent);
+}
+
+.news-window-title-link:focus-visible {
+  outline: 1px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.news-window-line {
+  position: relative;
+  isolation: isolate;
+}
+
+.news-window-line--linked {
+  cursor: pointer;
+}
+
+.news-window-line--linked:hover,
+.news-window-line--linked:focus-within {
+  background: rgba(206, 255, 0, 0.04);
+}
+
+.news-window-detail-link {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+}
+
+.news-window-detail-link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -3px;
+}
+
+.news-window-line > .news-window-meta,
+.news-window-line > .news-window-headline,
+.news-window-line > .news-window-blurb {
+  position: relative;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.news-window-paper-title,
+.news-window-paper-link,
+.news-window-venue,
+.news-window-venue-link {
+  display: inline;
+}
+
+.news-window-paper-link,
+.news-window-venue-link {
+  position: relative;
+  z-index: 3;
+  pointer-events: auto;
+  color: var(--accent);
+  text-decoration: none;
+  text-underline-offset: 0.2em;
+  transition: color 0.2s ease, text-decoration-color 0.2s ease;
+}
+
+.news-window-paper-link:hover,
+.news-window-paper-link:focus-visible,
+.news-window-venue-link:hover,
+.news-window-venue-link:focus-visible {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+.news-window-paper-link:focus-visible,
+.news-window-venue-link:focus-visible {
+  outline: 1px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.news-window-venue,
+.news-window-venue-link {
+  font-weight: 700;
+}
+
+.news-window-line--linked:hover .news-window-arrow,
+.news-window-line--linked:focus-within .news-window-arrow {
+  opacity: 1;
+  transform: translateX(0);
+  color: var(--accent);
+}
