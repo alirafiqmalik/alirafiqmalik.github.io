@@ -1,13 +1,13 @@
 # Selected news shown in the right-side News window.
 # Set selected: true to show an item in the panel.
-# news:
-#   - date: July 2026
-#     title: >-
-#       Paper on U.S. Banking Systems Security, "Model Checking Banking Payment Systems: Access-Control Attacks on the U.S. ACH Network" accepted in ACH CCS 26
-#     selected: true
+news:
+  - date: August 2026
+    title: >-
+      Paper on banking-system security, "Provable and Operational Attacks on Banking Payment Systems," accepted at ACM CCS 2026
+    selected: true
 
   - date: July 2026
     title: >-
-      Paper on Quantum Security, "Beyond the Quantum Promise: A Security Analysis of Classical Control in QKD" accepted in IEEE QCE 26
+      Paper on quantum security, "Beyond the Quantum Promise: A Security Analysis of Classical Control in Quantum Key Distribution," accepted to the QNET Technical Papers Track at IEEE Quantum Week 2026
     selected: true
     link: https://www.researchgate.net/publication/403682108_Beyond_the_Quantum_Promise_A_Security_Analysis_of_Classical_Control_in_Quantum_Key_Distribution
