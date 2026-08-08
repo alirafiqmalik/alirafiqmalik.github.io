@@ -7,6 +7,7 @@ category: IEEE Quantum Week 2026
 status: Accepted
 img: /assets/img/papers/ieee-quantum-week-2026-qkd/figure-1-architecture.png
 hero_image_fit: contain
+page_class: qkd-paper
 description: Security analysis of the classical control plane surrounding quantum key distribution protocols.
 technologies: [Quantum Security, QKD, Formal Verification, Model Checking, Tamarin]
 links:
@@ -51,7 +52,7 @@ Under <em>Eve<sup>+</sup></em>, the symbolic analysis falsifies secrecy or agree
 
 <figure>
   <figcaption>Table 1. Verification under <em>Eve<sup>+</sup></em>. ✓ verified; ✗ falsified.</figcaption>
-  <div>
+  <div class="qkd-table-scroll">
     <table>
       <thead>
         <tr><th>Model</th><th>Exec</th><th>Sec</th><th>Alive</th><th>Weak agreement</th><th>Non-injective agreement</th><th>Time</th></tr>

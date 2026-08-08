@@ -2593,6 +2593,113 @@ a.news-window-line:hover .news-window-arrow {
   background: var(--bg-card);
 }
 
+/* === QKD PAPER FIGURES AND RESULTS TABLE === */
+.qkd-paper .project-hero {
+  padding: clamp(0.75rem, 2vw, 1.25rem);
+  background: #f3f4ef;
+  border: 1px solid rgba(206, 255, 0, 0.28);
+  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.24);
+}
+
+.qkd-paper .project-hero-image-contain {
+  display: block;
+  width: 100%;
+  height: clamp(14rem, 35vw, 24rem);
+  max-height: none;
+  background: transparent;
+}
+
+.qkd-paper .project-content figure {
+  margin: 2rem 0 2.5rem;
+  padding: clamp(0.75rem, 2vw, 1.25rem);
+  background: #f3f4ef;
+  border: 1px solid rgba(206, 255, 0, 0.28);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.2);
+}
+
+.qkd-paper .project-content figure img {
+  display: block;
+  width: 100%;
+  max-height: 42rem;
+  object-fit: contain;
+  margin: 0 auto;
+}
+
+.qkd-paper .project-content figcaption {
+  margin-top: 0.85rem;
+  color: #303833;
+  font-size: 0.875rem;
+  line-height: 1.55;
+}
+
+.qkd-paper .qkd-table-scroll {
+  overflow-x: auto;
+  margin-top: 0.25rem;
+  border-radius: 0.35rem;
+}
+
+.qkd-paper .qkd-table-scroll table {
+  width: 100%;
+  min-width: 52rem;
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+  color: #202722;
+  background: #fbfcf8;
+  font-size: 0.8rem;
+  line-height: 1.35;
+}
+
+.qkd-paper .qkd-table-scroll th,
+.qkd-paper .qkd-table-scroll td {
+  padding: 0.65rem 0.55rem;
+  border-right: 1px solid #cbd3c9;
+  border-bottom: 1px solid #cbd3c9;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.qkd-paper .qkd-table-scroll th:first-child,
+.qkd-paper .qkd-table-scroll td:first-child {
+  text-align: left;
+}
+
+.qkd-paper .qkd-table-scroll thead th {
+  color: #f7faf4;
+  background: #26322c;
+  border-color: #47564c;
+  font-weight: 700;
+}
+
+.qkd-paper .qkd-table-scroll tbody tr:nth-child(even):not(:has(th[colspan])) {
+  background: #eef2eb;
+}
+
+.qkd-paper .qkd-table-scroll tbody th[colspan] {
+  padding: 0.5rem 0.7rem;
+  color: #17231b;
+  background: #d9e8d9;
+  border-color: #b8c9b8;
+  text-align: left;
+  letter-spacing: 0.02em;
+}
+
+.qkd-paper .qkd-table-scroll td:first-child {
+  font-weight: 600;
+}
+
+@media (max-width: 640px) {
+  .qkd-paper .project-content figure {
+    margin-right: -0.25rem;
+    margin-left: -0.25rem;
+  }
+
+  .qkd-paper .project-content figure img {
+    max-height: 34rem;
+  }
+}
+
 .project-title {
   font-size: 2.5rem;
   font-weight: 700;

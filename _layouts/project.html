@@ -1,7 +1,7 @@
 ---
 layout: default
 ---
-<article class="project-detail">
+<article class="project-detail{% if page.page_class %} {{ page.page_class }}{% endif %}">
   <header>
     {% if page.img %}
     <div class="project-hero">
