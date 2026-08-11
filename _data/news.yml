@@ -24,5 +24,5 @@ news:
     venue: "IEEE Quantum Week 2026"
     venue_url: "https://qce.quantum.ieee.org/2026/"
     detail_url: /papers/ieee-quantum-week-2026-qkd/
-    paper_url: "https://www.researchgate.net/publication/403682108_Beyond_the_Quantum_Promise_A_Security_Analysis_of_Classical_Control_in_Quantum_Key_Distribution"
+    paper_url: "https://arxiv.org/abs/2608.07626"
     selected: true
