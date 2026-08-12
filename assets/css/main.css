@@ -2637,6 +2637,8 @@ a.news-window-line:hover .news-window-arrow {
   overflow-x: auto;
   margin-top: 0.25rem;
   border-radius: 0.35rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
 }
 
 .qkd-paper .qkd-table-scroll table {
@@ -2645,8 +2647,8 @@ a.news-window-line:hover .news-window-arrow {
   border-collapse: separate;
   border-spacing: 0;
   overflow: hidden;
-  color: #202722;
-  background: #fbfcf8;
+  color: var(--text-primary);
+  background: var(--bg-card);
   font-size: 0.8rem;
   line-height: 1.35;
 }
@@ -2654,8 +2656,8 @@ a.news-window-line:hover .news-window-arrow {
 .qkd-paper .qkd-table-scroll th,
 .qkd-paper .qkd-table-scroll td {
   padding: 0.65rem 0.55rem;
-  border-right: 1px solid #cbd3c9;
-  border-bottom: 1px solid #cbd3c9;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
   text-align: center;
   vertical-align: middle;
 }
@@ -2666,21 +2668,21 @@ a.news-window-line:hover .news-window-arrow {
 }
 
 .qkd-paper .qkd-table-scroll thead th {
-  color: #f7faf4;
-  background: #26322c;
-  border-color: #47564c;
+  color: var(--text-primary);
+  background: var(--bg-elevated);
+  border-color: var(--border);
   font-weight: 700;
 }
 
 .qkd-paper .qkd-table-scroll tbody tr:nth-child(even):not(:has(th[colspan])) {
-  background: #eef2eb;
+  background: rgba(255, 255, 255, 0.035);
 }
 
 .qkd-paper .qkd-table-scroll tbody th[colspan] {
   padding: 0.5rem 0.7rem;
-  color: #17231b;
-  background: #d9e8d9;
-  border-color: #b8c9b8;
+  color: var(--accent);
+  background: rgba(206, 255, 0, 0.1);
+  border-color: rgba(206, 255, 0, 0.28);
   text-align: left;
   letter-spacing: 0.02em;
 }
