@@ -23,6 +23,6 @@ news:
     suffix: "', accepted to "
     venue: "IEEE Quantum Week 2026"
     venue_url: "https://qce.quantum.ieee.org/2026/"
-    detail_url: /papers/ieee-quantum-week-2026-qkd/
+    detail_url: /blog-demo-qkd-fv/
     paper_url: "https://arxiv.org/abs/2608.07626"
     selected: true
