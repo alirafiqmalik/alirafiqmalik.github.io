@@ -129,7 +129,9 @@ html.one-page-scroll-root body.one-page-scroll {
 
 .page-scroll-container {
   position: relative;
-  z-index: 1;
+  /* Layer 2 of the single site compositing stack:
+     0 = globe, 1 = .site-backdrop scrim, 2 = scrolling content. */
+  z-index: 2;
   height: var(--snap-panel-height);
   overflow-y: auto;
   overflow-x: hidden;
@@ -148,6 +150,27 @@ html.one-page-scroll-root body.one-page-scroll {
 
 .page-scroll-container:focus {
   outline: none;
+}
+
+/*
+ * Unified readability scrim (issue #21).
+ *
+ * The globe is a fixed layer behind the scrolling content. Tinting each snap
+ * panel individually meant that during a scroll transition two panels — each
+ * with its own rgba fill — shared the viewport, and the edge between them
+ * swept across the globe as a hard horizontal band. One fixed, full-viewport
+ * scrim between the globe and the content has no edges at all, so no seam can
+ * form regardless of where the panels happen to sit. Scroll progress drives
+ * `--backdrop-scrim` (opacity only — never a background-color animation).
+ */
+.site-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: #141414;
+  opacity: var(--backdrop-scrim, 0);
+  will-change: opacity;
 }
 
 body.one-page-scroll .main-content.main-content-scroll {
@@ -927,6 +950,13 @@ body.one-page-scroll .landing-scroll-track {
   scroll-snap-align: start;
   scroll-snap-stop: normal;
   flex-shrink: 0;
+  /*
+   * Scrollytelling overlap: pull About up into the tail of the pinned hero
+   * track so it starts rising into the viewport while the globe is still
+   * locked. Without this the track ends, nothing moves for ~1.5 screens, and
+   * About then hands off abruptly.
+   */
+  margin-bottom: calc(var(--landing-overlap) * -1);
 }
 
 .page-scroll-container.landing-scroll-free {
@@ -939,8 +969,12 @@ body.one-page-scroll .landing-scroll-track {
 }
 
 .landing-scroll-track {
+  /* Scrub length = track height - 100vh. Every unit of it drives a phase
+     (exit → reveal → dim), and the last stretch overlaps About's entrance. */
+  --landing-track-height: 230vh;
+  --landing-overlap: 50vh;
   position: relative;
-  height: 340vh;
+  height: var(--landing-track-height);
   width: 100%;
 }
 
@@ -1018,7 +1052,6 @@ body > .landing-globe-slot {
   height: 100%;
   display: block;
   border-radius: 50%;
-  contain: layout paint;
 }
 
 .landing-globe-frame > .cobe-globe-host,
@@ -1172,8 +1205,10 @@ body > .landing-globe-slot {
   border-radius: 0;
   background: transparent;
   backdrop-filter: none;
-  transform: translate3d(0, calc(var(--landing-exit) * -120vh), 0);
-  opacity: calc(1 - var(--landing-exit) * 1.2);
+  /* Leaves slightly ahead of the title block — a small stagger reads as
+     choreography rather than one rigid slab sliding off. */
+  transform: translate3d(0, calc(var(--landing-exit) * -140vh), 0);
+  opacity: calc(1 - var(--landing-exit) * 1.55);
   will-change: transform, opacity;
 }
 
@@ -1305,8 +1340,8 @@ body > .landing-globe-slot {
   overflow-x: clip;
   overflow-y: visible;
   -webkit-overflow-scrolling: touch;
-  transform: translate3d(0, calc(var(--landing-exit) * -120vh), 0);
-  opacity: calc(1 - var(--landing-exit) * 1.2);
+  transform: translate3d(0, calc(var(--landing-exit) * -140vh), 0);
+  opacity: calc(1 - var(--landing-exit) * 1.55);
   will-change: transform, opacity;
 }
 
@@ -1337,56 +1372,57 @@ body.globe-is-bg > .landing-globe-slot {
 }
 
 body.globe-is-bg .page-scroll-container,
-body.globe-is-bg .page-panel-about,
 body.globe-is-bg .page-panel-research,
 body.globe-is-bg .page-panel-experience,
 body.globe-is-bg .page-panel-publications,
 body.globe-is-bg .page-panel-explore,
 body.globe-is-bg .footer {
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 
-/* Translucent panels so the globe reads through as a persistent bg */
+/*
+ * Panels stay fully transparent — deliberately. Contrast over the globe comes
+ * from the single fixed `.site-backdrop` scrim, never from per-panel fills;
+ * per-panel fills are what produced the horizontal band in issue #21.
+ */
 body.globe-is-bg .page-panel-about,
 body.globe-is-bg .page-panel-research,
-body.globe-is-bg .page-panel-experience {
-  background: rgba(20, 20, 20, 0.52);
-  transition: background-color 0.7s ease;
-}
-
-body.globe-is-bg .page-panel-publications {
-  background: rgba(20, 20, 20, 0.58);
-  transition: background-color 0.7s ease;
-}
-
-body.globe-is-bg .page-panel-explore {
-  background: rgba(20, 20, 20, 0.62);
-  transition: background-color 0.7s ease;
-}
-
+body.globe-is-bg .page-panel-experience,
+body.globe-is-bg .page-panel-publications,
+body.globe-is-bg .page-panel-explore,
 body.globe-is-bg .footer-snap-panel,
 body.globe-is-bg .footer {
-  background: rgba(20, 20, 20, 0.7);
-  transition: background-color 0.7s ease;
+  background: transparent;
+}
+
+/* Landing hero is spent by now — never let it swallow clicks on About */
+body.globe-is-bg .home-section.home-section-landing {
+  pointer-events: none;
 }
 
 /* About eases in as it approaches (scroll-driven --about-enter) */
-.page-panel-about {
+.page-panel-about,
+body.globe-is-bg .page-panel-about {
   --about-enter: 0;
+  /* Rides over the tail of the pinned hero (z-index 2) during the overlap */
+  position: relative;
+  z-index: 3;
 }
 
-.page-panel-about .about-panel {
-  opacity: calc(0.2 + var(--about-enter) * 0.8);
-  transform: translate3d(0, calc((1 - var(--about-enter)) * 1.75rem), 0);
-  will-change: opacity, transform;
-  transition: none;
-}
-
+/*
+ * About settles into the pinned globe: scroll progress eases it up and scales
+ * it the last few percent so the hand-off reads as one continuous move rather
+ * than a panel snapping into place. Transform + opacity only.
+ */
+.page-panel-about .about-panel,
 .page-panel-about .about-panel.animate-on-scroll,
 .page-panel-about .about-panel.animate-on-scroll.visible {
-  opacity: calc(0.2 + var(--about-enter) * 0.8);
-  transform: translate3d(0, calc((1 - var(--about-enter)) * 1.75rem), 0);
+  opacity: calc(0.15 + var(--about-enter) * 0.85);
+  transform: translate3d(0, calc((1 - var(--about-enter)) * 2.25rem), 0)
+    scale(calc(0.972 + var(--about-enter) * 0.028));
+  will-change: opacity, transform;
+  transition: none;
 }
 
 .home-section {
@@ -3353,7 +3389,8 @@ a.news-window-line:hover .news-window-arrow {
   }
 
   .landing-scroll-track {
-    height: 280vh;
+    --landing-track-height: 200vh;
+    --landing-overlap: 42vh;
   }
 
   /* About: fit more bio above the fold; keep inner scroll for remainder */
@@ -3848,4 +3885,42 @@ a.news-window-line:hover .news-window-arrow {
 .cv-download svg {
   width: 1rem;
   height: 1rem;
+}
+
+/*
+ * Reduced motion: no scrollytelling. The track collapses to a single screen,
+ * the hero shows everything at rest, and the globe sits centred and dimmed as
+ * a static background. CSS owns these values so the page is correct even if
+ * landing-scroll.js never runs.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .landing-scroll-track {
+    --landing-track-height: 100dvh;
+    --landing-overlap: 0px;
+  }
+
+  .landing-title-block,
+  .landing-copy,
+  .landing-aside {
+    transform: none;
+    opacity: 1;
+  }
+
+  .landing-globe-slot,
+  body > .landing-globe-slot {
+    transform: translate(-50%, -50%);
+    opacity: 0.48;
+    filter: brightness(0.86) saturate(0.9);
+  }
+
+  .site-backdrop {
+    opacity: 0.55;
+  }
+
+  .page-panel-about .about-panel,
+  .page-panel-about .about-panel.animate-on-scroll,
+  .page-panel-about .about-panel.animate-on-scroll.visible {
+    opacity: 1;
+    transform: none;
+  }
 }

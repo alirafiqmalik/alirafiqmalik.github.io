@@ -1,7 +1,20 @@
 /**
- * Landing scroll choreography:
- * exit (bio/news/title) → reveal globe 50%→100% → dim as persistent site bg
- * → soft blend into About
+ * Landing scrollytelling choreography.
+ *
+ * The globe is a fixed layer pinned to the viewport centre for the whole page;
+ * scroll progress drives everything that moves around it:
+ *
+ *   0.00 → 0.40  hero copy (title / bio / news) lifts away
+ *   0.10 → 0.55  globe reveals from half-height to centred
+ *   0.45 → 1.00  globe dims and the unified scrim rises behind the content
+ *   ~0.62 → past the track  About rises through the overlap and settles
+ *
+ * The phases overlap on purpose: at no point in the journey is scrolling
+ * moving nothing, which is what produced the dead gap before About.
+ *
+ * Contrast over the globe comes from one fixed `.site-backdrop` layer whose
+ * opacity is set here (`--backdrop-scrim`). Panels are transparent, so no
+ * panel edge can ever slice across the globe (issue #21).
  */
 (function () {
   'use strict';
@@ -44,6 +57,10 @@
       });
     };
 
+    // Peak opacity of the unified scrim once the globe is the site background.
+    // Replaces the old per-panel rgba fills (0.52–0.70) with one uniform value.
+    const SCRIM_MAX = 0.58;
+
     const setVars = (p, exit, reveal, fade) => {
       stage.style.setProperty('--landing-p', String(p));
       stage.style.setProperty('--landing-exit', String(exit));
@@ -57,14 +74,16 @@
       }
     };
 
-    const applyEndState = () => {
-      setVars(1, 1, 1, 1);
-      document.body.classList.add('globe-is-bg');
-      if (about) about.style.setProperty('--about-enter', '1');
+    const setScrim = (value) => {
+      document.documentElement.style.setProperty('--backdrop-scrim', String(value));
     };
 
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      applyEndState();
+      // CSS `@media (prefers-reduced-motion: reduce)` owns the static values
+      // (one-screen track, centred dimmed globe, hero copy at rest). Only the
+      // classes that CSS cannot set are applied here.
+      document.body.classList.add('globe-is-bg');
+      if (about) about.style.setProperty('--about-enter', '1');
       return;
     }
 
@@ -107,15 +126,16 @@
 
     const syncSnapForProgress = (p, aboutEnter) => {
       if (!scrollRoot) return;
-      // Free scrub through most of the landing track; proximity snap only while
-      // blending into About. Once About is settled (aboutEnter >= 0.92), restore
-      // mandatory snap. Keying soft-snap only on landing progress staying at
-      // its max value left soft mode on forever and trapped later sections.
-      const inLanding = p > 0.01 && p < 0.88;
-      const inBlend = p >= 0.88 && aboutEnter < 0.92;
+      // The track and About now overlap, so the two mandatory snap points sit
+      // ~1.8 screens apart. Snap must stay off for that whole stretch or the
+      // browser yanks you across it. Gate on About's own entry rather than on
+      // track progress: aboutEnter reaches 1 and stays there once About has
+      // scrolled past, so mandatory snap reliably returns for later sections.
+      const inLanding = p > 0.01 && aboutEnter < 0.55;
+      const inBlend = !inLanding && aboutEnter >= 0.55 && aboutEnter < 0.94;
 
       scrollRoot.classList.toggle('landing-scroll-free', inLanding);
-      scrollRoot.classList.toggle('landing-scroll-soft', !inLanding && inBlend);
+      scrollRoot.classList.toggle('landing-scroll-soft', inBlend);
       if (!inLanding && !inBlend) {
         scrollRoot.classList.remove('landing-scroll-free', 'landing-scroll-soft');
       }
@@ -127,18 +147,21 @@
       const p = getTrackProgress();
       const aboutEnter = getAboutEnter();
 
-      // Longer, eased phases so landing → About feels continuous
-      const exit = smoothstep(clamp(p / 0.3, 0, 1));
-      const reveal = smoothstep(clamp((p - 0.14) / 0.5, 0, 1));
-      // Dim starts while reveal finishes and continues into the About approach
-      const fade = smoothstep(clamp((p - 0.52) / 0.48, 0, 1));
+      // Overlapping phases — something is always in motion while scrolling
+      const exit = smoothstep(clamp(p / 0.4, 0, 1));
+      const reveal = smoothstep(clamp((p - 0.1) / 0.45, 0, 1));
+      // Dim starts while the reveal finishes and runs into the About approach
+      const fade = smoothstep(clamp((p - 0.45) / 0.55, 0, 1));
 
       setVars(p, exit, reveal, fade);
+      // One uniform scrim, driven by whichever of the two blend drivers leads.
+      // Because it is a single fixed layer there is no edge to slice the globe.
+      setScrim(Math.max(fade, aboutEnter) * SCRIM_MAX);
       if (about) about.style.setProperty('--about-enter', String(aboutEnter));
       syncSnapForProgress(p, aboutEnter);
       syncNestedScrollPorts();
 
-      const shouldBeBg = fade > 0.2 || p >= 0.85 || aboutEnter > 0.15;
+      const shouldBeBg = fade > 0.2 || p >= 0.8 || aboutEnter > 0.05;
       document.body.classList.toggle('globe-is-bg', shouldBeBg);
     };
 

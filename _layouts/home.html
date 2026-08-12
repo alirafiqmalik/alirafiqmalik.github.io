@@ -4,6 +4,9 @@
   {% include head.html %}
 </head>
 <body class="one-page-scroll">
+  <!-- Single scrim between the fixed globe and the scrolling content. Replaces
+       the per-panel tints that produced the horizontal band artifact (#21). -->
+  <div class="site-backdrop" aria-hidden="true"></div>
   <div class="site-wrapper site-wrapper-scroll">
     {% include navigation.html %}
     <div class="page-scroll-container" id="page-scroll-container" tabindex="0">
