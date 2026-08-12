@@ -19,7 +19,7 @@ news:
   - date: July 2026
     kind: paper
     prefix: "Paper on quantum security, '"
-    paper_title: "Beyond the Quantum Promise: A Security Analysis of Classical Control in Quantum Key Distribution"
+    paper_title: "Beyond the Quantum Promise"
     suffix: "', accepted to "
     venue: "IEEE Quantum Week 2026"
     venue_url: "https://qce.quantum.ieee.org/2026/"
