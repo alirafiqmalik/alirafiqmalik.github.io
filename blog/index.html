@@ -12,14 +12,50 @@ title: Blog
 <div class="posts-list">
   {% if site.posts.size > 0 %}
     {% for post in site.posts %}
-    <article class="post-item animate-on-scroll">
-      <a href="{{ post.url | relative_url }}">
-        <div class="post-item-date">{{ post.date | date: "%B %d, %Y" }}</div>
-        <h2 class="post-item-title">{{ post.title }}</h2>
-        {% if post.excerpt %}
-        <p class="post-item-excerpt">{{ post.excerpt | strip_html | truncatewords: 30 }}</p>
+    {% assign post_href = post.redirect | default: post.url %}
+    {% assign is_external = false %}
+    {% if post_href contains '://' %}{% assign is_external = true %}{% endif %}
+    <article class="project-card animate-on-scroll">
+      {% if post.img %}
+      <div class="project-card-image">
+        <img src="{{ post.img }}" alt="{{ post.title }}" loading="lazy">
+        {% if post.status %}
+        <span class="project-status-badge">{{ post.status }}</span>
         {% endif %}
-      </a>
+      </div>
+      {% endif %}
+      <div class="project-card-content">
+        {% if post.venue %}<div class="project-card-category">{{ post.venue }}</div>{% endif %}
+        <h2 class="project-card-title">{{ post.title }}</h2>
+        <div class="post-item-date">{{ post.date | date: "%B %d, %Y" }}</div>
+        <p class="project-card-description">{{ post.description | default: post.excerpt | strip_html | truncatewords: 40 }}</p>
+        {% if post.technologies %}
+        <div class="tech-tags">
+          {% for tech in post.technologies %}
+          <span class="tech-tag">{{ tech }}</span>
+          {% endfor %}
+        </div>
+        {% endif %}
+        <div class="project-card-links">
+          <a href="{% if is_external %}{{ post_href }}{% else %}{{ post_href | relative_url }}{% endif %}"{% if is_external %} target="_blank" rel="noopener noreferrer"{% endif %} class="project-link">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+              <polyline points="15 3 21 3 21 9"/>
+              <line x1="10" y1="14" x2="21" y2="3"/>
+            </svg>
+            <span>Read Paper</span>
+          </a>
+          {% assign paper_url = post.links.paper | strip %}
+          {% if paper_url and paper_url != "" and paper_url != "#" %}
+          <a href="{{ post.links.paper }}" target="_blank" rel="noopener noreferrer" class="icon-link" aria-label="Preprint">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+            </svg>
+          </a>
+          {% endif %}
+        </div>
+      </div>
     </article>
     {% endfor %}
   {% else %}
