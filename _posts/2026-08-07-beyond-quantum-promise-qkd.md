@@ -8,7 +8,7 @@ description: >-
   control plane around QKD protocols and uncovers three specification-level
   vulnerabilities in ETSI- and ITU-T-grounded protocol models.
 technologies: [Quantum Security, QKD, Formal Verification, Model Checking, Tamarin]
-redirect: /papers/ieee-quantum-week-2026-qkd/
+redirect: https://alihamzamalik.me/blog-demo-qkd-fv/
 links:
   paper: "https://www.researchgate.net/publication/403682108_Beyond_the_Quantum_Promise_A_Security_Analysis_of_Classical_Control_in_Quantum_Key_Distribution"
 ---
