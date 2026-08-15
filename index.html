@@ -19,7 +19,7 @@ layout: home
         </div>
       </div>
 
-      <div class="landing-title-block" data-landing-title>
+      <div class="landing-title-block">
         <h1 class="landing-name">{{ site.data.personal.name }}</h1>
         <p class="landing-tagline" aria-label="Provable Security for Emerging Systems">
           <span class="landing-tagline-left">Provable Security</span>
@@ -27,7 +27,7 @@ layout: home
         </p>
       </div>
 
-      <div class="landing-copy" data-landing-exit>
+      <div class="landing-copy">
         <div class="landing-bio">
           {% if site.data.personal.bio_paragraphs %}
             {% for paragraph in site.data.personal.bio_paragraphs %}
@@ -97,7 +97,7 @@ layout: home
         </div>
       </div>
 
-      <aside class="landing-aside" id="news" data-landing-exit aria-label="News">
+      <aside class="landing-aside" id="news" aria-label="News">
         {% include news-window.html %}
       </aside>
     </div>

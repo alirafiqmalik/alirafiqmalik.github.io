@@ -111,33 +111,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // Keep News card sticky just under the floating navbar (content-sized; no stretch).
-  const syncNewsCardMetrics = () => {
-    if (!nav) return;
-    if (window.matchMedia('(max-width: 1023px)').matches) {
-      document.documentElement.style.removeProperty('--news-sticky-top');
-      return;
-    }
-
-    const stickyGap = Number.parseFloat(
-      getComputedStyle(document.documentElement).getPropertyValue('--nav-sticky-gap')
-    ) || 8;
-    const top = nav.getBoundingClientRect().bottom + stickyGap;
-    document.documentElement.style.setProperty('--news-sticky-top', `${top}px`);
-
-    const card = document.querySelector('.landing-aside .news-window-inner, .profile-aside .news-window-inner');
-    if (card) {
-      const height = card.getBoundingClientRect().height;
-      if (height > 0) {
-        document.documentElement.style.setProperty('--news-card-height', `${height}px`);
-      }
-    }
-  };
-
   const syncLayoutMetrics = () => {
     syncSnapPanelHeight();
     syncNavOffset();
-    syncNewsCardMetrics();
   };
 
   if (scrollContainer) {
@@ -161,7 +137,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const getObserveTarget = (element) => {
     if (!element) return null;
-    if (element.classList.contains('profile-interests')) return element;
     if (element.id === 'landing') return element;
     return getSnapPanel(element) || element;
   };
@@ -188,10 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const target = document.getElementById(id);
     if (!target) return false;
 
-    // Profile blocks (#research inside #about) scroll to the element itself.
-    const scrollTarget = target.classList.contains('profile-interests')
-      ? target
-      : (getSnapPanel(target) || target);
+    const scrollTarget = getSnapPanel(target) || target;
 
     if (scrollContainer) {
       const top = getPanelScrollTop(scrollTarget);
@@ -623,29 +595,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (card) card.addEventListener('click', toggle);
   });
 
-  // News CTA: scroll to #news and briefly focus the news window
-  const focusNewsWindow = () => {
-    const newsWindows = document.querySelectorAll('.news-window');
-    if (!newsWindows.length) return;
-    let target = newsWindows[0];
-    newsWindows.forEach(win => {
-      const panel = win.closest('.page-panel, .home-section, .landing-aside, .profile-aside');
-      if (!panel) return;
-      const rect = panel.getBoundingClientRect();
-      if (rect.top < window.innerHeight * 0.75 && rect.bottom > window.innerHeight * 0.15) {
-        target = win;
-      }
-    });
-    newsWindows.forEach(win => win.classList.remove('is-focused'));
-    target.classList.add('is-focused');
-    window.setTimeout(() => target.classList.remove('is-focused'), 1600);
-  };
-
-  document.querySelectorAll('[data-focus-news]').forEach(el => {
-    el.addEventListener('click', () => {
-      window.setTimeout(focusNewsWindow, 350);
-    });
-  });
 });
 
 // Navigation helper

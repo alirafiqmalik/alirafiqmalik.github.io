@@ -32,9 +32,6 @@
   --nav-float-offset: calc(var(--nav-float-top) + var(--nav-float-height));
   --nav-sticky-gap: 0.5rem;
   --nav-offset: calc(var(--nav-float-offset) + var(--nav-sticky-gap));
-  --news-card-height: auto;
-  --intro-viewport-height: calc(var(--snap-panel-height) - var(--nav-offset));
-  --news-sticky-top: var(--nav-offset);
   --snap-panel-height: 100dvh;
 }
 
@@ -250,24 +247,18 @@ body.one-page-scroll .main-content.main-content-scroll {
   justify-content: center;
 }
 
-.page-panel-about .about-panel.animate-on-scroll,
-.intro-about .about-panel.animate-on-scroll,
-.home-section-profile .profile-about.animate-on-scroll {
+.page-panel-about .about-panel.animate-on-scroll {
   opacity: 0;
   transform: none;
   transition: opacity 0.6s ease;
 }
 
-.page-panel-about .about-panel.animate-on-scroll.visible,
-.intro-about .about-panel.animate-on-scroll.visible,
-.home-section-profile .profile-about.animate-on-scroll.visible {
+.page-panel-about .about-panel.animate-on-scroll.visible {
   opacity: 1;
   transform: none;
 }
 
-.page-panel-about .about-grid,
-.intro-about .about-grid,
-.home-section-profile .about-grid {
+.page-panel-about .about-grid {
   align-items: center;
   width: 100%;
   min-height: 0;
@@ -275,39 +266,27 @@ body.one-page-scroll .main-content.main-content-scroll {
   gap: clamp(1rem, 2.5vh, 2rem);
 }
 
-.page-panel-about .about-text,
-.intro-about .about-text,
-.home-section-profile .about-text {
+.page-panel-about .about-text {
   min-height: 0;
 }
 
-.page-panel-about .about-text h2,
-.intro-about .about-text h2,
-.home-section-profile .about-text h2 {
+.page-panel-about .about-text h2 {
   font-size: clamp(1.5rem, 3vw, 1.875rem);
   margin-bottom: clamp(0.75rem, 2vh, 1.25rem);
 }
 
-.page-panel-about .about-text p,
-.intro-about .about-text p,
-.home-section-profile .about-text p {
+.page-panel-about .about-text p {
   font-size: clamp(0.8125rem, 1.4vw, 0.9375rem);
   line-height: 1.55;
   margin-bottom: clamp(0.5rem, 1.5vh, 0.875rem);
 }
 
-.page-panel-about .about-text p:last-child,
-.intro-about .about-text p:last-child,
-.home-section-profile .about-text p:last-child {
+.page-panel-about .about-text p:last-child {
   margin-bottom: 0;
 }
 
 .page-panel-about .about-portrait img,
-.page-panel-about .about-placeholder,
-.intro-about .about-portrait img,
-.intro-about .about-placeholder,
-.home-section-profile .about-portrait img,
-.home-section-profile .about-placeholder {
+.page-panel-about .about-placeholder {
   max-height: min(40dvh, 20rem);
   width: auto;
   object-fit: cover;
@@ -325,24 +304,6 @@ body.one-page-scroll .main-content.main-content-scroll {
 .page-panel-publications .page-panel-inner {
   justify-content: flex-start;
   padding-top: 1rem;
-}
-
-.page-panel-intro {
-  height: auto;
-  min-height: 0;
-  max-height: none;
-  scroll-snap-align: start;
-  scroll-snap-stop: normal;
-  overflow: visible;
-  justify-content: flex-start;
-  padding: calc(var(--nav-float-offset) + 0.35rem) 1.5rem 2rem;
-}
-
-.page-panel-landing.landing-hero {
-  margin-top: 0;
-  padding: 5rem 1.5rem 2rem;
-  justify-content: center;
-  overflow: hidden;
 }
 
 .page-panel-research .page-panel-header {
@@ -1274,10 +1235,6 @@ body > .landing-globe-slot {
   height: 1.125rem;
 }
 
-.landing-divider {
-  display: none;
-}
-
 .landing-buttons {
   display: flex;
   flex-wrap: wrap;
@@ -1303,19 +1260,6 @@ body > .landing-globe-slot {
 .landing-btn:hover {
   border-color: rgba(206, 255, 0, 0.55);
   color: var(--accent);
-}
-
-.landing-btn-primary {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #141414;
-}
-
-.landing-btn-primary:hover {
-  background: #dfff4d;
-  border-color: #dfff4d;
-  color: #141414;
-  filter: none;
 }
 
 .landing-btn svg {
@@ -1459,7 +1403,6 @@ body.globe-is-bg .page-panel-about {
   overflow: hidden;
 }
 
-.news-window.is-focused .news-window-inner,
 .news-window-inner:focus-within {
   border-color: rgba(206, 255, 0, 0.45);
   box-shadow: 0 0 0 1px rgba(206, 255, 0, 0.18);
@@ -1472,16 +1415,6 @@ body.globe-is-bg .page-panel-about {
   gap: 0.35rem;
   padding: 1rem 1.05rem 0.9rem;
   border-bottom: 1px solid var(--border);
-}
-
-.news-window-eyebrow {
-  margin: 0;
-  font-family: var(--font-mono);
-  font-size: 0.625rem;
-  font-weight: 400;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--text-secondary);
 }
 
 .news-window-title {
@@ -1598,17 +1531,6 @@ a.news-window-line:hover .news-window-arrow {
   color: var(--text-secondary);
   font-size: 0.85rem;
   line-height: 1.5;
-}
-
-/* === ABOUT SPLIT (legacy helpers) === */
-.intro-about .about-panel {
-  width: 100%;
-}
-
-.intro-about .about-aside .news-window-inner,
-.intro-aside .news-window-inner {
-  min-height: 0;
-  height: auto;
 }
 
 /* === HERO SECTION (legacy) === */
