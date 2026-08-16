@@ -91,6 +91,21 @@ test("stacked-at-desktop fixture goes red naming the stack-vs-corners invariant"
   }
 });
 
+test("trap fixture goes red naming the scroll-trap invariant", { timeout: 300_000 }, async () => {
+  const server = await serveStatic(join(REPO_ROOT, "tools", "probe", "fixtures", "scroll-trap"));
+  try {
+    const { code, stdout, stderr } = await runProbe(["--url", server.baseUrl]);
+    assert.equal(code, 1, `expected exit 1\nstdout:\n${stdout}\nstderr:\n${stderr}`);
+    assert.match(
+      stdout,
+      /^1280x800 \/ scroll-trap \/ news-card/m,
+      `expected a scroll-trap failure line at 1280x800\nstdout:\n${stdout}`
+    );
+  } finally {
+    await server.close();
+  }
+});
+
 test("current site goes green (build + serve + probe exits 0)", { timeout: 600_000 }, async () => {
   const { code, stdout, stderr } = await runProbe([]);
   assert.equal(code, 0, `expected exit 0\nstdout:\n${stdout}\nstderr:\n${stderr}`);

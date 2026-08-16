@@ -25,6 +25,11 @@ import {
   decideCtasUsable,
   decideReachable,
 } from "./geometry.mjs";
+import { decideWalk, decideTrapProbe, resetToTop } from "./scrollwalk.mjs";
+
+// The walk is repeated under prefers-reduced-motion: reduce at one phone and
+// one desktop viewport (spec #22).
+const REDUCED_MOTION_VIEWPORTS = new Set(["390x844", "1440x900"]);
 
 const REPO_ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const OUT_DIR = join(REPO_ROOT, "probe-out");
@@ -65,12 +70,15 @@ function runCommand(command, args, env) {
   });
 }
 
-async function probeViewport(browser, baseUrl, viewport) {
+async function probeViewport(browser, baseUrl, viewport, { reducedMotion = false } = {}) {
+  const label = reducedMotion ? `${viewport.name}-rm` : viewport.name;
+  const labeled = { ...viewport, name: label };
   const context = await browser.newContext({
     viewport: { width: viewport.width, height: viewport.height },
     deviceScaleFactor: viewport.deviceScaleFactor,
     isMobile: viewport.mobile,
     hasTouch: viewport.mobile,
+    ...(reducedMotion ? { reducedMotion: "reduce" } : {}),
   });
   let page = null;
   try {
@@ -80,20 +88,32 @@ async function probeViewport(browser, baseUrl, viewport) {
 
     const { rects, scrollbarGutter } = await measureHandles(page);
     // Screenshot every viewport on every run, pass or fail (feeds the Eyeball Pass).
-    await page.screenshot({ path: join(OUT_DIR, `${viewport.name}.png`), fullPage: true });
+    await page.screenshot({ path: join(OUT_DIR, `${label}.png`), fullPage: true });
+    console.log(`# ${label} gutter=${scrollbarGutter}px`);
 
-    console.log(`# ${viewport.name} gutter=${scrollbarGutter}px`);
-    // Rest-position invariants first; the reachability invariants drive real
-    // wheel input and may move the page, so they run last.
-    const failures = [
-      ...decideOverlapInvariant(viewport, rects),
-      ...decideStackVsCorners(viewport, rects),
-      ...(await decideCtasUsable(page, viewport, rects)),
-      ...(await decideReachable(page, viewport, "news-card", "news-reachable")),
-      ...(await decideReachable(page, viewport, "about-panel", "about-reachable")),
-    ];
+    let failures;
+    if (reducedMotion) {
+      // Reduced-motion runs repeat only the walk.
+      failures = await decideWalk(page, labeled);
+    } else {
+      // Rest-position invariants first; the reachability invariants drive real
+      // wheel input and may move the page; the walk and Trap Probes reset and
+      // re-drive the page, so they run last.
+      failures = [
+        ...decideOverlapInvariant(labeled, rects),
+        ...decideStackVsCorners(labeled, rects),
+        ...(await decideCtasUsable(page, labeled, rects)),
+        ...(await decideReachable(page, labeled, "news-card", "news-reachable")),
+        ...(await decideReachable(page, labeled, "about-panel", "about-reachable")),
+        ...(await decideWalk(page, labeled)),
+      ];
+      await resetToTop(page);
+      failures.push(...(await decideTrapProbe(page, labeled, "news-card")));
+      failures.push(...(await decideTrapProbe(page, labeled, "about-panel")));
+    }
+
     if (failures.length === 0) {
-      console.log(`ok ${viewport.name}`);
+      console.log(`ok ${label}`);
     } else {
       for (const line of failures) console.log(line);
     }
@@ -103,10 +123,10 @@ async function probeViewport(browser, baseUrl, viewport) {
     // screenshot guarantee for the rest and report this one as red.
     if (page) {
       await page
-        .screenshot({ path: join(OUT_DIR, `${viewport.name}.png`), fullPage: true })
+        .screenshot({ path: join(OUT_DIR, `${label}.png`), fullPage: true })
         .catch(() => {});
     }
-    const failure = `${viewport.name} / probe-error / ${error.message.split("\n")[0]}`;
+    const failure = `${label} / probe-error / ${error.message.split("\n")[0]}`;
     console.log(failure);
     return [failure];
   } finally {
@@ -142,6 +162,9 @@ async function main() {
     const allFailures = [];
     for (const viewport of VIEWPORTS) {
       allFailures.push(...(await probeViewport(browser, baseUrl, viewport)));
+    }
+    for (const viewport of VIEWPORTS.filter((v) => REDUCED_MOTION_VIEWPORTS.has(v.name))) {
+      allFailures.push(...(await probeViewport(browser, baseUrl, viewport, { reducedMotion: true })));
     }
     if (allFailures.length > 0) {
       console.log(`probe: ${allFailures.length} failure(s) across the viewport set`);

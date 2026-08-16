@@ -254,7 +254,7 @@ export async function decideCtasUsable(page, viewport, rects) {
 // observationally: the nearest self-or-ancestor whose content overflows,
 // stopping below the page scroll owner.
 
-async function measureReach(page, handleName) {
+export async function measureReach(page, handleName) {
   return page.evaluate((handle) => {
     const el = document.querySelector(`[data-probe="${handle}"]`);
     if (!el) return null;
@@ -289,6 +289,7 @@ async function measureReach(page, handleName) {
       portBottom === null ? window.innerHeight : Math.min(portBottom, window.innerHeight);
     const clampNum = (v, lo, hi) => Math.min(Math.max(v, lo), hi);
     return {
+      pageScrollTop: pageScroller.scrollTop,
       contentBottom,
       visibleBottom,
       portScrollTop,
@@ -299,7 +300,7 @@ async function measureReach(page, handleName) {
   }, handleName);
 }
 
-const twoFrames = (page) =>
+export const twoFrames = (page) =>
   page.evaluate(
     () =>
       new Promise((resolve) =>

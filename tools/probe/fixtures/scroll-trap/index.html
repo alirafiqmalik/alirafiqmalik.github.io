@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Probe fixture: nested scrollport traps wheel input</title>
+  <style>
+    /* Deliberate violation of the scroll-trap invariant: the News card sits in
+       a nested scrollport with overscroll-behavior: contain, so once the inner
+       scroll reaches its end, wheel input over the card never hands scrolling
+       back to the page. Kept narrow and near the top so the page-center walk
+       never wheels over it. */
+    body { margin: 0; font-family: sans-serif; }
+    header { display: flex; flex-direction: column; gap: 8px; padding: 8px; width: 280px; }
+    .trap { width: 280px; height: 150px; overflow-y: auto; overscroll-behavior: contain; border: 1px solid #999; }
+    [data-probe="news-card"] .item { height: 70px; border-bottom: 1px solid #ccc; }
+    section { margin: 8px; padding: 8px; width: 264px; border: 1px solid #999; }
+    .tall { height: 3000px; }
+  </style>
+</head>
+<body>
+  <header>
+    <nav data-probe="nav">Nav</nav>
+    <h1 data-probe="name">Name</h1>
+    <p data-probe="tagline">Tagline</p>
+  </header>
+  <div class="trap">
+    <div data-probe="news-card">
+      <div class="item">News item 1</div>
+      <div class="item">News item 2</div>
+      <div class="item">News item 3</div>
+      <div class="item">News item 4 (reachable by inner scroll, but the port traps)</div>
+    </div>
+  </div>
+  <section data-probe="about-panel"><p>About bio, short and fully visible.</p></section>
+  <section data-probe="cta-social"><a href="#">mail</a> <a href="#">github</a></section>
+  <section data-probe="cta-links"><a href="#">CV</a> <a href="#">Projects</a></section>
+  <div class="tall"></div>
+</body>
+</html>
