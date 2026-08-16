@@ -55,6 +55,42 @@ test("overlap fixture goes red naming the overlap invariant", { timeout: 300_000
   }
 });
 
+test("clipped News fixture goes red naming the news-reachable invariant", { timeout: 300_000 }, async () => {
+  const server = await serveStatic(join(REPO_ROOT, "tools", "probe", "fixtures", "news-clipped"));
+  try {
+    const { code, stdout, stderr } = await runProbe(["--url", server.baseUrl]);
+    assert.equal(code, 1, `expected exit 1\nstdout:\n${stdout}\nstderr:\n${stderr}`);
+    assert.match(
+      stdout,
+      /^1280x800 \/ news-reachable \//m,
+      `expected a news-reachable failure line at 1280x800\nstdout:\n${stdout}`
+    );
+  } finally {
+    await server.close();
+  }
+});
+
+test("stacked-at-desktop fixture goes red naming the stack-vs-corners invariant", { timeout: 300_000 }, async () => {
+  const server = await serveStatic(join(REPO_ROOT, "tools", "probe", "fixtures", "stacked-desktop"));
+  try {
+    const { code, stdout, stderr } = await runProbe(["--url", server.baseUrl]);
+    assert.equal(code, 1, `expected exit 1\nstdout:\n${stdout}\nstderr:\n${stderr}`);
+    assert.match(
+      stdout,
+      /^900x800 \/ stack-vs-corners \//m,
+      `expected a stack-vs-corners failure line at 900x800\nstdout:\n${stdout}`
+    );
+    // Boundary Pair: the same layout must be green on the stacked side.
+    assert.doesNotMatch(
+      stdout,
+      /^899x800 \/ stack-vs-corners \//m,
+      `stacked side of the Boundary Pair should pass\nstdout:\n${stdout}`
+    );
+  } finally {
+    await server.close();
+  }
+});
+
 test("current site goes green (build + serve + probe exits 0)", { timeout: 600_000 }, async () => {
   const { code, stdout, stderr } = await runProbe([]);
   assert.equal(code, 0, `expected exit 0\nstdout:\n${stdout}\nstderr:\n${stderr}`);

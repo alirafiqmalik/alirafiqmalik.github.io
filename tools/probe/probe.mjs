@@ -17,12 +17,17 @@ import { dirname, join } from "node:path";
 import { chromium } from "playwright";
 import { serveStatic } from "./serve.mjs";
 import { VIEWPORTS } from "./viewports.mjs";
+import {
+  settle,
+  measureHandles,
+  decideOverlapInvariant,
+  decideStackVsCorners,
+  decideCtasUsable,
+  decideReachable,
+} from "./geometry.mjs";
 
 const REPO_ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const OUT_DIR = join(REPO_ROOT, "probe-out");
-
-// The five named rects of the pairwise non-overlap invariant.
-const OVERLAP_HANDLES = ["name", "tagline", "nav", "about-panel", "news-card"];
 
 function parseArgs(argv) {
   const opts = { url: null };
@@ -60,91 +65,6 @@ function runCommand(command, args, env) {
   });
 }
 
-// Geometry is measured only once the page has settled: fonts loaded, images
-// complete, and scroll position stable across frames. Bounded, no retries —
-// a page that never settles is a real bug (settle discipline per spec #22).
-async function settle(page) {
-  await page.waitForFunction(
-    () => document.fonts.status === "loaded",
-    undefined,
-    { timeout: 15_000 }
-  );
-  await page.waitForFunction(
-    () => [...document.images].every((img) => img.complete),
-    undefined,
-    { timeout: 15_000 }
-  );
-  await page.waitForFunction(
-    () =>
-      new Promise((resolve) => {
-        const y0 = window.scrollY;
-        requestAnimationFrame(() =>
-          requestAnimationFrame(() => resolve(window.scrollY === y0))
-        );
-      }),
-    undefined,
-    { timeout: 15_000 }
-  );
-}
-
-const fmt = (n) => Math.round(n * 10) / 10;
-const fmtRect = (r) => `[x=${fmt(r.x)} y=${fmt(r.y)} w=${fmt(r.width)} h=${fmt(r.height)}]`;
-
-// Overlap = positive-area intersection beyond a subpixel tolerance.
-const EPSILON = 0.5;
-function intersection(a, b) {
-  const width = Math.min(a.x + a.width, b.x + b.width) - Math.max(a.x, b.x);
-  const height = Math.min(a.y + a.height, b.y + b.height) - Math.max(a.y, b.y);
-  return width > EPSILON && height > EPSILON ? { width, height } : null;
-}
-
-async function measureHandles(page, handles) {
-  return page.evaluate((names) => {
-    const rects = {};
-    for (const name of names) {
-      const el = document.querySelector(`[data-probe="${name}"]`);
-      rects[name] = el ? el.getBoundingClientRect().toJSON() : null;
-    }
-    // Root scrollbar gutter: >0 on an overflowing page proves classic
-    // (non-overlay) scrollbars are in effect.
-    return {
-      rects,
-      scrollbarGutter: window.innerWidth - document.documentElement.clientWidth,
-    };
-  }, handles);
-}
-
-function decideOverlapInvariant(viewport, rects) {
-  const failures = [];
-  for (const handle of OVERLAP_HANDLES) {
-    if (rects[handle] === null) {
-      failures.push(`${viewport.name} / overlap / handle not found: ${handle}`);
-    } else if (rects[handle].width <= 0 || rects[handle].height <= 0) {
-      // A collapsed named rect cannot overlap anything — going silently green
-      // here would be a false pass, so it fails instead.
-      failures.push(
-        `${viewport.name} / overlap / handle has zero-area rect: ${handle}=${fmtRect(rects[handle])}`
-      );
-    }
-  }
-  const visible = OVERLAP_HANDLES.filter(
-    (h) => rects[h] && rects[h].width > 0 && rects[h].height > 0
-  );
-  for (let i = 0; i < visible.length; i++) {
-    for (let j = i + 1; j < visible.length; j++) {
-      const [a, b] = [visible[i], visible[j]];
-      const hit = intersection(rects[a], rects[b]);
-      if (hit) {
-        failures.push(
-          `${viewport.name} / overlap / ${a}=${fmtRect(rects[a])} intersects ` +
-            `${b}=${fmtRect(rects[b])} by ${fmt(hit.width)}x${fmt(hit.height)}px`
-        );
-      }
-    }
-  }
-  return failures;
-}
-
 async function probeViewport(browser, baseUrl, viewport) {
   const context = await browser.newContext({
     viewport: { width: viewport.width, height: viewport.height },
@@ -158,12 +78,20 @@ async function probeViewport(browser, baseUrl, viewport) {
     await page.goto(`${baseUrl}/`, { waitUntil: "load", timeout: 30_000 });
     await settle(page);
 
-    const { rects, scrollbarGutter } = await measureHandles(page, OVERLAP_HANDLES);
+    const { rects, scrollbarGutter } = await measureHandles(page);
     // Screenshot every viewport on every run, pass or fail (feeds the Eyeball Pass).
     await page.screenshot({ path: join(OUT_DIR, `${viewport.name}.png`), fullPage: true });
 
     console.log(`# ${viewport.name} gutter=${scrollbarGutter}px`);
-    const failures = decideOverlapInvariant(viewport, rects);
+    // Rest-position invariants first; the reachability invariants drive real
+    // wheel input and may move the page, so they run last.
+    const failures = [
+      ...decideOverlapInvariant(viewport, rects),
+      ...decideStackVsCorners(viewport, rects),
+      ...(await decideCtasUsable(page, viewport, rects)),
+      ...(await decideReachable(page, viewport, "news-card", "news-reachable")),
+      ...(await decideReachable(page, viewport, "about-panel", "about-reachable")),
+    ];
     if (failures.length === 0) {
       console.log(`ok ${viewport.name}`);
     } else {

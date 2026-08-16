@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Probe fixture: News card clipped mid-item, unscrollable</title>
+  <style>
+    /* Deliberate violation of the news-reachable invariant: the News card sits
+       inside a fixed-height overflow:hidden box, so its last item is clipped
+       and no amount of wheel input over the card can reveal it. */
+    body { margin: 0; font-family: sans-serif; }
+    header { display: flex; flex-direction: column; gap: 8px; padding: 8px; }
+    .clip { height: 120px; overflow: hidden; border: 1px solid #999; }
+    [data-probe="news-card"] .item { height: 60px; border-bottom: 1px solid #ccc; }
+    section { margin: 8px; padding: 8px; border: 1px solid #999; }
+    .tall { height: 3000px; }
+  </style>
+</head>
+<body>
+  <header>
+    <nav data-probe="nav">Nav</nav>
+    <h1 data-probe="name">Name</h1>
+    <p data-probe="tagline">Tagline</p>
+  </header>
+  <div class="clip">
+    <div data-probe="news-card">
+      <div class="item">News item 1</div>
+      <div class="item">News item 2</div>
+      <div class="item">News item 3</div>
+      <div class="item">News item 4 (clipped, unreachable)</div>
+    </div>
+  </div>
+  <section data-probe="about-panel"><p>About bio, short and fully visible.</p></section>
+  <section data-probe="cta-social"><a href="#">mail</a> <a href="#">github</a></section>
+  <section data-probe="cta-links"><a href="#">CV</a> <a href="#">Projects</a></section>
+  <div class="tall"></div>
+</body>
+</html>

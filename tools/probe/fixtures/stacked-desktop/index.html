@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Probe fixture: stacked layout persisting at desktop widths</title>
+  <style>
+    /* Deliberate violation of the stack-vs-corners invariant: the stacked
+       (single-column, full-width) layout persists at every width, so at
+       ≥900px there is no corner layout — the News card stays centered under
+       the title instead of bottom-right, and the CTAs stay centered instead
+       of bottom-left. */
+    body { margin: 0; font-family: sans-serif; display: flex; flex-direction: column; gap: 10px; padding: 10px; }
+    [data-probe] { border: 1px solid #999; padding: 8px; }
+    [data-probe="name"], [data-probe="tagline"] { text-align: center; margin: 0; }
+  </style>
+</head>
+<body>
+  <nav data-probe="nav">Nav</nav>
+  <h1 data-probe="name">Name</h1>
+  <p data-probe="tagline">Tagline</p>
+  <div data-probe="news-card">News card, full width under the title at all widths</div>
+  <div data-probe="about-panel"><p>About bio, short and fully visible.</p></div>
+  <div data-probe="cta-social"><a href="#">mail</a> <a href="#">github</a></div>
+  <div data-probe="cta-links"><a href="#">CV</a> <a href="#">Projects</a></div>
+</body>
+</html>
