@@ -54,6 +54,8 @@ exclude:
   - Gemfile.lock
   - README.md
   - .github
+  - tools
+  - probe-out
 
 # Keep CNAME for custom domain (GitHub Pages)
 keep_files:

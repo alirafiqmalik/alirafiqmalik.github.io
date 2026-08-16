@@ -11,6 +11,9 @@ vendor/
 # Node
 node_modules/
 
+# Layout Probe artifacts
+probe-out/
+
 # OS
 .DS_Store
 Thumbs.db

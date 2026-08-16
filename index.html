@@ -20,8 +20,8 @@ layout: home
       </div>
 
       <div class="landing-title-block">
-        <h1 class="landing-name">{{ site.data.personal.name }}</h1>
-        <p class="landing-tagline" aria-label="Provable Security for Emerging Systems">
+        <h1 class="landing-name" data-probe="name">{{ site.data.personal.name }}</h1>
+        <p class="landing-tagline" data-probe="tagline" aria-label="Provable Security for Emerging Systems">
           <span class="landing-tagline-left">Provable Security</span>
           <span class="landing-tagline-right">for Emerging Systems</span>
         </p>
@@ -44,7 +44,7 @@ layout: home
         </div>
 
         <div class="landing-footer-row">
-          <div class="landing-social">
+          <div class="landing-social" data-probe="cta-social">
             <a href="mailto:{{ site.data.personal.email }}" aria-label="Email">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <rect width="20" height="16" x="2" y="4" rx="2"></rect>
@@ -75,7 +75,7 @@ layout: home
             {% endif %}
           </div>
 
-          <div class="landing-buttons">
+          <div class="landing-buttons" data-probe="cta-links">
             {% assign cv_pdf = site.data.personal.cv_pdf | default: '/assets/pdf/AliMalik_Resume.pdf' %}
             <a class="landing-btn" href="{{ cv_pdf | relative_url }}" target="_blank" rel="noopener noreferrer">
               CV
@@ -107,7 +107,7 @@ layout: home
 <!-- About — match live alihamzamalik.me/#about -->
 <section class="page-panel page-panel-about" id="about">
   <div class="page-panel-inner container">
-    <div class="about-panel animate-on-scroll">
+    <div class="about-panel animate-on-scroll" data-probe="about-panel">
       <div class="about-grid">
         <div class="about-portrait">
           {% assign profile_image = site.static_files | where: "path", site.data.personal.profileImage | first %}

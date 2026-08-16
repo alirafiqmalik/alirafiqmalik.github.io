@@ -6,7 +6,7 @@
     - venue_url: optional conference URL; when present, conference name is accent-green/clickable
 {% endcomment %}
 {% assign selected_news = site.data.news.news | where: "selected", true %}
-<div class="news-window" aria-label="News">
+<div class="news-window" data-probe="news-card" aria-label="News">
   <div class="news-window-inner">
     <div class="news-window-header">
       <h2 class="news-window-title"><a class="news-window-title-link" href="{{ '/history/' | relative_url }}">News</a></h2>

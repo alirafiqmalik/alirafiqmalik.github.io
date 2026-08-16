@@ -10,6 +10,7 @@ served as static HTML; there is no backend, database, or automated test suite.
 - **Build**: `bundle exec jekyll build` (CI runs this with `JEKYLL_ENV=production`; see `.github/workflows/jekyll.yml`).
 - **Landing globe (COBE)**: `npm ci && npm run build:globe` bundles `assets/js/globe-src.js` → `assets/js/globe.js` (depends on `cobe`). Re-run after editing the globe source.
 - **Health check (closest thing to lint)**: `bundle exec jekyll doctor`. There is no separate linter or test framework.
+- **Layout Probe**: `npm run probe` builds the site, serves `_site`, and checks the Viewport Matrix (screenshots in `probe-out/`); `npm run probe -- --url <base>` attaches to a running server instead. One-time setup: `npx playwright install chromium`. Probe self-tests: `npm run probe:test`.
 
 ### Non-obvious notes
 - Gems are installed into a project-local `vendor/bundle` (via `bundle config set --local path 'vendor/bundle'`). `vendor/` and `.bundle/` are gitignored. Always run Jekyll commands through `bundle exec`.

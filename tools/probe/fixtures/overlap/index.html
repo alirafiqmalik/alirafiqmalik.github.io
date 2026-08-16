@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Probe fixture: overlapping named rects</title>
+  <style>
+    /* Deliberate violation of the overlap invariant: "name" and "tagline"
+       are pinned to intersecting absolute positions at every viewport.
+       The other named rects flow normally and stay disjoint. */
+    body { margin: 0; font-family: sans-serif; }
+    [data-probe="name"] {
+      position: absolute; top: 40px; left: 20px;
+      width: 200px; height: 80px; background: #fdd;
+    }
+    [data-probe="tagline"] {
+      position: absolute; top: 80px; left: 100px;
+      width: 200px; height: 80px; background: #dfd;
+    }
+    [data-probe="nav"] { margin-top: 200px; height: 40px; background: #ddf; }
+    [data-probe="news-card"] { margin-top: 20px; height: 100px; background: #ffd; }
+    [data-probe="about-panel"] { margin-top: 20px; height: 100px; background: #dff; }
+  </style>
+</head>
+<body>
+  <h1 data-probe="name">Name</h1>
+  <p data-probe="tagline">Tagline</p>
+  <nav data-probe="nav">Nav</nav>
+  <div data-probe="news-card">News card</div>
+  <div data-probe="about-panel">About panel</div>
+  <!-- Force page overflow so classic-scrollbar width reservation is observable. -->
+  <div style="height: 3000px"></div>
+</body>
+</html>

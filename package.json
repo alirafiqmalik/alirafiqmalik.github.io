@@ -4,12 +4,15 @@
   "description": "Academic portfolio site (Jekyll) — front-end dependencies",
   "scripts": {
     "build:globe": "esbuild assets/js/globe-src.js --bundle --format=iife --outfile=assets/js/globe.js --minify",
-    "build": "npm run build:globe"
+    "build": "npm run build:globe",
+    "probe": "node tools/probe/probe.mjs",
+    "probe:test": "node --test \"tools/probe/test/*.test.mjs\""
   },
   "dependencies": {
     "cobe": "^2.0.1"
   },
   "devDependencies": {
-    "esbuild": "^0.25.0"
+    "esbuild": "^0.25.0",
+    "playwright": "^1.62.1"
   }
 }
