@@ -10,7 +10,7 @@ served as static HTML; there is no backend, database, or automated test suite.
 - **Build**: `bundle exec jekyll build` (CI runs this with `JEKYLL_ENV=production`; see `.github/workflows/jekyll.yml`).
 - **Landing globe (COBE)**: `npm ci && npm run build:globe` bundles `assets/js/globe-src.js` → `assets/js/globe.js` (depends on `cobe`). Re-run after editing the globe source.
 - **Health check (closest thing to lint)**: `bundle exec jekyll doctor`. There is no separate linter or test framework.
-- **Layout Probe**: `npm run probe` builds the site, serves `_site`, and checks the Viewport Matrix (screenshots in `probe-out/`); `npm run probe -- --url <base>` attaches to a running server instead. One-time setup: `npx playwright install chromium`. Probe self-tests: `npm run probe:test`.
+- **Layout Probe**: `npm run probe` builds the site, serves `_site`, and decides the Viewport Matrix invariants (screenshots in `probe-out/`); `npm run probe -- --url <base>` attaches to a running server instead. One-time setup: `npm install` then `npx playwright install chromium`. Probe self-tests: `npm run probe:test`.
 
 ### Non-obvious notes
 - Gems are installed into a project-local `vendor/bundle` (via `bundle config set --local path 'vendor/bundle'`). `vendor/` and `.bundle/` are gitignored. Always run Jekyll commands through `bundle exec`.
@@ -18,41 +18,63 @@ served as static HTML; there is no backend, database, or automated test suite.
 - CI uses Ruby 3.3, but Ruby 3.2 (Ubuntu 24.04 system Ruby) builds the site fine; the Gemfile only requires Ruby 3+.
 - Jekyll's livereload watcher does **not** pick up changes to `_config.yml`; restart `jekyll serve` after editing it. Content/layout/data file edits hot-reload automatically.
 
-### SOLID CONSTRAINT — multi-device review before signoff
-**Do not sign off, merge, or push landing/UI changes as done until you have visually
-reviewed the live local page across multiple device sizes.** A production Jekyll
-build alone is not sufficient. Layout regressions (overlaps, clipped News, clipped
-About bio, stacked vs corner hero breaking, scroll traps) have shipped more than
-once when agents skipped this.
+### SOLID CONSTRAINT — Signoff for landing / About / CSS / home-layout / news / social-icon changes
 
-**Required before signoff (landing / About / CSS / home layout / news / social icons):**
-1. Run the local server and hard-refresh after CSS changes.
-2. Resize (or device-emulate) and screenshot **at least** these viewports:
-   - Phone: `390×844`
-   - Short phone: `360×640`
-   - Tablet portrait: `768×1024`
-   - Tablet landscape / small laptop: `1024×768`
-   - MacBook common: `1280×800`
-   - Compact laptop: `1440×780`
-   - Standard laptop: `1440×900`
-   - Desktop: `1920×1080`
-3. Every viewport must **PASS** all of:
-   - **No overlaps:** name, tagline, nav, bio, and News must not cover each other.
-   - **News readable:** every selected news item is reachable (fully visible or
-     scrollable inside the News card) — never clipped mid-item with no way to read it.
-   - **About readable:** the full About bio is reachable (fully visible or scrollable
-     inside the About panel) — never clipped mid-paragraph with no way to read it.
-   - **≤899px stacks:** title → news → bio/CTAs (not cramped absolute corners).
-   - **≥900px corners:** bio bottom-left, News bottom-right, title centered above.
-   - **CTAs usable:** social icons + CV/Projects fully on-screen and clickable.
-   - **Scroll continuity:** wheel/trackpad can advance landing → About → Research →
-     later sections without getting stuck. Nested News/About scrollports must not
-     trap page scroll (`overscroll-behavior: contain` is unsafe inside
-     `#page-scroll-container`; `overflow-x: hidden` + `overflow-y: visible`
-     computes to a scrollport — use `overflow-x: clip` instead). Soft-snap
-     (`landing-scroll-soft`) must clear once About is settled.
-4. If any viewport fails, fix and re-run the full matrix before signing off.
-5. Prefer browser/computer-use screenshots over guessing from CSS media queries.
+**Signoff is two steps, both mandatory:**
+1. **`npm run probe` passes** (exit 0). The Layout Probe executes the mechanical
+   half of the Viewport Matrix below at all 11 viewports — the 8 canonical ones
+   plus the Boundary Pair (`899×800` / `900×800`) and the Narrow Floor
+   (`320×568`) — and repeats the scroll walk under reduced motion at one phone
+   and one desktop viewport.
+2. **Eyeball Pass over `probe-out/`.** The probe writes a full-page screenshot
+   per viewport on every run; a human (or vision-capable agent) reviews them
+   before signoff. The probe complements, never replaces, this review
+   (`docs/adr/0001-layout-probe-observable-only.md`): aesthetics — spacing,
+   typography, visual balance — are out of the probe's scope by design.
+
+If any viewport fails, fix and re-run until the probe is green; do not merge or
+push landing/UI changes red. While iterating, `npm run probe -- --url <base>`
+attaches to an already-running dev server and skips the build.
+
+#### Viewport Matrix (spec of record)
+
+Canonical viewports: phone `390×844`, short phone `360×640`, tablet portrait
+`768×1024`, tablet landscape `1024×768`, MacBook common `1280×800`, compact
+laptop `1440×780`, standard laptop `1440×900`, desktop `1920×1080`.
+
+Every viewport must satisfy all of:
+- **No overlaps:** name, tagline, nav, bio, and News must not cover each other.
+- **News readable:** every selected news item is reachable (fully visible or
+  scrollable inside the News card) — never clipped mid-item with no way to read it.
+- **About readable:** the full About bio is reachable (fully visible or scrollable
+  inside the About panel) — never clipped mid-paragraph with no way to read it.
+- **≤899px stacks:** title → news → bio/CTAs (not cramped absolute corners).
+- **≥900px corners:** bio bottom-left, News bottom-right, title centered above.
+- **CTAs usable:** social icons + CV/Projects fully on-screen and clickable.
+- **Scroll continuity:** wheel/trackpad can advance landing → About → Research →
+  later sections without getting stuck. Nested News/About scrollports must not
+  trap page scroll (`overscroll-behavior: contain` is unsafe inside
+  `#page-scroll-container`; `overflow-x: hidden` + `overflow-y: visible`
+  computes to a scrollport — use `overflow-x: clip` instead). Soft-snap
+  (`landing-scroll-soft`) must clear once About is settled.
+
+#### Probe Handle contract
+
+The homepage elements named by the Viewport Matrix carry `data-probe`
+attributes: `name`, `tagline`, `nav`, `news-card`, `about-panel`, `cta-social`,
+`cta-links`. The probe locates elements only through these handles and section
+ids — never styling or state classes (ADR-0001) — so renaming or removing a
+`data-probe` attribute is a contract change: keep the handle on the element
+that plays that role, or update the probe and this section together.
+
+#### Deliberate non-goals (do not "fix" these later)
+
+- **Local-only** — no CI gate yet; promotion is a separate decision after
+  observing flake rate.
+- **Homepage-only** — other pages are out of the probe's scope.
+- **No retries** — a red run is a real bug in the site or in the probe's settle
+  detection; fix one of them, never re-roll.
+- Landscape phone `844×390` is a possible later viewport row, not a current one.
 
 ## Agent skills
 
