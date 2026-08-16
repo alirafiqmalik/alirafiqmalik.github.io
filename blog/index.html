@@ -12,7 +12,11 @@ title: Blog
 <div class="posts-list">
   {% if site.posts.size > 0 %}
     {% for post in site.posts %}
-    {% assign post_href = post.redirect | default: post.url %}
+    {% assign pub = nil %}
+    {% if post.publication %}
+      {% assign pub = site.publications | where: 'slug', post.publication | first %}
+    {% endif %}
+    {% assign post_href = pub.detail_url | default: post.redirect | default: post.url %}
     {% assign is_external = false %}
     {% if post_href contains '://' %}{% assign is_external = true %}{% endif %}
     <article class="project-card animate-on-scroll">
@@ -25,7 +29,8 @@ title: Blog
       </div>
       {% endif %}
       <div class="project-card-content">
-        {% if post.venue %}<div class="project-card-category">{{ post.venue }}</div>{% endif %}
+        {% assign venue = pub.venue | default: post.venue %}
+        {% if venue %}<div class="project-card-category">{{ venue }}</div>{% endif %}
         <h2 class="project-card-title">{{ post.title }}</h2>
         <div class="post-item-date">{{ post.date | date: "%B %d, %Y" }}</div>
         <p class="project-card-description">{{ post.description | default: post.excerpt | strip_html | truncatewords: 40 }}</p>
@@ -45,9 +50,9 @@ title: Blog
             </svg>
             <span>Read Blog</span>
           </a>
-          {% assign paper_url = post.links.paper | strip %}
+          {% assign paper_url = pub.links.preprint | default: pub.links.arxiv | default: post.links.paper | strip %}
           {% if paper_url and paper_url != "" and paper_url != "#" %}
-          <a href="{{ post.links.paper }}" target="_blank" rel="noopener noreferrer" class="icon-link" aria-label="Preprint">
+          <a href="{{ paper_url }}" target="_blank" rel="noopener noreferrer" class="icon-link" aria-label="Preprint">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
               <polyline points="14 2 14 8 20 8"/>

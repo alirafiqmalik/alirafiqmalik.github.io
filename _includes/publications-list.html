@@ -48,7 +48,8 @@
           <p class="publication-entry-venue"><em>{{ pub.venue }}</em></p>
           {% endif %}
 
-          {% if pub.links %}
+          {% assign detail_url = pub.detail_url | strip %}
+          {% if pub.links or detail_url != "" %}
           <div class="publication-entry-links">
             {% assign pdf_url = pub.links.pdf | strip %}
             {% if pdf_url and pdf_url != "" and pdf_url != "#" %}
@@ -61,6 +62,17 @@
             {% assign doi_url = pub.links.doi | strip %}
             {% if doi_url and doi_url != "" and doi_url != "#" %}
             <a href="{{ doi_url }}" target="_blank" rel="noopener noreferrer" class="publication-link-btn">DOI</a>
+            {% endif %}
+            {% assign code_url = pub.links.code | strip %}
+            {% if code_url and code_url != "" and code_url != "#" %}
+            <a href="{{ code_url }}" target="_blank" rel="noopener noreferrer" class="publication-link-btn">Code</a>
+            {% endif %}
+            {% if detail_url != "" %}
+            {% if detail_url contains '://' %}
+            <a href="{{ detail_url }}" target="_blank" rel="noopener noreferrer" class="publication-link-btn">Read Blog</a>
+            {% else %}
+            <a href="{{ detail_url | relative_url }}" class="publication-link-btn">Read Blog</a>
+            {% endif %}
             {% endif %}
           </div>
           {% endif %}

@@ -1,28 +1,15 @@
 # Selected news shown in the right-side News window.
 # Set selected: true to show an item in the panel.
 # For paper announcements:
-# - detail_url opens the local paper detail page when the news row is clicked.
-# - paper_url is optional; when present, the paper title becomes an accent-green link.
-# - venue_url is optional; when present, the conference name becomes an accent-green link.
+# - publication: slug of a _publications/*.md record — title, venue, venue_url,
+#   detail_url, and paper_url (arxiv/preprint link) are pulled from that record
+#   so they can't drift from the publications list. prefix/suffix stay
+#   hand-written editorial phrasing around the pulled facts.
+# - paper_title overrides the record's short_title/title if set by hand.
 news:
-#   - date: August 2026
-#     kind: paper
-#     prefix: "Paper on banking-system security, '"
-#     paper_title: "Provable and Operational Attacks on Banking Payment Systems"
-#     suffix: "', accepted at "
-#     venue: "ACM CCS 2026"
-#     venue_url: "https://sigsac.org/ccs/CCS2026/"
-#     detail_url: /papers/acm-ccs-2026-banking-payment-systems/
-#     paper_url: ""
-#     selected: true
-
   - date: July 2026
     kind: paper
+    publication: beyond-quantum-promise-qkd
     prefix: "Paper on quantum security, '"
-    paper_title: "Beyond the Quantum Promise"
     suffix: "', accepted to "
-    venue: "IEEE Quantum Week 2026"
-    venue_url: "https://qce.quantum.ieee.org/2026/"
-    detail_url: /blog-demo-qkd-fv/
-    paper_url: "https://arxiv.org/abs/2608.07626"
     selected: true

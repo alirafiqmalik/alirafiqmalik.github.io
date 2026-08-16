@@ -28,7 +28,7 @@ losing manageability.
 | # | Candidate | Flow | Blocked by | Why this position |
 |---|-----------|------|------------|-------------------|
 | 1 | ~~2 · Delete the al-folio corpse~~ | **DONE** — commit `7fa1c68` (2026-08-15) | — | No decisions to grill; pure subtraction. Every later session reads a smaller, honest repo. |
-| 2 | 6 · Viewport-matrix probe | `/grill-with-docs` → `/to-spec` → `/to-tickets` | — | The safety net. Makes the landing refactors (3+4) reviewable by one command instead of the 8-viewport hand matrix. |
+| 2 | ~~6 · Viewport-matrix probe~~ | **DONE** — commits `dd1f0d9`, `b910dca`, `c0f947e`, `832733f` (2026-08-15/16) | — | The safety net. Makes the landing refactors (3+4) reviewable by one command instead of the 8-viewport hand matrix. |
 | 3 | 1 · Publication record | full flow | — | Deepest design question; drift is publicly visible on the deployed site. Grill: which file format is the one record? what happens to `papers/`, `_publications/`, the `blog-demo` slug (redirects?), venue naming, the 3-vs-4 vulnerability claim? |
 | 4 | 3 + 4 · Landing choreography + scroll owner | grill **as one idea**, one spec | 6 | The scroll-owner module (4) will likely fall out as a ticket inside 3's spec rather than its own spec. Do not start before the probe exists. |
 | 5 | 5 · Nav data file | short grill → `/to-spec` → `/to-tickets` (small spec is fine) | — | Mostly mechanical once the nav.yml schema is decided; include the `#contact` bare-fragment fix. |

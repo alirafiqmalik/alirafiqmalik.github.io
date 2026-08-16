@@ -1,6 +1,6 @@
 ---
 title: "Beyond the Quantum Promise: A Security Analysis of Classical Control in QKD"
-venue: "IEEE Quantum Week 2026"
+publication: beyond-quantum-promise-qkd
 status: Accepted
 img: /assets/img/papers/ieee-quantum-week-2026-qkd/figure-1-architecture.png
 description: >-
@@ -8,9 +8,7 @@ description: >-
   control plane around QKD protocols and uncovers three specification-level
   vulnerabilities in ETSI- and ITU-T-grounded protocol models.
 technologies: [Quantum Security, QKD, Formal Verification, Model Checking, Tamarin]
-redirect: https://alihamzamalik.me/blog-demo-qkd-fv/
-links:
-  paper: "https://www.researchgate.net/publication/403682108_Beyond_the_Quantum_Promise_A_Security_Analysis_of_Classical_Control_in_Quantum_Key_Distribution"
 ---
 
-Our paper on the classical control plane in Quantum Key Distribution was accepted to IEEE Quantum Week 2026. Read the full write-up on the [paper page]({{ page.redirect }}).
+{% assign pub = site.publications | where: 'slug', page.publication | first %}
+Our paper on the classical control plane in Quantum Key Distribution was accepted to {{ pub.venue }}. Read the full write-up on the [paper page]({{ pub.detail_url }}).

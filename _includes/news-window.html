@@ -1,7 +1,11 @@
 {% comment %}
   News feature boxes — selected items from _data/news.yml.
   Paper items support:
-    - detail_url: local detail page opened by clicking the news row
+    - publication: slug of a _publications/*.md record; title/venue/venue_url/
+      detail_url/paper_url are pulled from that record, so this include never
+      hand-types facts that already live in the publications list.
+    - detail_url: opened by clicking the news row (from the record, or set
+      directly on the item for non-publication news).
     - paper_url: optional external publication URL; when present, only the paper title is accent-green/clickable
     - venue_url: optional conference URL; when present, conference name is accent-green/clickable
 {% endcomment %}
@@ -15,8 +19,12 @@
     {% if selected_news and selected_news.size > 0 %}
     <div class="news-window-list" role="list">
       {% for item in selected_news %}
+      {% assign pub = nil %}
+      {% if item.publication %}
+        {% assign pub = site.publications | where: 'slug', item.publication | first %}
+      {% endif %}
       <div class="news-window-item" role="listitem">
-        {% assign detail_link = item.detail_url | default: item.link %}
+        {% assign detail_link = item.detail_url | default: pub.detail_url | default: item.link %}
         {% if detail_link and detail_link != "" %}
           {% if detail_link contains '://' %}
             {% assign resolved_detail_link = detail_link %}
@@ -42,9 +50,13 @@
             {% endif %}
           </div>
 
+          {% assign paper_title = item.paper_title | default: pub.short_title | default: pub.title %}
+          {% assign paper_url = item.paper_url | default: pub.links.arxiv | default: pub.links.preprint %}
+          {% assign venue = item.venue | default: pub.venue %}
+          {% assign venue_url = item.venue_url | default: pub.venue_url %}
           <div class="news-window-headline">
-            {% if item.kind == "paper" and item.paper_title %}
-              {{ item.prefix }}{% if item.paper_url and item.paper_url != "" %}<a class="news-window-paper-link" href="{{ item.paper_url }}" target="_blank" rel="noopener noreferrer">{{ item.paper_title }}</a>{% else %}<span class="news-window-paper-title">{{ item.paper_title }}</span>{% endif %}{{ item.suffix }}{% if item.venue_url and item.venue_url != "" %}<a class="news-window-venue-link" href="{{ item.venue_url }}" target="_blank" rel="noopener noreferrer">{{ item.venue }}</a>{% else %}<strong class="news-window-venue">{{ item.venue }}</strong>{% endif %}
+            {% if item.kind == "paper" and paper_title %}
+              {{ item.prefix }}{% if paper_url and paper_url != "" %}<a class="news-window-paper-link" href="{{ paper_url }}" target="_blank" rel="noopener noreferrer">{{ paper_title }}</a>{% else %}<span class="news-window-paper-title">{{ paper_title }}</span>{% endif %}{{ item.suffix }}{% if venue_url and venue_url != "" %}<a class="news-window-venue-link" href="{{ venue_url }}" target="_blank" rel="noopener noreferrer">{{ venue }}</a>{% else %}<strong class="news-window-venue">{{ venue }}</strong>{% endif %}
             {% else %}
               {{ item.title }}
             {% endif %}

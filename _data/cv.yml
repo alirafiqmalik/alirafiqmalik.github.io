@@ -21,7 +21,7 @@ experience:
     location: Amherst, MA
     year: September 2023 - Present
     responsibilities:
-      - Built a verification framework to analyze quantum key distribution (QKD) protocols; identified four new vulnerabilities arising from quantum-classical interactions
+      - Built a verification framework to analyze quantum key distribution (QKD) protocols; identified three new vulnerabilities arising from quantum-classical interactions
       - Applied formal analysis to U.S. ACH banking systems to uncover security vulnerabilities in the access control and authorization of ACH direct payments
   - title: Undergraduate Research Assistant
     company: Communication Systems and Networks Lab, NUST
