@@ -28,6 +28,18 @@ const measureWalk = (page) =>
     };
   });
 
+const measureLandingHandoff = (page) =>
+  page.evaluate(() => {
+    const landing = document.getElementById("landing");
+    const about = document.getElementById("about");
+    if (!landing && !about) return null;
+
+    return {
+      landing: landing ? landing.getBoundingClientRect().toJSON() : null,
+      about: about ? about.getBoundingClientRect().toJSON() : null,
+    };
+  });
+
 export async function resetToTop(page) {
   await page.evaluate(() => {
     const scroller =
@@ -37,6 +49,30 @@ export async function resetToTop(page) {
     scroller.scrollTop = 0;
   });
   await waitScrollStable(page);
+}
+
+// --- Invariant: landing-to-About handoff — the About section starts no later
+// than the landing section ends. A positive gap creates an empty scroll runway
+// after the landing content leaves and before the About content can enter.
+
+export async function decideLandingHandoff(page, viewport) {
+  const EDGE_EPS = 2;
+
+  await resetToTop(page);
+  const state = await measureLandingHandoff(page);
+  // Synthetic fixtures that do not model the homepage can omit both sections.
+  if (state === null) return [];
+  if (!state.landing || !state.about) {
+    const missing = state.landing ? "#about" : "#landing";
+    return [`${viewport.name} / landing-to-about / section not found: ${missing}`];
+  }
+
+  const runway = state.about.top - state.landing.bottom;
+  if (runway <= EDGE_EPS) return [];
+  return [
+    `${viewport.name} / landing-to-about / ${fmt(runway)}px content runway: ` +
+      `landing bottom ${fmt(state.landing.bottom)}, About top ${fmt(state.about.top)}`,
+  ];
 }
 
 // --- Invariant: scroll-walk — synthetic wheel input at page center advances

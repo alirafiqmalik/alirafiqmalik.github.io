@@ -44,6 +44,8 @@ laptop `1440×780`, standard laptop `1440×900`, desktop `1920×1080`.
 
 Every viewport must satisfy all of:
 - **No overlaps:** name, tagline, nav, bio, and News must not cover each other.
+- **Landing handoff:** About starts at the landing edge. No empty scroll runway
+  separates the sections.
 - **News readable:** every selected news item is reachable (fully visible or
   scrollable inside the News card) — never clipped mid-item with no way to read it.
 - **About readable:** the full About bio is reachable (fully visible or scrollable

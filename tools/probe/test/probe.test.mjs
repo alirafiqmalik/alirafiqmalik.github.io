@@ -106,6 +106,27 @@ test("trap fixture goes red naming the scroll-trap invariant", { timeout: 300_00
   }
 });
 
+test("runway fixture goes red naming the landing-to-About invariant", { timeout: 300_000 }, async () => {
+  const fixture = join(REPO_ROOT, "tools", "probe", "fixtures", "landing-runway");
+  const server = await serveStatic(fixture);
+  try {
+    const { code, stdout, stderr } = await runProbe(["--url", server.baseUrl]);
+    assert.equal(code, 1, `expected exit 1\nstdout:\n${stdout}\nstderr:\n${stderr}`);
+    for (const viewport of VIEWPORTS) {
+      assert.match(
+        stdout,
+        new RegExp(
+          `^${viewport.name} / landing-to-about / \\d+(?:\\.\\d+)?px content runway:`,
+          "m"
+        ),
+        `expected a landing-to-about failure line for ${viewport.name}\nstdout:\n${stdout}`
+      );
+    }
+  } finally {
+    await server.close();
+  }
+});
+
 test("current site goes green (build + serve + probe exits 0)", { timeout: 600_000 }, async () => {
   const { code, stdout, stderr } = await runProbe([]);
   assert.equal(code, 0, `expected exit 0\nstdout:\n${stdout}\nstderr:\n${stderr}`);

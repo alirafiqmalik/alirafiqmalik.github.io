@@ -7,7 +7,7 @@
  *   0.00 → 0.40  hero copy (title / bio / news) lifts away
  *   0.10 → 0.55  globe reveals from half-height to centred
  *   0.45 → 1.00  globe dims and the unified scrim rises behind the content
- *   ~0.62 → past the track  About rises through the overlap and settles
+ *   first scroll → past the track  About rises through the overlap and settles
  *
  * The phases overlap on purpose: at no point in the journey is scrolling
  * moving nothing, which is what produced the dead gap before About.
@@ -50,10 +50,17 @@
     const nestedScrollPorts = () =>
       document.querySelectorAll('.landing-aside, .page-panel-about .page-panel-inner');
 
+    const needsNestedScroll = (el) => {
+      // The About reveal transform expands scrollHeight even when the bio fits.
+      // Its own scrollHeight measures the bio layout without that transform.
+      const content = el.querySelector(':scope > .about-panel');
+      const contentHeight = content ? content.scrollHeight : el.scrollHeight;
+      return contentHeight > el.clientHeight + 1;
+    };
+
     const syncNestedScrollPorts = () => {
       nestedScrollPorts().forEach((el) => {
-        const needsScroll = el.scrollHeight > el.clientHeight + 1;
-        el.classList.toggle('is-scrollable', needsScroll);
+        el.classList.toggle('is-scrollable', needsNestedScroll(el));
       });
     };
 
@@ -124,14 +131,14 @@
       return smoothstep(clamp(1 - top / viewportHeight, 0, 1));
     };
 
-    const syncSnapForProgress = (p, aboutEnter) => {
+    const syncSnapForProgress = (aboutEnter) => {
       if (!scrollRoot) return;
-      // The track and About now overlap, so the two mandatory snap points sit
-      // ~1.8 screens apart. Snap must stay off for that whole stretch or the
-      // browser yanks you across it. Gate on About's own entry rather than on
-      // track progress: aboutEnter reaches 1 and stays there once About has
-      // scrolled past, so mandatory snap reliably returns for later sections.
-      const inLanding = p > 0.01 && aboutEnter < 0.55;
+      // The track and About overlap. Snap must stay off during the blend, or
+      // the browser can skip the scroll-driven transition. About entry reaches
+      // 1 and stays there after About passes, so snap returns for later panels.
+      // Free scrolling must own the rest position. Otherwise, mandatory snap
+      // can cancel small wheel ticks before progress reaches the old 1% gate.
+      const inLanding = aboutEnter < 0.55;
       const inBlend = !inLanding && aboutEnter >= 0.55 && aboutEnter < 0.94;
 
       scrollRoot.classList.toggle('landing-scroll-free', inLanding);
@@ -158,7 +165,7 @@
       // Because it is a single fixed layer there is no edge to slice the globe.
       setScrim(Math.max(fade, aboutEnter) * SCRIM_MAX);
       if (about) about.style.setProperty('--about-enter', String(aboutEnter));
-      syncSnapForProgress(p, aboutEnter);
+      syncSnapForProgress(aboutEnter);
       syncNestedScrollPorts();
 
       const shouldBeBg = fade > 0.2 || p >= 0.8 || aboutEnter > 0.05;

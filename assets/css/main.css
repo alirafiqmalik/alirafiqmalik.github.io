@@ -912,10 +912,8 @@ body.one-page-scroll .landing-scroll-track {
   scroll-snap-stop: normal;
   flex-shrink: 0;
   /*
-   * Scrollytelling overlap: pull About up into the tail of the pinned hero
-   * track so it starts rising into the viewport while the globe is still
-   * locked. Without this the track ends, nothing moves for ~1.5 screens, and
-   * About then hands off abruptly.
+   * Pull About over the part of the track that extends past one viewport.
+   * Thus, About starts at the landing edge while the hero remains pinned.
    */
   margin-bottom: calc(var(--landing-overlap) * -1);
 }
@@ -930,10 +928,10 @@ body.one-page-scroll .landing-scroll-track {
 }
 
 .landing-scroll-track {
-  /* Scrub length = track height - 100vh. Every unit of it drives a phase
-     (exit → reveal → dim), and the last stretch overlaps About's entrance. */
+  /* The scrub length drives exit, reveal, and dim. About overlaps that full
+     length, so the transition has no empty runway between the two sections. */
   --landing-track-height: 230vh;
-  --landing-overlap: 50vh;
+  --landing-overlap: calc(var(--landing-track-height) - 100dvh);
   position: relative;
   height: var(--landing-track-height);
   width: 100%;
@@ -3312,7 +3310,6 @@ a.news-window-line:hover .news-window-arrow {
 
   .landing-scroll-track {
     --landing-track-height: 200vh;
-    --landing-overlap: 42vh;
   }
 
   /* About: fit more bio above the fold; keep inner scroll for remainder */

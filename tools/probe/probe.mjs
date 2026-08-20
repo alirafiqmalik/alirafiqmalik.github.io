@@ -25,7 +25,12 @@ import {
   decideCtasUsable,
   decideReachable,
 } from "./geometry.mjs";
-import { decideWalk, decideTrapProbe, resetToTop } from "./scrollwalk.mjs";
+import {
+  decideLandingHandoff,
+  decideWalk,
+  decideTrapProbe,
+  resetToTop,
+} from "./scrollwalk.mjs";
 
 // The walk is repeated under prefers-reduced-motion: reduce at one phone and
 // one desktop viewport (spec #22).
@@ -103,6 +108,7 @@ async function probeViewport(browser, baseUrl, viewport, { reducedMotion = false
         ...decideOverlapInvariant(labeled, rects),
         ...decideStackVsCorners(labeled, rects),
         ...(await decideCtasUsable(page, labeled, rects)),
+        ...(await decideLandingHandoff(page, labeled)),
         ...(await decideReachable(page, labeled, "news-card", "news-reachable")),
         ...(await decideReachable(page, labeled, "about-panel", "about-reachable")),
         ...(await decideWalk(page, labeled)),
