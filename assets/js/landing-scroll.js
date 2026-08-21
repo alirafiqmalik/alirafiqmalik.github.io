@@ -133,11 +133,12 @@
 
     const syncSnapForProgress = (aboutEnter) => {
       if (!scrollRoot) return;
-      // The track and About overlap. Snap must stay off during the blend, or
-      // the browser can skip the scroll-driven transition. About entry reaches
-      // 1 and stays there after About passes, so snap returns for later panels.
-      // Free scrolling must own the rest position. Otherwise, mandatory snap
-      // can cancel small wheel ticks before progress reaches the old 1% gate.
+      // Landing phase signal. CSS scroll-snap is gone (it pinned the page at
+      // About: it re-snapped after every wheel event, and one gesture is many
+      // events, so each was reverted before the next landed). These classes
+      // now only mark the phase — `landing-scroll-soft` tells main.js's panel
+      // settle to keep its hands off while the track and About are blended,
+      // since that blend is driven by the raw scroll offset.
       const inLanding = aboutEnter < 0.55;
       const inBlend = !inLanding && aboutEnter >= 0.55 && aboutEnter < 0.94;
 

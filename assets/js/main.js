@@ -53,40 +53,135 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const getScrollTop = () => scrollContainer ? scrollContainer.scrollTop : window.scrollY;
 
-  const updateScrollHintVisibility = () => {
-    if (!scrollHint || !isOnePageScroll || !scrollContainer) return;
+  const getSnapPanel = (element) => {
+    if (!element) return null;
+    if (element.id === 'landing') {
+      return document.getElementById('landing-scroll-track') || element;
+    }
+    return element.closest('.footer-snap-panel, .page-panel, .home-section') || element;
+  };
 
-    const sections = SECTION_ORDER;
-    const scrollTop = scrollContainer.scrollTop;
-    const viewportMid = scrollTop + scrollContainer.clientHeight * 0.35;
-    let currentId = sections[0];
+  const getPanelScrollTop = (panel) => {
+    if (!scrollContainer || !panel) return 0;
+    const panelRect = panel.getBoundingClientRect();
+    const containerRect = scrollContainer.getBoundingClientRect();
+    return panelRect.top - containerRect.top + scrollContainer.scrollTop;
+  };
 
-    sections.forEach(id => {
-      const section = document.getElementById(id);
-      if (!section) return;
-      const panelRect = section.getBoundingClientRect();
-      const containerRect = scrollContainer.getBoundingClientRect();
-      const top = panelRect.top - containerRect.top + scrollContainer.scrollTop;
-      if (top <= viewportMid) currentId = id;
+  /*
+   * === Shared scroll model ===
+   *
+   * One geometry snapshot per frame drives the progress bar, the nav
+   * highlight, the URL hash and the scroll hint. They used to be three
+   * independent computations that disagreed with each other.
+   *
+   * Progress is section-index based, not pixel based. Panels are not equal
+   * heights — `#experience` is the one auto-height panel and runs to ~2.2x the
+   * viewport on a phone — so raw `scrollTop / scrollHeight` made the bar crawl
+   * through most sections and sprint through that one. Each section now owns
+   * an equal slice, and travel inside a section fills its slice linearly.
+   */
+
+  // Scroll offset of each section's panel, ascending. Rebuilt on layout change.
+  let sectionStops = [];
+
+  const measureSectionStops = () => {
+    if (!scrollContainer) {
+      sectionStops = [];
+      return;
+    }
+    const max = Math.max(scrollContainer.scrollHeight - scrollContainer.clientHeight, 0);
+    const containerTop = scrollContainer.getBoundingClientRect().top;
+    const scrolled = scrollContainer.scrollTop;
+
+    const stops = [];
+    SECTION_ORDER.forEach((id) => {
+      const element = document.getElementById(id);
+      if (!element) return;
+      const panel = getSnapPanel(element) || element;
+      const top = panel.getBoundingClientRect().top - containerTop + scrolled;
+      stops.push({ id, top: Math.min(Math.max(Math.round(top), 0), max) });
     });
+    if (!stops.length) {
+      sectionStops = [];
+      return;
+    }
 
-    scrollHint.classList.toggle('hidden', currentId === sections[sections.length - 1]);
+    // The last section is the footer panel: its own top sits past the end of
+    // the scroll range, so pin it to max or the final slice never completes.
+    stops[stops.length - 1].top = max;
+    // Keep strictly ascending — a clamped stop must never overtake its
+    // predecessor, or the interpolation below divides by zero.
+    for (let i = 1; i < stops.length; i += 1) {
+      if (stops[i].top < stops[i - 1].top) stops[i].top = stops[i - 1].top;
+    }
+    sectionStops = stops;
   };
 
-  const updateProgressBar = () => {
-    if (!progressBar) return;
-    const container = scrollContainer || document.documentElement;
-    const scrollTop = scrollContainer ? scrollContainer.scrollTop : window.scrollY;
-    const scrollHeight = container.scrollHeight - container.clientHeight;
-    const pct = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
-    progressBar.style.width = `${pct}%`;
+  // { index, id, progress } for a scroll offset. `progress` is 0..1 across the
+  // whole page with every section weighted equally.
+  const resolveScrollPosition = (scrollTop) => {
+    if (sectionStops.length < 2) return { index: 0, id: SECTION_ORDER[0], progress: 0 };
+
+    const last = sectionStops.length - 1;
+    let index = 0;
+    while (index < last && scrollTop >= sectionStops[index + 1].top) index += 1;
+
+    const start = sectionStops[index].top;
+    const end = index < last ? sectionStops[index + 1].top : start;
+    const span = end - start;
+    const local = span > 0 ? Math.min(Math.max((scrollTop - start) / span, 0), 1) : 0;
+
+    return {
+      index,
+      id: sectionStops[index].id,
+      progress: Math.min(Math.max((index + local) / last, 0), 1)
+    };
   };
 
-  // Scroll effect for nav + progress bar
+  // Set by the one-page block below so the model can drive the nav highlight,
+  // and so a programmatic scroll can claim its destination up front.
+  let onSectionChange = null;
+  let claimSection = null;
+  let lastSectionId = null;
+
+  const applyScrollState = () => {
+    const scrollTop = getScrollTop();
+
+    nav?.classList.toggle('scrolled', scrollTop > 20);
+
+    if (!isOnePageScroll || !scrollContainer) {
+      if (progressBar) {
+        const root = document.documentElement;
+        const range = root.scrollHeight - root.clientHeight;
+        const p = range > 0 ? Math.min(Math.max(scrollTop / range, 0), 1) : 0;
+        progressBar.style.transform = `scaleX(${p})`;
+      }
+      return;
+    }
+
+    const position = resolveScrollPosition(scrollTop);
+
+    if (progressBar) progressBar.style.transform = `scaleX(${position.progress})`;
+    if (scrollHint) {
+      scrollHint.classList.toggle('hidden', position.index >= sectionStops.length - 1);
+    }
+    if (position.id !== lastSectionId) {
+      lastSectionId = position.id;
+      onSectionChange?.(position.id);
+    }
+  };
+
+  // rAF-batched: the previous handler wrote a style and then read 14
+  // getBoundingClientRects on every scroll event, forcing a synchronous layout
+  // flush per event (~137 layouts per 20 wheel ticks).
+  let scrollFrame = 0;
   const onScroll = () => {
-    nav?.classList.toggle('scrolled', getScrollTop() > 20);
-    updateProgressBar();
-    updateScrollHintVisibility();
+    if (scrollFrame) return;
+    scrollFrame = requestAnimationFrame(() => {
+      scrollFrame = 0;
+      applyScrollState();
+    });
   };
 
   if (scrollContainer) {
@@ -114,6 +209,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const syncLayoutMetrics = () => {
     syncSnapPanelHeight();
     syncNavOffset();
+    measureSectionStops();
+    applyScrollState();
   };
 
   if (scrollContainer) {
@@ -126,27 +223,6 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('load', syncLayoutMetrics);
     window.addEventListener('resize', syncLayoutMetrics);
   }
-
-  const getSnapPanel = (element) => {
-    if (!element) return null;
-    if (element.id === 'landing') {
-      return document.getElementById('landing-scroll-track') || element;
-    }
-    return element.closest('.footer-snap-panel, .page-panel, .home-section') || element;
-  };
-
-  const getObserveTarget = (element) => {
-    if (!element) return null;
-    if (element.id === 'landing') return element;
-    return getSnapPanel(element) || element;
-  };
-
-  const getPanelScrollTop = (panel) => {
-    if (!scrollContainer || !panel) return 0;
-    const panelRect = panel.getBoundingClientRect();
-    const containerRect = scrollContainer.getBoundingClientRect();
-    return panelRect.top - containerRect.top + scrollContainer.scrollTop;
-  };
 
   const updateUrlForSection = (id) => {
     if (id === 'landing') {
@@ -167,6 +243,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (scrollContainer) {
       const top = getPanelScrollTop(scrollTarget);
+      claimSection?.(id);
       scrollContainer.scrollTo({
         top,
         behavior: smooth ? 'smooth' : 'auto'
@@ -303,100 +380,229 @@ document.addEventListener('DOMContentLoaded', () => {
       updateUrlForSection(canonicalHashForSection(sectionId));
     };
 
-    const sectionObserver = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting || entry.intersectionRatio < 0.45) return;
-        const sectionId = panelSectionMap.get(entry.target);
-        if (!sectionId) return;
-        setActiveSection(sectionId);
-        syncHashToSection(sectionId);
-        updateScrollHintVisibility();
-      });
-    }, {
-      root: scrollContainer,
-      threshold: [0.45, 0.6]
-    });
-
+    /*
+     * The active section comes from the shared scroll model, not from an
+     * IntersectionObserver ratio.
+     *
+     * The observer gated on `intersectionRatio >= 0.45` against the panel's own
+     * box. `#experience` is auto-height, so its peak achievable ratio is
+     * viewportHeight / panelHeight — 0.447 at 390x844. It sat three
+     * thousandths under the gate and therefore never became active on a phone,
+     * which froze `activeSectionId` and left the keyboard and the scroll hint
+     * unable to move past it. Reading the section from scroll offsets is
+     * height-independent, so no panel can fall through that way.
+     */
     SECTION_ORDER.forEach(id => {
       const element = document.getElementById(id);
       if (!element) return;
-      const observeTarget = getObserveTarget(element);
-      panelSectionMap.set(observeTarget, id);
-      sectionObserver.observe(observeTarget);
+      panelSectionMap.set(getSnapPanel(element) || element, id);
     });
 
-    const panelNeedsInternalScroll = (panel) => {
-      if (!panel || !scrollContainer) return false;
-      return panel.offsetHeight > scrollContainer.clientHeight + 12;
+    onSectionChange = (sectionId) => {
+      if (sectionId === activeSectionId) return;
+      setActiveSection(sectionId);
+      syncHashToSection(sectionId);
     };
 
-    const scrollWithinPanel = (panel, delta) => {
-      scrollContainer.style.scrollSnapType = 'none';
+    claimSection = (sectionId) => {
+      lastSectionId = sectionId;
+      setActiveSection(sectionId);
+      // A settle chosen before this jump is now aimed at the wrong panel.
+      cancelSettle();
+    };
+
+    /*
+     * A section's scroll footprint is the gap to the next section's stop, not
+     * its own offsetHeight. The landing track's box is 230vh but it carries
+     * `margin-bottom: -130vh`, so it only occupies 100vh of scroll. Measuring
+     * it by offsetHeight made this code believe landing owned 0-2070 when
+     * About actually starts at 900, so "scroll within the landing panel"
+     * stepped straight over About's rest position and it was never shown.
+     */
+    const sectionBounds = (index) => {
+      if (index < 0 || index >= sectionStops.length) return null;
+      const top = sectionStops[index].top;
+      const bottom = index + 1 < sectionStops.length
+        ? sectionStops[index + 1].top
+        : scrollContainer.scrollHeight;
+      return { top, bottom };
+    };
+
+    // Scrolling is free now, so this no longer has to disable and restore
+    // snap — that restore used to re-arm mandatory snap mid-animation and yank
+    // the last ~130px of the tall Experience panel out of reach.
+    const scrollWithinPanel = (_panel, delta) => {
       scrollContainer.scrollBy({ top: delta, behavior: 'smooth' });
-      window.setTimeout(() => {
-        scrollContainer.style.scrollSnapType = '';
-      }, 900);
     };
 
     const handlePanelScroll = (direction) => {
-      if (isNavigating) return;
+      if (isNavigating || sectionStops.length < 2) return;
 
-      const currentId = activeSectionId;
-      const currentIndex = SECTION_ORDER.indexOf(currentId);
-      if (currentIndex === -1) return;
-
-      const element = document.getElementById(currentId);
-      const panel = getSnapPanel(element);
-      if (!panel) return;
-
-      const panelTop = getPanelScrollTop(panel);
-      const panelBottom = panelTop + panel.offsetHeight;
       const scrollTop = scrollContainer.scrollTop;
-      const scrollBottom = scrollTop + scrollContainer.clientHeight;
-      const canScrollInsidePanel = panelNeedsInternalScroll(panel);
+      // Steer from where the scroll actually is, not from the last section the
+      // observer happened to report.
+      const currentIndex = resolveScrollPosition(scrollTop).index;
+      const bounds = sectionBounds(currentIndex);
+      if (!bounds) return;
+
+      const viewport = scrollContainer.clientHeight;
+      const scrollBottom = scrollTop + viewport;
+      // Only a section taller than the viewport has anywhere to go inside it.
+      const canScrollInsidePanel = bounds.bottom - bounds.top > viewport + 12;
 
       if (direction === 'down') {
-        if (canScrollInsidePanel && scrollBottom < panelBottom - 12) {
+        if (canScrollInsidePanel && scrollBottom < bounds.bottom - 12) {
           lockNavigation(true);
-          scrollWithinPanel(panel, scrollContainer.clientHeight * 0.85);
+          scrollWithinPanel(null, Math.min(viewport * 0.85, bounds.bottom - scrollBottom));
           return;
         }
-
-        // Skip sibling intro blocks that share the same tall panel.
-        let nextIndex = currentIndex + 1;
-        while (nextIndex < SECTION_ORDER.length) {
-          const nextEl = document.getElementById(SECTION_ORDER[nextIndex]);
-          const nextPanel = getSnapPanel(nextEl);
-          if (nextPanel !== panel) break;
-          nextIndex += 1;
-        }
-
-        if (nextIndex < SECTION_ORDER.length) {
-          lockNavigation(false);
-          scrollToSection(SECTION_ORDER[nextIndex], { smooth: false });
+        if (currentIndex + 1 < sectionStops.length) {
+          lockNavigation(true);
+          scrollToSection(sectionStops[currentIndex + 1].id, { smooth: true });
         }
         return;
       }
 
-      if (canScrollInsidePanel && scrollTop > panelTop + 12) {
+      if (canScrollInsidePanel && scrollTop > bounds.top + 12) {
         lockNavigation(true);
-        scrollWithinPanel(panel, -scrollContainer.clientHeight * 0.85);
+        scrollWithinPanel(null, -Math.min(viewport * 0.85, scrollTop - bounds.top));
         return;
       }
 
-      let prevIndex = currentIndex - 1;
-      while (prevIndex >= 0) {
-        const prevEl = document.getElementById(SECTION_ORDER[prevIndex]);
-        const prevPanel = getSnapPanel(prevEl);
-        if (prevPanel !== panel) break;
-        prevIndex -= 1;
-      }
-
-      if (prevIndex >= 0) {
-        lockNavigation(false);
-        scrollToSection(SECTION_ORDER[prevIndex], { smooth: false });
+      if (currentIndex - 1 >= 0) {
+        lockNavigation(true);
+        scrollToSection(sectionStops[currentIndex - 1].id, { smooth: true });
       }
     };
+
+    /*
+     * === Panel settle ===
+     *
+     * This replaces CSS scroll-snap. Mandatory snap re-evaluated after every
+     * wheel event, and one real wheel/trackpad gesture is a burst of many
+     * small events, so each one was snapped away before the next arrived: the
+     * page was pinned at About and no amount of scrolling moved it.
+     *
+     * The settle does the same job from the other side. It never touches a
+     * scroll that is still arriving. Only once input has been quiet does it
+     * ease to the nearest panel edge, and only when that edge is already
+     * close and lies the way the user was already travelling. Anything else is
+     * left exactly where the user put it.
+     */
+    const SETTLE_IDLE_MS = 140;
+    const SETTLE_DURATION = 360;
+    // Reach, as a fraction of the viewport. Beyond this the user is reading
+    // mid-panel on purpose (Experience is taller than the viewport) and a
+    // settle would be a yank, so we leave the scroll alone.
+    const SETTLE_REACH = 0.3;
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    let settleTimer = 0;
+    let settleFrame = 0;
+    let isSettling = false;
+    let settleFromTop = scrollContainer.scrollTop;
+    let scrollDirection = 1;
+
+    const cancelSettle = () => {
+      if (settleTimer) {
+        window.clearTimeout(settleTimer);
+        settleTimer = 0;
+      }
+      if (settleFrame) {
+        cancelAnimationFrame(settleFrame);
+        settleFrame = 0;
+      }
+      isSettling = false;
+    };
+
+    const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+
+    const animateSettle = (to) => {
+      const from = scrollContainer.scrollTop;
+      const distance = to - from;
+      const startedAt = performance.now();
+      isSettling = true;
+      // Last offset this animation wrote, so it can tell its own movement
+      // apart from someone else's.
+      let written = from;
+
+      const finish = () => {
+        settleFrame = 0;
+        isSettling = false;
+        settleFromTop = scrollContainer.scrollTop;
+      };
+
+      const step = (now) => {
+        // Anything else that moved the scroll mid-animation outranks the
+        // settle — a nav jump, a reset, a fresh gesture. Yield instead of
+        // stomping it back to the target we picked before it happened.
+        if (Math.abs(scrollContainer.scrollTop - written) > 2) {
+          finish();
+          return;
+        }
+        const t = Math.min((now - startedAt) / SETTLE_DURATION, 1);
+        scrollContainer.scrollTop = from + distance * easeOutCubic(t);
+        // Read back: the container clamps at its bounds, so the value we asked
+        // for is not always the value we got.
+        written = scrollContainer.scrollTop;
+        if (t < 1) {
+          settleFrame = requestAnimationFrame(step);
+          return;
+        }
+        finish();
+      };
+
+      settleFrame = requestAnimationFrame(step);
+    };
+
+    const settleToPanel = () => {
+      settleTimer = 0;
+      if (isNavigating || isSettling || reducedMotion.matches) return;
+      // Landing and About are blended by raw scroll offset during the
+      // hand-off; moving the scroll under that blend fights the choreography.
+      if (scrollContainer.classList.contains('landing-scroll-soft')) return;
+      if (sectionStops.length < 2) return;
+
+      const scrollTop = scrollContainer.scrollTop;
+      const max = scrollContainer.scrollHeight - scrollContainer.clientHeight;
+      if (scrollTop <= 1 || scrollTop >= max - 1) return;
+
+      // Only ever settle the way the user was already going. Settling to the
+      // nearest edge in either direction would drag a reader back out of a
+      // panel taller than the viewport.
+      const goingDown = scrollDirection >= 0;
+      let target = null;
+      sectionStops.forEach(({ top }) => {
+        if (goingDown ? top < scrollTop : top > scrollTop) return;
+        if (target === null || (goingDown ? top < target : top > target)) target = top;
+      });
+      if (target === null) return;
+
+      const distance = Math.abs(target - scrollTop);
+      if (distance < 2 || distance > scrollContainer.clientHeight * SETTLE_REACH) return;
+
+      animateSettle(target);
+    };
+
+    const queueSettle = () => {
+      if (isSettling) return;
+      const top = scrollContainer.scrollTop;
+      if (Math.abs(top - settleFromTop) > 0.5) {
+        scrollDirection = top > settleFromTop ? 1 : -1;
+        settleFromTop = top;
+      }
+      if (settleTimer) window.clearTimeout(settleTimer);
+      settleTimer = window.setTimeout(settleToPanel, SETTLE_IDLE_MS);
+    };
+
+    scrollContainer.addEventListener('scroll', queueSettle, { passive: true });
+    // Any fresh input outranks a settle already in flight.
+    ['wheel', 'touchstart', 'pointerdown'].forEach((type) => {
+      scrollContainer.addEventListener(type, cancelSettle, { passive: true });
+    });
+    document.addEventListener('keydown', cancelSettle, { passive: true });
+    window.addEventListener('resize', cancelSettle, { passive: true });
 
     document.querySelectorAll('[data-scroll-direction]').forEach(btn => {
       btn.addEventListener('click', (e) => {
@@ -435,8 +641,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('keydown', handleSectionKeydown);
     scrollContainer.focus({ preventScroll: true });
 
-    updateScrollHintVisibility();
-    updateProgressBar();
+    applyScrollState();
     syncSnapPanelHeight();
     setActiveSection(activeSectionId);
   }
@@ -543,7 +748,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
     updateNavPromptCwd(cwdFromPathname());
-    updateProgressBar();
+    applyScrollState();
   }
 
   // Scroll animations via IntersectionObserver

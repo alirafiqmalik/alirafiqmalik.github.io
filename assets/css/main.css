@@ -132,7 +132,14 @@ html.one-page-scroll-root body.one-page-scroll {
   height: var(--snap-panel-height);
   overflow-y: auto;
   overflow-x: hidden;
-  scroll-snap-type: y mandatory;
+  /*
+   * No CSS scroll-snap. Mandatory snap re-snaps after every wheel event, and a
+   * real wheel/trackpad gesture is many small events, so each one was reverted
+   * before the next landed — the page could not be scrolled past About at all.
+   * Panels are settled instead by main.js once the gesture has gone quiet
+   * (`settleToPanel`), which never fights input that is still arriving.
+   */
+  scroll-snap-type: none;
   scroll-behavior: auto;
   scroll-padding: 0;
   overscroll-behavior-y: contain;
@@ -178,8 +185,6 @@ body.one-page-scroll .main-content.main-content-scroll {
   height: var(--snap-panel-height);
   min-height: var(--snap-panel-height);
   max-height: var(--snap-panel-height);
-  scroll-snap-align: start;
-  scroll-snap-stop: normal;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -355,8 +360,6 @@ body.one-page-scroll .main-content.main-content-scroll {
   height: auto;
   min-height: var(--snap-panel-height);
   max-height: none;
-  scroll-snap-align: start;
-  scroll-snap-stop: normal;
   overflow: visible;
 }
 
@@ -438,7 +441,9 @@ body.one-page-scroll .main-content.main-content-scroll {
   min-width: 9rem;
 }
 
-.footer-one-page {
+/* Specificity must beat `.footer { margin-top: 4rem }` further down the file,
+   or a 64px dead band sits between Explore and the footer panel. */
+body.one-page-scroll .footer.footer-one-page {
   margin-top: 0;
 }
 
@@ -446,8 +451,6 @@ body.one-page-scroll .main-content.main-content-scroll {
   height: var(--snap-panel-height);
   min-height: var(--snap-panel-height);
   max-height: var(--snap-panel-height);
-  scroll-snap-align: start;
-  scroll-snap-stop: normal;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -527,10 +530,13 @@ body.one-page-scroll .main-content.main-content-scroll {
 
 .nav-progress-bar {
   height: 100%;
-  width: 0%;
+  width: 100%;
+  transform: scaleX(0);
+  transform-origin: left center;
   background: var(--accent);
   border-radius: 999px;
-  transition: width 0.12s ease-out;
+  /* transform composites; `width` relaid out the bar on every scroll frame. */
+  will-change: transform;
 }
 
 .panel-scroll-hint {
@@ -903,13 +909,13 @@ body.one-page-scroll .main-content.main-content-scroll {
 /* === LANDING (hero + news) + PROFILE (About + Interests) === */
 /* === LANDING: Spur-like full-bleed sticky hero + scroll phases === */
 /*
- * Landing must be a valid snap target at scrollTop=0. With mandatory snap and
- * align:none, the browser skips the hero and jumps to #about on load.
- * Mid-track free scrolling is handled by .landing-scroll-free (JS toggles it).
+ * The track is 230vh with a -130vh margin, so its snap area was far taller
+ * than the snapport. Under any CSS snap mode that oversized area stayed a
+ * valid rest position for the whole landing→About overlap and competed with
+ * About's own snap point, which is what pinned the page at About. Scrolling is
+ * free now; JS settles panels after the gesture ends.
  */
 body.one-page-scroll .landing-scroll-track {
-  scroll-snap-align: start;
-  scroll-snap-stop: normal;
   flex-shrink: 0;
   /*
    * Pull About over the part of the track that extends past one viewport.
@@ -918,13 +924,15 @@ body.one-page-scroll .landing-scroll-track {
   margin-bottom: calc(var(--landing-overlap) * -1);
 }
 
-.page-scroll-container.landing-scroll-free {
-  scroll-snap-type: none;
-}
-
-/* Soft snap while blending landing → About (avoids a hard mandatory yank) */
+/*
+ * Landing phase state. Both classes are now signals only — scrolling is free
+ * throughout, so neither re-arms snap. `landing-scroll-soft` additionally
+ * suppresses the JS panel settle while landing and About are blended, so the
+ * scroll-driven hand-off is never interrupted mid-blend.
+ */
+.page-scroll-container.landing-scroll-free,
 .page-scroll-container.landing-scroll-soft {
-  scroll-snap-type: y proximity;
+  scroll-snap-type: none;
 }
 
 .landing-scroll-track {

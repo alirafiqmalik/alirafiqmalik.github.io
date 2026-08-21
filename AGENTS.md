@@ -57,8 +57,22 @@ Every viewport must satisfy all of:
   later sections without getting stuck. Nested News/About scrollports must not
   trap page scroll (`overscroll-behavior: contain` is unsafe inside
   `#page-scroll-container`; `overflow-x: hidden` + `overflow-y: visible`
-  computes to a scrollport — use `overflow-x: clip` instead). Soft-snap
-  (`landing-scroll-soft`) must clear once About is settled.
+  computes to a scrollport — use `overflow-x: clip` instead).
+  **Do not reintroduce CSS `scroll-snap-type` on `#page-scroll-container`.**
+  Mandatory snap re-snapped after every wheel event, and one real gesture is a
+  burst of many small events, so each was reverted before the next landed: the
+  page could not be scrolled past About at all. Panels are settled by
+  `settleToPanel` in `main.js` once input has gone quiet instead, and it must
+  always yield to a scroll anyone else performs. `landing-scroll-free` and
+  `landing-scroll-soft` are phase signals only; `landing-scroll-soft`
+  suppresses the settle during the landing→About blend and must clear once
+  About is settled.
+
+  Note the probe's own blind spot here: `decideWalk` models a flick as **one**
+  large wheel event, which overpowers a snap engine that a burst of small
+  events cannot. That is why the walk stayed green while the site was
+  unscrollable on a real trackpad. Treat a green walk as necessary, not
+  sufficient, for scroll changes.
 
 #### Probe Handle contract
 
