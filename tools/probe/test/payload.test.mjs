@@ -3,7 +3,8 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
-import { writeFile } from "node:fs/promises";
+import { mkdtemp, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { serveStatic } from "../serve.mjs";
@@ -18,9 +19,12 @@ const REPO_ROOT = join(PROBE_DIR, "..", "..", "..");
 const PROBE = join(REPO_ROOT, "tools", "probe", "probe.mjs");
 const FIXTURES = join(REPO_ROOT, "tools", "probe", "fixtures");
 
-function runProbe(args) {
+function runProbe(args, extraEnv = {}) {
   return new Promise((resolve, reject) => {
-    const child = spawn(process.execPath, [PROBE, ...args], { cwd: REPO_ROOT });
+    const child = spawn(process.execPath, [PROBE, ...args], {
+      cwd: REPO_ROOT,
+      env: { ...process.env, ...extraEnv },
+    });
     let stdout = "";
     let stderr = "";
     child.stdout.on("data", (chunk) => (stdout += chunk));
@@ -28,6 +32,11 @@ function runProbe(args) {
     child.on("error", reject);
     child.on("close", (code) => resolve({ code, stdout, stderr }));
   });
+}
+
+async function withIsolatedProbeOut(fn) {
+  const probeOut = await mkdtemp(join(tmpdir(), "probe-payload-"));
+  return fn({ PROBE_OUT: probeOut });
 }
 
 const ORIGIN = "http://127.0.0.1:4000";
@@ -168,20 +177,40 @@ test("decidePayloadFromEntries: uses content-length/body bytes when transferSize
   );
 });
 
+test("decidePayloadFromEntries: under-counted transferSize cannot hide an over-budget image", () => {
+  const { failures } = decidePayloadFromEntries(
+    [
+      {
+        url: `${ORIGIN}/big.png`,
+        bytes: 66_492,
+        resourceType: "image",
+        fallbackBytes: 200_000,
+      },
+    ],
+    budgets
+  );
+  assert.ok(
+    failures.includes("payload / image-ceiling / /big.png 200000 > 153600"),
+    `expected the larger measured size to decide the ceiling\n${failures.join("\n")}`
+  );
+});
+
 test("oversized image fixture goes red naming image-ceiling", { timeout: 300_000 }, async () => {
   const dir = join(FIXTURES, "payload-image");
   await writeFile(join(dir, "big.png"), Buffer.alloc(200_000, 1));
   const server = await serveStatic(dir);
   try {
-    const { code, stdout, stderr } = await runProbe(["--url", server.baseUrl]);
-    assert.equal(code, 1, `expected exit 1\nstdout:\n${stdout}\nstderr:\n${stderr}`);
-    const imageLine = stdout.match(/^payload \/ image-ceiling \/ \/big\.png (\d+) > 153600$/m);
-    assert.ok(imageLine, `expected an image-ceiling failure line\nstdout:\n${stdout}`);
-    assert.ok(
-      Number(imageLine[1]) >= 200_000,
-      `expected measured image bytes >= 200000, got ${imageLine[1]}`
-    );
-    assert.match(stdout, /^# payload total=\d+ images=\d+ fonts=\d+ thirdPartyFonts=\d+$/m);
+    await withIsolatedProbeOut(async (env) => {
+      const { code, stdout, stderr } = await runProbe(["--url", server.baseUrl], env);
+      assert.equal(code, 1, `expected exit 1\nstdout:\n${stdout}\nstderr:\n${stderr}`);
+      const imageLine = stdout.match(/^payload \/ image-ceiling \/ \/big\.png (\d+) > 153600$/m);
+      assert.ok(imageLine, `expected an image-ceiling failure line\nstdout:\n${stdout}`);
+      assert.ok(
+        Number(imageLine[1]) >= 200_000,
+        `expected measured image bytes >= 200000, got ${imageLine[1]}`
+      );
+      assert.match(stdout, /^# payload total=\d+ images=\d+ fonts=\d+ thirdPartyFonts=\d+$/m);
+    });
   } finally {
     await server.close();
   }
@@ -190,13 +219,15 @@ test("oversized image fixture goes red naming image-ceiling", { timeout: 300_000
 test("Google Fonts fixture goes red naming third-party-fonts", { timeout: 300_000 }, async () => {
   const server = await serveStatic(join(FIXTURES, "payload-fonts"));
   try {
-    const { code, stdout, stderr } = await runProbe(["--url", server.baseUrl]);
-    assert.equal(code, 1, `expected exit 1\nstdout:\n${stdout}\nstderr:\n${stderr}`);
-    assert.match(
-      stdout,
-      /^payload \/ third-party-fonts \/ https:\/\/fonts\.googleapis\.com\//m,
-      `expected a third-party-fonts failure line\nstdout:\n${stdout}`
-    );
+    await withIsolatedProbeOut(async (env) => {
+      const { code, stdout, stderr } = await runProbe(["--url", server.baseUrl], env);
+      assert.equal(code, 1, `expected exit 1\nstdout:\n${stdout}\nstderr:\n${stderr}`);
+      assert.match(
+        stdout,
+        /^payload \/ third-party-fonts \/ https:\/\/fonts\.googleapis\.com\//m,
+        `expected a third-party-fonts failure line\nstdout:\n${stdout}`
+      );
+    });
   } finally {
     await server.close();
   }

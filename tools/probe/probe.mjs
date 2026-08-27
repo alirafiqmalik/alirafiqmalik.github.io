@@ -40,7 +40,7 @@ import { decidePayload, formatPayloadSummary } from "./payload.mjs";
 const REDUCED_MOTION_VIEWPORTS = new Set(["390x844", "1440x900"]);
 
 const REPO_ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const OUT_DIR = join(REPO_ROOT, "probe-out");
+const OUT_DIR = process.env.PROBE_OUT || join(REPO_ROOT, "probe-out");
 
 function parseArgs(argv) {
   const opts = { url: null };
