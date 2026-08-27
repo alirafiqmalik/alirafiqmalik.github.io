@@ -295,7 +295,7 @@ body.one-page-scroll .main-content.main-content-scroll {
 .page-panel-about .about-placeholder {
   max-height: min(40dvh, 20rem);
   width: auto;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .page-panel-publications .publication-list {
@@ -1813,14 +1813,14 @@ a.news-window-line:hover .news-window-arrow {
   width: 100%;
   max-width: 280px;
   height: auto;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 560 / 747;
   border-radius: var(--radius-lg);
   border: 1px solid var(--border);
 }
 
 .about-placeholder {
   width: min(100%, 280px);
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 560 / 747;
   border-radius: var(--radius-lg);
   border: 1px solid var(--border);
   background:
@@ -2169,37 +2169,6 @@ a.news-window-line:hover .news-window-arrow {
   font-size: 0.875rem;
   color: var(--accent);
   margin-top: 0.5rem;
-}
-
-/* === QUICK LINKS === */
-.quick-links {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
-}
-
-.quick-link {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 1.25rem;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  font-weight: 600;
-  transition: all 0.3s;
-}
-
-.quick-link:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-  transform: translateY(-2px);
-}
-
-.quick-link svg {
-  width: 1.25rem;
-  height: 1.25rem;
 }
 
 /* === PAGE HEADERS === */
@@ -3593,10 +3562,6 @@ a.news-window-line:hover .news-window-arrow {
   .footer-content {
     padding: 0 1.5rem;
   }
-
-  .quick-links {
-    grid-template-columns: repeat(3, 1fr);
-  }
 }
 
 /* Tablet: show desktop nav, but keep landing/about stacked for breathing room */
@@ -3677,10 +3642,6 @@ a.news-window-line:hover .news-window-arrow {
 
   .projects-grid {
     grid-template-columns: repeat(3, 1fr);
-  }
-
-  .quick-links {
-    grid-template-columns: repeat(6, 1fr);
   }
 
   .about-grid {
