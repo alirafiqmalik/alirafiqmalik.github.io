@@ -13,18 +13,18 @@ import createGlobe from 'cobe';
 
   // Device stickers extracted from assets/img/Firefly_RemoveBackground.png
   const STICKERS = [
-    { id: 'cellular-tower', file: 'cellular-tower.png', label: 'Cellular tower' },
-    { id: 'datacenter', file: 'datacenter.png', label: 'Datacenter' },
-    { id: 'cluster', file: 'cloud.png', label: 'Cloud cluster' },
-    { id: 'wifi', file: 'wifi.png', label: 'Wi‑Fi' },
-    { id: 'phone', file: 'phone.png', label: 'Phone' },
-    { id: 'laptop', file: 'laptop.png', label: 'Laptop' },
-    { id: 'desktop', file: 'desktop.png', label: 'Desktop' },
-    { id: 'bank', file: 'house.png', label: 'Bank / building' },
-    { id: 'watch', file: 'watch.png', label: 'Smartwatch' },
-    { id: 'gamepad', file: 'gamepad.png', label: 'IoT / gamepad' },
-    { id: 'phone-signal', file: 'phone-signal.png', label: 'Mobile signal' },
-    { id: 'location', file: 'location-pin.png', label: 'Location' }
+    { id: 'cellular-tower', file: 'cellular-tower.webp', label: 'Cellular tower' },
+    { id: 'datacenter', file: 'datacenter.webp', label: 'Datacenter' },
+    { id: 'cluster', file: 'cloud.webp', label: 'Cloud cluster' },
+    { id: 'wifi', file: 'wifi.webp', label: 'Wi‑Fi' },
+    { id: 'phone', file: 'phone.webp', label: 'Phone' },
+    { id: 'laptop', file: 'laptop.webp', label: 'Laptop' },
+    { id: 'desktop', file: 'desktop.webp', label: 'Desktop' },
+    { id: 'bank', file: 'house.webp', label: 'Bank / building' },
+    { id: 'watch', file: 'watch.webp', label: 'Smartwatch' },
+    { id: 'gamepad', file: 'gamepad.webp', label: 'IoT / gamepad' },
+    { id: 'phone-signal', file: 'phone-signal.webp', label: 'Mobile signal' },
+    { id: 'location', file: 'location-pin.webp', label: 'Location' }
   ];
 
   // Progressive mesh links (indices into STICKERS)
@@ -78,11 +78,9 @@ import createGlobe from 'cobe';
     return null;
   }
 
-  function isCobeFacing(id) {
+  function isCobeFacing(id, style) {
     // COBE sets `--cobe-visible-{id}: N` on :root when facing; removes when not
-    const raw = getComputedStyle(document.documentElement)
-      .getPropertyValue(`--cobe-visible-${id}`)
-      .trim();
+    const raw = style.getPropertyValue(`--cobe-visible-${id}`).trim();
     return raw !== '' && raw !== '0';
   }
 
@@ -109,7 +107,8 @@ import createGlobe from 'cobe';
     const nodes = STICKERS.map((s, i) => ({
       ...s,
       location: locations[i],
-      el: null
+      el: null,
+      anchor: null
     }));
 
     let width = 0;
@@ -122,6 +121,9 @@ import createGlobe from 'cobe';
     let running = true;
     let globe = null;
     let startTs = 0;
+    let stickerLayer = null;
+    let lastStickerSyncTs = 0;
+    const STICKER_SYNC_INTERVAL_MS = 1000 / 30;
 
     // Progressive timeline (seconds), then loop
     const T = {
@@ -146,13 +148,14 @@ import createGlobe from 'cobe';
       if (!host) return;
       host.classList.add('cobe-globe-host');
 
-      let layer = host.querySelector('.globe-sticker-layer');
+      let layer = stickerLayer || host.querySelector('.globe-sticker-layer');
       if (!layer) {
         layer = document.createElement('div');
         layer.className = 'globe-sticker-layer';
         host.appendChild(layer);
       }
       layer.innerHTML = '';
+      stickerLayer = layer;
 
       nodes.forEach((node) => {
         const el = document.createElement('div');
@@ -165,6 +168,9 @@ import createGlobe from 'cobe';
         img.src = assetPath(node.file);
         img.alt = node.label;
         img.draggable = false;
+        img.decoding = 'async';
+        img.width = 64;
+        img.height = 64;
         el.appendChild(img);
 
         layer.appendChild(el);
@@ -223,8 +229,12 @@ import createGlobe from 'cobe';
 
     const syncStickerLayout = () => {
       const host = ensureHost();
-      const layer = host?.querySelector('.globe-sticker-layer');
+      const layer = stickerLayer || host?.querySelector('.globe-sticker-layer');
       if (!host || !layer) return;
+      if (!stickerLayer) stickerLayer = layer;
+
+      // One style recalc for all stickers (COBE writes --cobe-visible-* on :root)
+      const rootStyle = getComputedStyle(document.documentElement);
 
       // Front-hemisphere only (COBE culls the back), then resolve overlaps
       const candidates = [];
@@ -232,8 +242,9 @@ import createGlobe from 'cobe';
       nodes.forEach((node) => {
         if (!node.el) return;
         const shown = node.el.classList.contains('is-shown');
-        const anchor = findAnchor(host, node.id);
-        const cobeFacing = isCobeFacing(node.id);
+        if (!node.anchor) node.anchor = findAnchor(host, node.id);
+        const anchor = node.anchor;
+        const cobeFacing = isCobeFacing(node.id, rootStyle);
 
         if (anchor) {
           node.el.style.left = anchor.style.left || '50%';
@@ -344,8 +355,7 @@ import createGlobe from 'cobe';
         globe.update({ arcs: arcsForCount(st.arcCount) });
       }
 
-      const layer = ensureHost()?.querySelector('.globe-sticker-layer');
-      if (layer) layer.style.opacity = String(st.fade);
+      if (stickerLayer) stickerLayer.style.opacity = String(st.fade);
     };
 
     const render = (ts) => {
@@ -367,7 +377,11 @@ import createGlobe from 'cobe';
       }
 
       globe.update({ phi, theta });
-      syncStickerLayout();
+      // DOM sticker layout is independent of the WebGL loop; cap it at ~30 Hz
+      if (ts - lastStickerSyncTs >= STICKER_SYNC_INTERVAL_MS) {
+        lastStickerSyncTs = ts;
+        syncStickerLayout();
+      }
 
       if (!REDUCED_MOTION.matches) {
         raf = requestAnimationFrame(render);
