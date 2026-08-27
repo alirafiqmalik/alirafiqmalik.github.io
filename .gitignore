@@ -13,6 +13,7 @@ node_modules/
 
 # Layout Probe artifacts
 probe-out/
+tools/probe/fixtures/payload-image/big.png
 
 # OS
 .DS_Store

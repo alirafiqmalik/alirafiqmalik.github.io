@@ -48,6 +48,7 @@ export async function serveStatic(rootDir) {
       }
       res.writeHead(200, {
         "content-type": CONTENT_TYPES[extname(filePath).toLowerCase()] ?? "application/octet-stream",
+        "content-length": info.size,
         "cache-control": "no-store",
       });
       createReadStream(filePath).pipe(res);

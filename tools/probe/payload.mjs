@@ -37,9 +37,7 @@ function originHost(origin) {
 }
 
 function entryBytes(entry) {
-  const n = Number(entry.bytes) || 0;
-  if (n > 0) return n;
-  return Number(entry.fallbackBytes) || 0;
+  return Math.max(Number(entry.bytes) || 0, Number(entry.fallbackBytes) || 0);
 }
 
 function isImage(entry) {
@@ -203,9 +201,11 @@ export async function collectLandingPayload(browser, baseUrl) {
     for (const [url, entry] of byUrl) {
       const timed = timing[url];
       if (!timed) continue;
-      if (timed.transferSize > 0) entry.bytes = timed.transferSize;
-      if (timed.encodedBodySize > 0) {
-        entry.fallbackBytes = Math.max(entry.fallbackBytes || 0, timed.encodedBodySize);
+      // Prefer the larger of transfer vs encoded body so a Resource Timing
+      // under-count cannot hide an over-budget file.
+      const timedBytes = Math.max(timed.transferSize || 0, timed.encodedBodySize || 0);
+      if (timedBytes > 0) {
+        entry.fallbackBytes = Math.max(entry.fallbackBytes || 0, timedBytes);
       }
     }
   } finally {
