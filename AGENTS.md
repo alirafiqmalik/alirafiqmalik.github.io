@@ -43,6 +43,7 @@ Canonical viewports: phone `390×844`, short phone `360×640`, tablet portrait
 laptop `1440×780`, standard laptop `1440×900`, desktop `1920×1080`.
 
 Every viewport must satisfy all of:
+- **Payload Group (once per invocation, not per-viewport):** landing total ≤ 1 MB; no image > 150 KB; zero third-party font hosts; ≤ 3 font files. Decided from bytes actually requested while loading `/`, after walking every `img` into view so lazy assets cannot hide from the budget.
 - **No overlaps:** name, tagline, nav, bio, and News must not cover each other.
 - **Landing handoff:** About starts at the landing edge. No empty scroll runway
   separates the sections.
@@ -82,7 +83,8 @@ attributes: `name`, `tagline`, `nav`, `nav-logo`, `news-card`, `about-panel`,
 handles and section ids — never styling or state classes (ADR-0001) — so
 renaming or removing a `data-probe` attribute is a contract change: keep the
 handle on the element that plays that role, or update the probe and this
-section together. `contact-panel` marks the Contact section for reachability.
+section together. Contact reachability is decided from the `#contact` section
+id (the `contact-panel` handle lives on that same element).
 
 #### Deliberate non-goals (do not "fix" these later)
 
