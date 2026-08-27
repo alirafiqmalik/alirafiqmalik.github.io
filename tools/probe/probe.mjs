@@ -24,6 +24,8 @@ import {
   decideStackVsCorners,
   decideCtasUsable,
   decideReachable,
+  decideNavLogoTarget,
+  homepageHasLanding,
 } from "./geometry.mjs";
 import {
   decideLandingHandoff,
@@ -31,6 +33,7 @@ import {
   decideTrapProbe,
   resetToTop,
 } from "./scrollwalk.mjs";
+import { decidePayload, formatPayloadSummary } from "./payload.mjs";
 
 // The walk is repeated under prefers-reduced-motion: reduce at one phone and
 // one desktop viewport (spec #22).
@@ -111,8 +114,14 @@ async function probeViewport(browser, baseUrl, viewport, { reducedMotion = false
         ...(await decideLandingHandoff(page, labeled)),
         ...(await decideReachable(page, labeled, "news-card", "news-reachable")),
         ...(await decideReachable(page, labeled, "about-panel", "about-reachable")),
-        ...(await decideWalk(page, labeled)),
       ];
+      if (await homepageHasLanding(page)) {
+        failures.push(...decideNavLogoTarget(labeled, rects));
+        failures.push(
+          ...(await decideReachable(page, labeled, "contact-panel", "contact-reachable"))
+        );
+      }
+      failures.push(...(await decideWalk(page, labeled)));
       await resetToTop(page);
       failures.push(...(await decideTrapProbe(page, labeled, "news-card")));
       failures.push(...(await decideTrapProbe(page, labeled, "about-panel")));
@@ -166,6 +175,15 @@ async function main() {
 
   try {
     const allFailures = [];
+    const payload = await decidePayload(browser, baseUrl);
+    console.log(formatPayloadSummary(payload.measured));
+    if (payload.failures.length === 0) {
+      console.log("ok payload");
+    } else {
+      for (const line of payload.failures) console.log(line);
+      allFailures.push(...payload.failures);
+    }
+
     for (const viewport of VIEWPORTS) {
       allFailures.push(...(await probeViewport(browser, baseUrl, viewport)));
     }
