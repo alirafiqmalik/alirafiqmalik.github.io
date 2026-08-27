@@ -112,7 +112,20 @@ layout: home
         <div class="about-portrait">
           {% assign profile_image = site.static_files | where: "path", site.data.personal.profileImage | first %}
           {% if site.data.personal.profileImage and profile_image %}
-          <img src="{{ site.data.personal.profileImage | relative_url }}" alt="{{ site.data.personal.name }}">
+          {% assign profile_webp = site.static_files | where: "path", "/assets/img/ali.webp" | first %}
+          <picture>
+            {% if profile_webp %}
+            <source type="image/webp" srcset="{{ '/assets/img/ali.webp' | relative_url }}">
+            {% endif %}
+            <img
+              src="{{ site.data.personal.profileImage | relative_url }}"
+              alt="{{ site.data.personal.name }}"
+              width="560"
+              height="420"
+              loading="lazy"
+              decoding="async"
+            >
+          </picture>
           {% else %}
           <div class="about-placeholder" aria-label="{{ site.data.personal.name }}">{{ site.data.personal.name | split: ' ' | first | slice: 0 }}{{ site.data.personal.name | split: ' ' | last | slice: 0 }}</div>
           {% endif %}
@@ -174,34 +187,5 @@ layout: home
 <section class="page-panel page-panel-publications" id="publications">
   <div class="page-panel-inner container-md">
     {% include publications-list.html %}
-  </div>
-</section>
-
-<!-- Explore More -->
-<section class="page-panel page-panel-explore" id="explore">
-  <div class="page-panel-inner container">
-    <div class="page-panel-header animate-on-scroll">
-      <h2>Explore <span class="highlight">More</span></h2>
-    </div>
-    <div class="quick-links explore-quick-links animate-on-scroll">
-      <a href="{{ '/projects/' | relative_url }}" class="quick-link">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
-        Projects
-      </a>
-      {% if site.show_blog_in_nav != false %}
-      <a href="{{ '/blog/' | relative_url }}" class="quick-link">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/></svg>
-        Blog
-      </a>
-      {% endif %}
-      <a href="https://alihamzamalik.me/sec-deadlines/" class="quick-link">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg>
-        Deadlines
-      </a>
-      <a href="https://alihamzamalik.me/fsm-tool/" class="quick-link">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg>
-        drawFSMs
-      </a>
-    </div>
   </div>
 </section>

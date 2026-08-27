@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const progressBar = document.getElementById('nav-progress-bar');
   const scrollHint = document.querySelector('.panel-scroll-hint');
 
-  const SECTION_ORDER = ['landing', 'about', 'research', 'experience', 'publications', 'explore', 'contact'];
+  const SECTION_ORDER = ['landing', 'about', 'research', 'experience', 'publications', 'contact'];
 
   const navPromptCwd = document.querySelector('[data-nav-cwd]');
 
@@ -18,7 +18,6 @@ document.addEventListener('DOMContentLoaded', () => {
     research: 'whoami',
     experience: 'experience',
     publications: 'publications',
-    explore: 'explore',
     contact: 'contact',
     news: 'news'
   };
@@ -76,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
    * independent computations that disagreed with each other.
    *
    * Progress is section-index based, not pixel based. Panels are not equal
-   * heights — `#experience` is the one auto-height panel and runs to ~2.2x the
+   * heights — `#experience`, `#publications`, and Contact are auto-height and `#experience` runs to ~2.2x the
    * viewport on a phone — so raw `scrollTop / scrollHeight` made the bar crawl
    * through most sections and sprint through that one. Each section now owns
    * an equal slice, and travel inside a section fills its slice linearly.
@@ -337,7 +336,6 @@ document.addEventListener('DOMContentLoaded', () => {
       research: 'about',
       experience: null,
       news: null,
-      explore: null,
       publications: 'publications',
       contact: 'contact'
     };
