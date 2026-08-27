@@ -203,8 +203,7 @@ export async function collectLandingPayload(browser, baseUrl) {
         );
 
         scroller.scrollTo(0, scroller.scrollHeight);
-      })
-      .catch(() => {});
+      });
     await page.waitForLoadState("networkidle", { timeout: 8_000 }).catch(() => {});
     await Promise.all([...pending]);
 
