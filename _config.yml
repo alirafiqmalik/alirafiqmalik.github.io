@@ -56,6 +56,13 @@ exclude:
   - .github
   - tools
   - probe-out
+  # Source / unused originals — not referenced by the built site.
+  - assets/img/Firefly_RemoveBackground.png
+  - assets/img/prof_pic_color.png
+  - assets/img/prof_pic.jpg
+  - assets/img/ali_old.jpg
+  - assets/img/ali_old_2.jpg
+  - assets/img/globe/stickers/*.png
 
 # Keep CNAME for custom domain (GitHub Pages)
 keep_files:
