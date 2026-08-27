@@ -32,7 +32,9 @@ progress (no scroll traps, landing → About → later sections).
 **Payload Group**:
 The invariants decided from the served landing page's network bytes and
 request hosts (total payload, per-image ceiling, third-party fonts, font
-file count). One pass per probe invocation, not per-viewport.
+file count). One pass per probe invocation, not per-viewport. Collection
+walks every homepage `img` into view so lazy assets cannot hide from the
+budget.
 _Avoid_: lighthouse audit, network test
 
 **Trap Probe**:
