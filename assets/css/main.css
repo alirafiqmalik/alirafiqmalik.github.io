@@ -132,7 +132,7 @@ html.one-page-scroll-root body.one-page-scroll {
   z-index: 2;
   height: var(--snap-panel-height);
   overflow-y: auto;
-  overflow-x: hidden;
+  overflow-x: clip;
   /*
    * No CSS scroll-snap. Mandatory snap re-snaps after every wheel event, and a
    * real wheel/trackpad gesture is many small events, so each one was reverted
