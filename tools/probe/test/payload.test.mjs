@@ -232,3 +232,26 @@ test("Google Fonts fixture goes red naming third-party-fonts", { timeout: 300_00
     await server.close();
   }
 });
+
+test("lazy mid-page image fixture goes red naming image-ceiling", { timeout: 300_000 }, async () => {
+  const dir = join(FIXTURES, "payload-lazy");
+  await writeFile(join(dir, "lazy.png"), Buffer.alloc(200_000, 1));
+  const server = await serveStatic(dir);
+  try {
+    await withIsolatedProbeOut(async (env) => {
+      const { code, stdout, stderr } = await runProbe(["--url", server.baseUrl], env);
+      assert.equal(code, 1, `expected exit 1\nstdout:\n${stdout}\nstderr:\n${stderr}`);
+      const imageLine = stdout.match(/^payload \/ image-ceiling \/ \/lazy\.png (\d+) > 153600$/m);
+      assert.ok(
+        imageLine,
+        `expected a lazy image-ceiling failure line (scrollTo(max) must not skip it)\nstdout:\n${stdout}`
+      );
+      assert.ok(
+        Number(imageLine[1]) >= 200_000,
+        `expected measured image bytes >= 200000, got ${imageLine[1]}`
+      );
+    });
+  } finally {
+    await server.close();
+  }
+});
