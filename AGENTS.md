@@ -77,11 +77,12 @@ Every viewport must satisfy all of:
 #### Probe Handle contract
 
 The homepage elements named by the Viewport Matrix carry `data-probe`
-attributes: `name`, `tagline`, `nav`, `news-card`, `about-panel`, `cta-social`,
-`cta-links`. The probe locates elements only through these handles and section
-ids — never styling or state classes (ADR-0001) — so renaming or removing a
-`data-probe` attribute is a contract change: keep the handle on the element
-that plays that role, or update the probe and this section together.
+attributes: `name`, `tagline`, `nav`, `nav-logo`, `news-card`, `about-panel`,
+`cta-social`, `cta-links`. The probe locates elements only through these
+handles and section ids — never styling or state classes (ADR-0001) — so
+renaming or removing a `data-probe` attribute is a contract change: keep the
+handle on the element that plays that role, or update the probe and this
+section together. `contact-panel` marks the Contact section for reachability.
 
 #### Deliberate non-goals (do not "fix" these later)
 

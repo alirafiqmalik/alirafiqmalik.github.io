@@ -29,6 +29,12 @@ The invariants decidable from element rectangles and visibility alone.
 The invariants decided by synthetically scrolling the page and observing
 progress (no scroll traps, landing → About → later sections).
 
+**Payload Group**:
+The invariants decided from the served landing page's network bytes and
+request hosts (total payload, per-image ceiling, third-party fonts, font
+file count). One pass per probe invocation, not per-viewport.
+_Avoid_: lighthouse audit, network test
+
 **Trap Probe**:
 A targeted scroll check aimed at a nested scrollport (News, About) verifying
 that reaching its end hands scrolling back to the page.

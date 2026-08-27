@@ -11,6 +11,7 @@ export const PROBE_HANDLES = [
   "name",
   "tagline",
   "nav",
+  "nav-logo",
   "news-card",
   "about-panel",
   "cta-social",
@@ -255,8 +256,18 @@ export async function decideCtasUsable(page, viewport, rects) {
 // stopping below the page scroll owner.
 
 export async function measureReach(page, handleName) {
-  return page.evaluate((handle) => {
-    const el = document.querySelector(`[data-probe="${handle}"]`);
+  return measureReachLocated(page, { handle: handleName });
+}
+
+export async function measureReachBySectionId(page, sectionId) {
+  return measureReachLocated(page, { sectionId });
+}
+
+function measureReachLocated(page, loc) {
+  return page.evaluate((loc) => {
+    const el = loc.handle
+      ? document.querySelector(`[data-probe="${loc.handle}"]`)
+      : document.getElementById(loc.sectionId);
     if (!el) return null;
     const pageScroller =
       document.getElementById("page-scroll-container") ||
@@ -297,7 +308,7 @@ export async function measureReach(page, handleName) {
       cursorX: clampNum(rect.x + rect.width / 2, 1, window.innerWidth - 2),
       cursorY: clampNum((Math.max(rect.y, 0) + Math.min(rect.bottom, visibleBottom)) / 2, 1, window.innerHeight - 2),
     };
-  }, handleName);
+  }, loc);
 }
 
 export const twoFrames = (page) =>
@@ -319,12 +330,31 @@ export async function decideReachable(page, viewport, handleName, invariantName)
     return [`${viewport.name} / ${invariantName} / handle not found: ${handleName}`];
   }
   await waitScrollStable(page);
+  return driveReachability(page, viewport, invariantName, () => measureReach(page, handleName));
+}
 
+export async function decideSectionReachable(page, viewport, sectionId, invariantName) {
+  const present = await page.evaluate((id) => {
+    const el = document.getElementById(id);
+    if (!el) return false;
+    el.scrollIntoView({ block: "nearest", behavior: "instant" });
+    return true;
+  }, sectionId);
+  if (!present) {
+    return [`${viewport.name} / ${invariantName} / section not found`];
+  }
+  await waitScrollStable(page);
+  return driveReachability(page, viewport, invariantName, () =>
+    measureReachBySectionId(page, sectionId)
+  );
+}
+
+async function driveReachability(page, viewport, invariantName, measureFn) {
   const REACH_EPS = 1.5;
   const MAX_WHEEL_STEPS = 40;
   const STALL_LIMIT = 3;
 
-  let state = await measureReach(page, handleName);
+  let state = await measureFn();
   if (state.contentBottom <= state.visibleBottom + REACH_EPS) return [];
 
   let steps = 0;
@@ -335,7 +365,7 @@ export async function decideReachable(page, viewport, handleName, invariantName)
     await page.mouse.wheel(0, 260);
     steps++;
     await twoFrames(page);
-    state = await measureReach(page, handleName);
+    state = await measureFn();
     const gap = state.contentBottom - state.visibleBottom;
     if (gap <= REACH_EPS) return [];
     if (gap >= lastGap - 0.5) {
@@ -354,4 +384,24 @@ export async function decideReachable(page, viewport, handleName, invariantName)
     `${viewport.name} / ${invariantName} / last content bottom ${fmt(state.contentBottom)} ` +
       `below visible bottom ${fmt(state.visibleBottom)} after ${steps} wheel steps (${portInfo})`,
   ];
+}
+
+// --- Invariant: nav logo tap target ≥ 44px tall (WCAG 2.5.5 / issue #28).
+// Homepage only (`#landing`): fixtures without a landing section skip.
+
+export function decideNavLogoTarget(viewport, rects) {
+  const logo = rects["nav-logo"];
+  if (!logo) {
+    return [`${viewport.name} / nav-logo-target / handle not found: nav-logo`];
+  }
+  if (logo.height + EPSILON < 44) {
+    return [
+      `${viewport.name} / nav-logo-target / height ${fmt(logo.height)} < 44`,
+    ];
+  }
+  return [];
+}
+
+export async function homepageHasLanding(page) {
+  return page.evaluate(() => Boolean(document.getElementById("landing")));
 }
