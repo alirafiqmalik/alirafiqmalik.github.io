@@ -1,0 +1,49 @@
+/*
+ * Metric-matched fallbacks (font-display: swap without CLS).
+ * Inlined in <head> so first paint is not gated on a second stylesheet.
+ *
+ * Method: next.js / fontaine calcAverageWidth (Google Aurora).
+ * Atkinson Hyperlegible Next + Mono (fonttools on the woff2 files):
+ *   unitsPerEm 1000; hhea == OS/2 typo: 984 / -316 / 0
+ *   Next freq-avg 453.372093 / 1000 → Arial size-adjust 99.36%
+ *   Mono freq-avg 632 / 1000 → Courier New size-adjust 105.32%
+ *
+ * local() stacks: Arial / Liberation Sans / Roboto (Android) for Next;
+ * Courier New / Liberation Mono for Mono. Ascent/descent overrides keep
+ * the line box stable even when the local face's glyph widths differ.
+ */
+@font-face {
+  font-family: 'Atkinson Hyperlegible Next';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 200 800;
+  src: url('{{ "/assets/fonts/atkinson-hyperlegible-next-latin-wght-normal.woff2" | relative_url }}') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Atkinson Hyperlegible Next Fallback';
+  src: local('Arial'), local('Liberation Sans'), local('Roboto'), local('Helvetica Neue'), local('Helvetica');
+  size-adjust: 99.36%;
+  ascent-override: 99.04%;
+  descent-override: 31.80%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'Atkinson Hyperlegible Mono';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 200 800;
+  src: url('{{ "/assets/fonts/atkinson-hyperlegible-mono-latin-wght-normal.woff2" | relative_url }}') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Atkinson Hyperlegible Mono Fallback';
+  src: local('Courier New'), local('Liberation Mono'), local('Courier');
+  size-adjust: 105.32%;
+  ascent-override: 93.43%;
+  descent-override: 30.00%;
+  line-gap-override: 0%;
+}
