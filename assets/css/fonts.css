@@ -25,6 +25,9 @@
  *   -> size-adjust 105.32%; ascent-override 93.43%; descent-override 30.00%;
  *      line-gap-override 0%
  *
+ * local() stacks include metric-compatible free faces so Linux hosts that
+ * lack Arial / Courier New still swap without a fallback-font miss.
+ *
  * Google Fonts latin unicode-range (Fontsource latin vf files).
  */
 
@@ -39,7 +42,8 @@
 
 @font-face {
   font-family: 'Atkinson Hyperlegible Next Fallback';
-  src: local('Arial');
+  /* Arial metrics; Liberation Sans is the metric-compatible free face. */
+  src: local('Arial'), local('Liberation Sans'), local('Helvetica Neue'), local('Helvetica');
   size-adjust: 99.36%;
   ascent-override: 99.04%;
   descent-override: 31.80%;
@@ -57,7 +61,8 @@
 
 @font-face {
   font-family: 'Atkinson Hyperlegible Mono Fallback';
-  src: local('Courier New');
+  /* Courier New metrics; Liberation Mono shares the 1229/2048 pitch. */
+  src: local('Courier New'), local('Liberation Mono'), local('Courier');
   size-adjust: 105.32%;
   ascent-override: 93.43%;
   descent-override: 30.00%;
