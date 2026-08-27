@@ -387,21 +387,17 @@ async function driveReachability(page, viewport, invariantName, measureFn) {
 }
 
 // --- Invariant: nav logo tap target ≥ 44px tall (WCAG 2.5.5 / issue #28).
-// Homepage only (`#landing`): fixtures without a landing section skip.
+// Located via the `nav-logo` Probe Handle. Missing handle is red.
 
 export function decideNavLogoTarget(viewport, rects) {
   const logo = rects["nav-logo"];
   if (!logo) {
     return [`${viewport.name} / nav-logo-target / handle not found: nav-logo`];
   }
-  if (logo.height + EPSILON < 44) {
+  if (logo.height < 44) {
     return [
       `${viewport.name} / nav-logo-target / height ${fmt(logo.height)} < 44`,
     ];
   }
   return [];
-}
-
-export async function homepageHasLanding(page) {
-  return page.evaluate(() => Boolean(document.getElementById("landing")));
 }

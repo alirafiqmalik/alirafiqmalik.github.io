@@ -24,8 +24,8 @@ import {
   decideStackVsCorners,
   decideCtasUsable,
   decideReachable,
+  decideSectionReachable,
   decideNavLogoTarget,
-  homepageHasLanding,
 } from "./geometry.mjs";
 import {
   decideLandingHandoff,
@@ -111,16 +111,12 @@ async function probeViewport(browser, baseUrl, viewport, { reducedMotion = false
         ...decideOverlapInvariant(labeled, rects),
         ...decideStackVsCorners(labeled, rects),
         ...(await decideCtasUsable(page, labeled, rects)),
+        ...decideNavLogoTarget(labeled, rects),
         ...(await decideLandingHandoff(page, labeled)),
         ...(await decideReachable(page, labeled, "news-card", "news-reachable")),
         ...(await decideReachable(page, labeled, "about-panel", "about-reachable")),
+        ...(await decideSectionReachable(page, labeled, "contact", "contact-reachable")),
       ];
-      if (await homepageHasLanding(page)) {
-        failures.push(...decideNavLogoTarget(labeled, rects));
-        failures.push(
-          ...(await decideReachable(page, labeled, "contact-panel", "contact-reachable"))
-        );
-      }
       failures.push(...(await decideWalk(page, labeled)));
       await resetToTop(page);
       failures.push(...(await decideTrapProbe(page, labeled, "news-card")));
@@ -175,13 +171,19 @@ async function main() {
 
   try {
     const allFailures = [];
-    const payload = await decidePayload(browser, baseUrl);
-    console.log(formatPayloadSummary(payload.measured));
-    if (payload.failures.length === 0) {
-      console.log("ok payload");
-    } else {
-      for (const line of payload.failures) console.log(line);
-      allFailures.push(...payload.failures);
+    try {
+      const payload = await decidePayload(browser, baseUrl);
+      console.log(formatPayloadSummary(payload.measured));
+      if (payload.failures.length === 0) {
+        console.log("ok payload");
+      } else {
+        for (const line of payload.failures) console.log(line);
+        allFailures.push(...payload.failures);
+      }
+    } catch (error) {
+      const failure = `payload / probe-error / ${error.message.split("\n")[0]}`;
+      console.log(failure);
+      allFailures.push(failure);
     }
 
     for (const viewport of VIEWPORTS) {
