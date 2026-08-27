@@ -4,6 +4,7 @@
 export const DEFAULT_BUDGETS = {
   totalBytes: 1_048_576,
   imageCeiling: 153_600,
+  fontCount: 3,
   maxFontFiles: 3,
 };
 
@@ -70,7 +71,7 @@ export function formatPayloadSummary(measured) {
 export function decidePayloadFromEntries(entries, budgets = DEFAULT_BUDGETS) {
   const totalLimit = budgets.totalBytes ?? DEFAULT_BUDGETS.totalBytes;
   const imageLimit = budgets.imageCeiling ?? DEFAULT_BUDGETS.imageCeiling;
-  const fontLimit = budgets.maxFontFiles ?? DEFAULT_BUDGETS.maxFontFiles;
+  const fontLimit = budgets.fontCount ?? budgets.maxFontFiles ?? DEFAULT_BUDGETS.fontCount;
   const pageHost = originHost(budgets.origin || "");
 
   const failures = [];
@@ -151,11 +152,14 @@ export async function collectLandingPayload(browser, baseUrl) {
     });
   };
 
+  page.on("request", (request) => {
+    record(request.url(), request.resourceType(), 0);
+  });
   page.on("response", (response) => {
     const req = response.request();
     const job = sizeOfResponse(response)
       .then((bytes) => {
-        record(req.url(), req.resourceType(), bytes);
+        record(req.url(), req.resourceType(), 0, bytes);
       })
       .catch(() => {
         record(req.url(), req.resourceType(), 0);
@@ -169,9 +173,41 @@ export async function collectLandingPayload(browser, baseUrl) {
 
   try {
     await page.goto(`${origin}/`, { waitUntil: "load", timeout: 30_000 });
-    // Stickers and late font files may arrive after `load`.
-    await page.waitForTimeout(1500);
+    // Flush lazy-loaded landing images so they count toward the budget.
+    await page
+      .evaluate(() => {
+        const scroller =
+          document.getElementById("page-scroll-container") ||
+          document.scrollingElement ||
+          document.documentElement;
+        scroller.scrollTo(0, scroller.scrollHeight);
+      })
+      .catch(() => {});
+    await page.waitForLoadState("networkidle", { timeout: 8_000 }).catch(() => {});
     await Promise.all([...pending]);
+
+    const timing = await page.evaluate(() => {
+      const list = [
+        ...performance.getEntriesByType("navigation"),
+        ...performance.getEntriesByType("resource"),
+      ];
+      const map = {};
+      for (const entry of list) {
+        map[entry.name] = {
+          transferSize: entry.transferSize || 0,
+          encodedBodySize: entry.encodedBodySize || 0,
+        };
+      }
+      return map;
+    });
+    for (const [url, entry] of byUrl) {
+      const timed = timing[url];
+      if (!timed) continue;
+      if (timed.transferSize > 0) entry.bytes = timed.transferSize;
+      if (timed.encodedBodySize > 0) {
+        entry.fallbackBytes = Math.max(entry.fallbackBytes || 0, timed.encodedBodySize);
+      }
+    }
   } finally {
     await context.close();
   }
