@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Probe fixture: lazy oversized image mid-page</title>
+  <style>
+    .runway { height: 300vh; }
+  </style>
+</head>
+<body>
+  <p>Deliberate Payload Group violation: a lazy image several viewports down.</p>
+  <div class="runway" aria-hidden="true"></div>
+  <img src="lazy.png" width="64" height="64" alt="oversized lazy" loading="lazy">
+  <div class="runway" aria-hidden="true"></div>
+</body>
+</html>

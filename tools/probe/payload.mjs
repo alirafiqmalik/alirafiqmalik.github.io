@@ -115,13 +115,16 @@ export function decidePayloadFromEntries(entries, budgets = DEFAULT_BUDGETS) {
 async function sizeOfResponse(response) {
   const headers = response.headers();
   const contentLength = Number(headers["content-length"]);
-  if (Number.isFinite(contentLength) && contentLength > 0) return contentLength;
+  const headerBytes =
+    Number.isFinite(contentLength) && contentLength > 0 ? contentLength : 0;
+  let bodyBytes = 0;
   try {
     const body = await response.body();
-    return body.length;
+    bodyBytes = body.length;
   } catch {
-    return 0;
+    // Body may already be consumed or unavailable; header/timing still apply.
   }
+  return Math.max(headerBytes, bodyBytes);
 }
 
 /**
@@ -171,13 +174,34 @@ export async function collectLandingPayload(browser, baseUrl) {
 
   try {
     await page.goto(`${origin}/`, { waitUntil: "load", timeout: 30_000 });
-    // Flush lazy-loaded landing images so they count toward the budget.
+    // Blink lazy-load uses proximity to the *current* viewport. A jump to
+    // scrollHeight can skip mid-page images (the About portrait sits several
+    // viewports above Contact). Walk every img into view and force eager load
+    // so the budget sees every homepage image, not just what happened to fetch.
     await page
-      .evaluate(() => {
+      .evaluate(async () => {
         const scroller =
           document.getElementById("page-scroll-container") ||
           document.scrollingElement ||
           document.documentElement;
+
+        for (const el of document.querySelectorAll("section, footer, [data-probe]")) {
+          el.scrollIntoView({ block: "center", behavior: "instant" });
+        }
+
+        const imgs = [...document.images];
+        await Promise.all(
+          imgs.map((img) => {
+            img.loading = "eager";
+            img.scrollIntoView({ block: "center", behavior: "instant" });
+            if (img.complete) return Promise.resolve();
+            return new Promise((resolve) => {
+              img.addEventListener("load", resolve, { once: true });
+              img.addEventListener("error", resolve, { once: true });
+            });
+          })
+        );
+
         scroller.scrollTo(0, scroller.scrollHeight);
       })
       .catch(() => {});
