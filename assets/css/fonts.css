@@ -1,0 +1,65 @@
+/*
+ * Metric-matched fallbacks (font-display: swap without CLS).
+ *
+ * Method: next.js / fontaine calcAverageWidth (Google Aurora).
+ *   avgCharacters = "aaabcdeeeefghiijklmnnoopqrrssttuvwxyz      "
+ *   sizeAdjust    = (webFreqAvg / webUPM) / (fallbackAzAvg / fallbackUPM)
+ *   ascent%       = |hhea.ascent|  / (webUPM * sizeAdjust) * 100
+ *   descent%      = |hhea.descent| / (webUPM * sizeAdjust) * 100
+ *   line-gap%     = |hhea.lineGap| / (webUPM * sizeAdjust) * 100
+ *
+ * Atkinson Hyperlegible Next + Mono (fonttools on the woff2 files):
+ *   unitsPerEm 1000; hhea == OS/2 typo (USE_TYPO_METRICS): 984 / -316 / 0
+ *   fvar wght 200–800
+ *   Next freq-avg advance 453.372093 / 1000
+ *   Mono freq-avg advance 632.000000 / 1000 (fixed pitch)
+ *
+ * Arial (next.js fontkit on Arial.ttf — proprietary, not on this host):
+ *   azAvgWidth 934.5116279069767 / unitsPerEm 2048
+ *   -> size-adjust 99.36%; ascent-override 99.04%; descent-override 31.80%;
+ *      line-gap-override 0%
+ *
+ * Courier New (@capsizecss/metrics + Liberation Mono, which share Courier
+ * New's 1229/2048 pitch; mono frequency-average == glyph width):
+ *   azAvgWidth 1229 / unitsPerEm 2048
+ *   -> size-adjust 105.32%; ascent-override 93.43%; descent-override 30.00%;
+ *      line-gap-override 0%
+ *
+ * Google Fonts latin unicode-range (Fontsource latin vf files).
+ */
+
+@font-face {
+  font-family: 'Atkinson Hyperlegible Next';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 200 800;
+  src: url('../fonts/atkinson-hyperlegible-next-latin-wght-normal.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Atkinson Hyperlegible Next Fallback';
+  src: local('Arial');
+  size-adjust: 99.36%;
+  ascent-override: 99.04%;
+  descent-override: 31.80%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'Atkinson Hyperlegible Mono';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 200 800;
+  src: url('../fonts/atkinson-hyperlegible-mono-latin-wght-normal.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Atkinson Hyperlegible Mono Fallback';
+  src: local('Courier New');
+  size-adjust: 105.32%;
+  ascent-override: 93.43%;
+  descent-override: 30.00%;
+  line-gap-override: 0%;
+}
