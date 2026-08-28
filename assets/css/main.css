@@ -614,16 +614,13 @@ body.one-page-scroll .footer.footer-one-page {
   display: inline-flex;
   align-items: baseline;
   gap: 0.35rem;
-  min-width: 0;
-  max-width: min(14rem, 42vw);
+  flex-shrink: 0;
   font-family: ui-monospace, 'SFMono-Regular', 'SF Mono', 'Cascadia Code', 'Segoe UI Mono', Menlo, Consolas, monospace;
   font-size: 0.8125rem;
   font-weight: 500;
   letter-spacing: 0;
   line-height: 1.2;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .nav-logo-prompt:hover {
@@ -646,10 +643,7 @@ body.one-page-scroll .footer.footer-one-page {
 }
 
 .nav-prompt-path {
-  flex-shrink: 1;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  flex-shrink: 0;
   color: var(--text-secondary);
 }
 
@@ -3307,7 +3301,6 @@ a.news-window-line:hover .news-window-arrow {
   }
 
   .nav-logo-prompt {
-    max-width: min(12.5rem, 62vw);
     font-size: 0.75rem;
   }
 
@@ -3616,7 +3609,6 @@ a.news-window-line:hover .news-window-arrow {
   }
 
   .nav-logo-prompt {
-    max-width: min(11.5rem, 26vw);
     font-size: 0.75rem;
   }
 
@@ -3652,10 +3644,6 @@ a.news-window-line:hover .news-window-arrow {
 @media (min-width: 1024px) and (max-width: 1279px) {
   .nav-links {
     gap: 1.35rem;
-  }
-
-  .nav-logo-prompt {
-    max-width: min(13rem, 24vw);
   }
 
 }
