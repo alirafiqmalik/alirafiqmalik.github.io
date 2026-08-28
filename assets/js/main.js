@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
    * independent computations that disagreed with each other.
    *
    * Progress is section-index based, not pixel based. Panels are not equal
-   * heights — `#experience` is the one auto-height panel and runs to ~2.2x the
+   * heights — `#experience`, `#publications`, and Contact are auto-height and `#experience` runs to ~2.2x the
    * viewport on a phone — so raw `scrollTop / scrollHeight` made the bar crawl
    * through most sections and sprint through that one. Each section now owns
    * an equal slice, and travel inside a section fills its slice linearly.

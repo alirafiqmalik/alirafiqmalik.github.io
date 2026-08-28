@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
-
 /* === RESET & BASE === */
 *, *::before, *::after {
   margin: 0;
@@ -19,9 +17,9 @@
   --text-primary: #FAFAFA;
   --text-secondary: #B3B3B3;
   --text-muted: #8D8D8D;
-  --font-display: 'Space Grotesk', 'Inter', sans-serif;
-  --font-body: 'Inter', sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --font-display: 'Atkinson Hyperlegible Next', 'Atkinson Hyperlegible Next Fallback', sans-serif;
+  --font-body: 'Atkinson Hyperlegible Next', 'Atkinson Hyperlegible Next Fallback', sans-serif;
+  --font-mono: 'Atkinson Hyperlegible Mono', 'Atkinson Hyperlegible Mono Fallback', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --radius: 0.25rem;
   --radius-lg: 0.5rem;
   --radius-card: 0.75rem;
@@ -32,7 +30,9 @@
   --nav-float-offset: calc(var(--nav-float-top) + var(--nav-float-height));
   --nav-sticky-gap: 0.5rem;
   --nav-offset: calc(var(--nav-float-offset) + var(--nav-sticky-gap));
-  --snap-panel-height: 100dvh;
+  /* vh fallback first; svh is the small viewport (browser chrome visible). */
+  --snap-panel-height: 100vh;
+  --snap-panel-height: 100svh;
 }
 
 html {
@@ -108,6 +108,7 @@ img {
 
 .site-wrapper {
   min-height: 100vh;
+  min-height: 100svh;
   display: flex;
   flex-direction: column;
 }
@@ -131,7 +132,7 @@ html.one-page-scroll-root body.one-page-scroll {
   z-index: 2;
   height: var(--snap-panel-height);
   overflow-y: auto;
-  overflow-x: hidden;
+  overflow-x: clip;
   /*
    * No CSS scroll-snap. Mandatory snap re-snaps after every wheel event, and a
    * real wheel/trackpad gesture is many small events, so each one was reverted
@@ -294,7 +295,7 @@ body.one-page-scroll .main-content.main-content-scroll {
 .page-panel-about .about-placeholder {
   max-height: min(40dvh, 20rem);
   width: auto;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .page-panel-publications .publication-list {
@@ -303,12 +304,18 @@ body.one-page-scroll .main-content.main-content-scroll {
 }
 
 .page-panel-publications {
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  overflow: visible;
   justify-content: flex-start;
 }
 
 .page-panel-publications .page-panel-inner {
+  overflow: visible;
   justify-content: flex-start;
   padding-top: 1rem;
+  padding-bottom: 2rem;
 }
 
 .page-panel-research .page-panel-header {
@@ -448,16 +455,17 @@ body.one-page-scroll .footer.footer-one-page {
 }
 
 .footer-snap-panel {
-  height: var(--snap-panel-height);
-  min-height: var(--snap-panel-height);
-  max-height: var(--snap-panel-height);
+  height: auto;
+  min-height: 0;
+  max-height: none;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: flex-start;
   box-sizing: border-box;
-  overflow: hidden;
+  overflow: visible;
   flex-shrink: 0;
   border-top: none;
+  padding-top: calc(var(--nav-float-offset) + 0.5rem);
 }
 
 .footer-top-divider {
@@ -479,7 +487,6 @@ body.one-page-scroll .footer.footer-one-page {
 #about,
 #research,
 #experience,
-#explore,
 #publications,
 #contact {
   scroll-margin-top: 0;
@@ -612,7 +619,7 @@ body.one-page-scroll .footer.footer-one-page {
 
 .nav-logo-prompt {
   display: inline-flex;
-  align-items: baseline;
+  align-items: center;
   gap: 0.35rem;
   flex-shrink: 0;
   font-family: ui-monospace, 'SFMono-Regular', 'SF Mono', 'Cascadia Code', 'Segoe UI Mono', Menlo, Consolas, monospace;
@@ -933,7 +940,9 @@ body.one-page-scroll .landing-scroll-track {
   /* The scrub length drives exit, reveal, and dim. About overlaps that full
      length, so the transition has no empty runway between the two sections. */
   --landing-track-height: 230vh;
-  --landing-overlap: calc(var(--landing-track-height) - 100dvh);
+  --landing-track-height: 230svh;
+  --landing-overlap: calc(var(--landing-track-height) - 100vh);
+  --landing-overlap: calc(var(--landing-track-height) - 100svh);
   position: relative;
   height: var(--landing-track-height);
   width: 100%;
@@ -943,9 +952,12 @@ body.one-page-scroll .landing-scroll-track {
 .home-section.home-section-landing {
   position: sticky;
   top: 0;
-  height: 100dvh;
-  min-height: 100dvh;
-  max-height: 100dvh;
+  height: 100vh;
+  height: 100svh;
+  min-height: 100vh;
+  min-height: 100svh;
+  max-height: 100vh;
+  max-height: 100svh;
   width: 100%;
   display: block;
   padding: 0 !important;
@@ -1537,6 +1549,7 @@ a.news-window-line:hover .news-window-arrow {
 .hero {
   position: relative;
   min-height: 100vh;
+  min-height: 100svh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1805,16 +1818,24 @@ a.news-window-line:hover .news-window-arrow {
   justify-content: center;
 }
 
+.about-portrait picture {
+  display: flex;
+  justify-content: center;
+  max-width: 280px;
+}
+
 .about-portrait img {
   width: 100%;
   max-width: 280px;
+  height: auto;
+  aspect-ratio: 560 / 747;
   border-radius: var(--radius-lg);
   border: 1px solid var(--border);
 }
 
 .about-placeholder {
   width: min(100%, 280px);
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 560 / 747;
   border-radius: var(--radius-lg);
   border: 1px solid var(--border);
   background:
@@ -2744,7 +2765,7 @@ a.news-window-line:hover .news-window-arrow {
   background: rgba(255, 255, 255, 0.05);
   border-radius: 0.25rem;
   font-size: 0.875em;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-family: var(--font-mono);
   color: var(--accent);
 }
 
@@ -3106,7 +3127,7 @@ a.news-window-line:hover .news-window-arrow {
   background: rgba(255, 255, 255, 0.05);
   border-radius: 0.25rem;
   font-size: 0.875em;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-family: var(--font-mono);
   color: var(--accent);
 }
 
@@ -3437,10 +3458,14 @@ a.news-window-line:hover .news-window-arrow {
     width: 100%;
     max-width: none;
     margin-top: auto;
-    padding: 0;
+    padding: 0.85rem 1rem 1rem;
     flex: 0 0 auto;
     gap: 0.75rem;
     z-index: 4;
+    /* Local scrim over globe arcs — does not dim the globe globally. */
+    border-radius: 1rem;
+    background: rgba(20, 20, 20, 0.78);
+    box-shadow: 0 0 2.5rem 1.35rem rgba(20, 20, 20, 0.5);
   }
 
   .landing-bio p {
@@ -3810,7 +3835,8 @@ a.news-window-line:hover .news-window-arrow {
  */
 @media (prefers-reduced-motion: reduce) {
   .landing-scroll-track {
-    --landing-track-height: 100dvh;
+    --landing-track-height: 100vh;
+    --landing-track-height: 100svh;
     --landing-overlap: 0px;
   }
 

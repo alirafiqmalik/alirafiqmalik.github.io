@@ -1,13 +1,13 @@
 <!-- Navigation -->
 <nav class="nav" data-probe="nav">
   <div class="nav-content">
-    <a class="nav-logo nav-logo-prompt" href="{{ '/' | relative_url }}" data-scroll-to="landing" aria-label="Home">
+    <a class="nav-logo nav-logo-prompt" href="{{ '/' | relative_url }}" data-scroll-to="landing" data-probe="nav-logo" aria-label="Home">
       <span class="nav-prompt-user">alihamza@malik</span><span class="nav-prompt-glyph" aria-hidden="true">❯</span><span class="nav-prompt-path">~/<span class="nav-prompt-cwd" data-nav-cwd></span></span>
     </a>
     <div class="nav-links">
       <a href="{{ '/' | relative_url }}#about" class="nav-link" data-scroll-to="about" data-nav-section="about">About</a>
       <a href="{{ '/' | relative_url }}#publications" class="nav-link" data-scroll-to="publications" data-nav-section="publications">Publications</a>
-      <a href="#contact" class="nav-link" data-scroll-to="contact" data-nav-section="contact">Contacts</a>
+      <a href="{{ '/' | relative_url }}#contact" class="nav-link" data-scroll-to="contact" data-nav-section="contact">Contact</a>
 
       <div class="nav-actions">
         <div class="nav-dropdown">
@@ -56,7 +56,7 @@
   <div class="mobile-menu">
     <a href="{{ '/' | relative_url }}#about" class="nav-link" data-scroll-to="about" data-nav-section="about">About</a>
     <a href="{{ '/' | relative_url }}#publications" class="nav-link" data-scroll-to="publications" data-nav-section="publications">Publications</a>
-    <a href="#contact" class="nav-link" data-scroll-to="contact" data-nav-section="contact">Contacts</a>
+    <a href="{{ '/' | relative_url }}#contact" class="nav-link" data-scroll-to="contact" data-nav-section="contact">Contact</a>
 
     <div class="mobile-more-group">
       <span class="mobile-more-label">More</span>
