@@ -622,7 +622,8 @@ body.one-page-scroll .footer.footer-one-page {
   align-items: center;
   gap: 0.35rem;
   flex-shrink: 0;
-  font-family: ui-monospace, 'SFMono-Regular', 'SF Mono', 'Cascadia Code', 'Segoe UI Mono', Menlo, Consolas, monospace;
+  min-height: 44px;
+  font-family: var(--font-mono);
   font-size: 0.8125rem;
   font-weight: 500;
   letter-spacing: 0;
