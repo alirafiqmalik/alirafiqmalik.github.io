@@ -631,10 +631,7 @@ body.one-page-scroll .footer.footer-one-page {
 }
 
 .nav-prompt-user {
-  flex-shrink: 1;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  flex-shrink: 0;
   color: var(--text-primary);
 }
 
@@ -649,7 +646,10 @@ body.one-page-scroll .footer.footer-one-page {
 }
 
 .nav-prompt-path {
-  flex-shrink: 0;
+  flex-shrink: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
   color: var(--text-secondary);
 }
 
