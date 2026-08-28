@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const progressBar = document.getElementById('nav-progress-bar');
   const scrollHint = document.querySelector('.panel-scroll-hint');
 
-  const SECTION_ORDER = ['landing', 'about', 'research', 'experience', 'publications', 'contact'];
+  const SECTION_ORDER = ['landing', 'about', 'research', 'experience', 'publications', 'explore', 'contact'];
 
   const navPromptCwd = document.querySelector('[data-nav-cwd]');
 
@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     research: 'whoami',
     experience: 'experience',
     publications: 'publications',
+    explore: 'explore',
     contact: 'contact',
     news: 'news'
   };
@@ -336,6 +337,7 @@ document.addEventListener('DOMContentLoaded', () => {
       research: 'about',
       experience: null,
       news: null,
+      explore: null,
       publications: 'publications',
       contact: 'contact'
     };
