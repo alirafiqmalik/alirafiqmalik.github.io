@@ -428,8 +428,28 @@ body.one-page-scroll .main-content.main-content-scroll {
   margin-bottom: 0.5rem;
 }
 
+.page-panel-explore .page-panel-header {
+  margin-bottom: 2rem;
+}
+
+.page-panel-explore .explore-quick-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  max-width: 48rem;
+  margin: 0 auto;
+}
+
+.page-panel-explore .explore-quick-links .quick-link {
+  flex: 0 1 auto;
+  min-width: 9rem;
+}
+
 /* Specificity must beat `.footer { margin-top: 4rem }` further down the file,
-   or a 64px dead band sits between Publications and the footer panel. */
+   or a 64px dead band sits between Explore and the footer panel. */
 body.one-page-scroll .footer.footer-one-page {
   margin-top: 0;
 }
@@ -1318,6 +1338,7 @@ body.globe-is-bg .page-scroll-container,
 body.globe-is-bg .page-panel-research,
 body.globe-is-bg .page-panel-experience,
 body.globe-is-bg .page-panel-publications,
+body.globe-is-bg .page-panel-explore,
 body.globe-is-bg .footer {
   position: relative;
   z-index: 2;
@@ -1332,6 +1353,7 @@ body.globe-is-bg .page-panel-about,
 body.globe-is-bg .page-panel-research,
 body.globe-is-bg .page-panel-experience,
 body.globe-is-bg .page-panel-publications,
+body.globe-is-bg .page-panel-explore,
 body.globe-is-bg .footer-snap-panel,
 body.globe-is-bg .footer {
   background: transparent;
@@ -2169,6 +2191,37 @@ a.news-window-line:hover .news-window-arrow {
   font-size: 0.875rem;
   color: var(--accent);
   margin-top: 0.5rem;
+}
+
+/* === QUICK LINKS === */
+.quick-links {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.quick-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1.25rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.quick-link:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.quick-link svg {
+  width: 1.25rem;
+  height: 1.25rem;
 }
 
 /* === PAGE HEADERS === */
@@ -3149,50 +3202,14 @@ a.news-window-line:hover .news-window-arrow {
   width: 100%;
 }
 
-.footer-contact-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 1.5rem 3rem;
-  width: 100%;
-}
-
 .footer-contact-inner {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   text-align: left;
-  flex: 1 1 18rem;
-  width: auto;
-  gap: clamp(1.25rem, 3vh, 1.75rem);
-  padding: 1rem 0 1.25rem;
-}
-
-.footer-destinations {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.55rem 0.7rem;
-  padding: 1rem 0;
-  flex: 0 1 auto;
-}
-
-.footer-destination {
-  font-family: var(--font-mono);
-  font-size: 0.8125rem;
-  font-weight: 500;
-  color: var(--text-secondary);
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  padding: 0.4rem 0.85rem;
-  text-decoration: none;
-  transition: color 0.2s, border-color 0.2s;
-}
-
-.footer-destination:hover {
-  color: var(--accent);
-  border-color: var(--accent);
+  width: 100%;
+  gap: clamp(1.5rem, 4vh, 2rem);
+  padding: 3rem 0 2rem;
 }
 
 .footer-heading {
@@ -3562,6 +3579,10 @@ a.news-window-line:hover .news-window-arrow {
   .footer-content {
     padding: 0 1.5rem;
   }
+
+  .quick-links {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 /* Tablet: show desktop nav, but keep landing/about stacked for breathing room */
@@ -3642,6 +3663,10 @@ a.news-window-line:hover .news-window-arrow {
 
   .projects-grid {
     grid-template-columns: repeat(3, 1fr);
+  }
+
+  .quick-links {
+    grid-template-columns: repeat(6, 1fr);
   }
 
   .about-grid {
