@@ -979,34 +979,84 @@ document.addEventListener('DOMContentLoaded', () => {
     );
   };
 
+  const suffixWidth = (el, wordCount) => {
+    const words = eachWord(el);
+    if (words.length < wordCount) return 0;
+    const slice = words.slice(-wordCount);
+    const range = document.createRange();
+    range.setStart(slice[0].node, slice[0].start);
+    range.setEnd(slice[slice.length - 1].node, slice[slice.length - 1].end);
+    return range.getBoundingClientRect().width;
+  };
+
+  const lastLineAvailable = (el) => {
+    const lines = mergeLineRects(el);
+    if (!lines.length) return el.clientWidth;
+    const last = lines[lines.length - 1];
+    const box = el.getBoundingClientRect();
+    const padRight = parseFloat(getComputedStyle(el).paddingRight) || 0;
+    let rightEdge = box.right - padRight;
+    collectRightFloats(el).forEach((f) => {
+      if (f.side !== 'right') return;
+      if (last.top < f.bottom - 1 && last.top + 4 > f.top) {
+        rightEdge = Math.min(rightEdge, f.left);
+      }
+    });
+    return Math.max(8, rightEdge - last.left);
+  };
+
   const fillElement = (el) => {
     if (!el || !el.textContent.trim()) return;
     if (!lineFillOriginals.has(el)) lineFillOriginals.set(el, el.innerHTML);
     restoreLineFill(el);
     if (el.clientWidth < 32) return;
 
-    let bestK = 0;
-    let bestScore = minLineRatio(el);
-    if (bestScore >= LINE_FILL_MIN) return;
+    const startScore = minLineRatio(el);
+    if (startScore >= LINE_FILL_MIN) return;
 
+    let bestK = 0;
+    let bestScore = startScore;
+    let foundFill = false;
     const wordCount = (el.textContent.match(LINE_FILL_WORD) || []).length;
     const maxK = Math.min(wordCount - 1, 48);
+    const previousWrap = el.style.getPropertyValue('text-wrap');
+    el.style.setProperty('text-wrap', 'wrap');
+
     for (let k = 2; k <= maxK; k += 1) {
       restoreLineFill(el);
       if (!glueLastWords(el, k)) continue;
       if (overflowsMeasure(el)) continue;
+      const lines = mergeLineRects(el);
+      const avail = lastLineAvailable(el);
+      const suffix = suffixWidth(el, k);
+      if (lines.length < 2) {
+        if (suffix >= LINE_FILL_MIN * el.clientWidth - 1) {
+          bestK = k;
+          bestScore = 1;
+          foundFill = true;
+          break;
+        }
+        continue;
+      }
       const score = minLineRatio(el);
       if (score > bestScore + 0.001) {
         bestScore = score;
         bestK = k;
       }
-      if (score >= LINE_FILL_MIN) break;
+      if (suffix >= LINE_FILL_MIN * avail - 1 && suffix <= avail + 1 && score >= LINE_FILL_MIN) {
+        bestK = k;
+        bestScore = score;
+        foundFill = true;
+        break;
+      }
     }
 
     restoreLineFill(el);
-    // Only mutate when every wrapped line actually clears 50%. A "best effort"
-    // glue that still misses can wrap the glued tail and make the widow worse.
-    if (bestK > 0 && bestScore >= LINE_FILL_MIN) glueLastWords(el, bestK);
+    if (bestK > 0 && (foundFill || bestScore > startScore + 0.001)) {
+      glueLastWords(el, bestK);
+    }
+    if (previousWrap) el.style.setProperty('text-wrap', previousWrap);
+    else el.style.removeProperty('text-wrap');
   };
 
   const optimizeLineUtilization = () => {
