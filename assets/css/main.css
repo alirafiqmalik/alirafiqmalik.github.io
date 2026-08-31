@@ -248,7 +248,7 @@ body.one-page-scroll .main-content.main-content-scroll {
 
 .page-panel-about .about-panel {
   width: 100%;
-  max-width: 54rem;
+  max-width: 72rem;
   margin-inline: auto;
   display: flex;
   flex-direction: column;
@@ -268,8 +268,8 @@ body.one-page-scroll .main-content.main-content-scroll {
 }
 
 .page-panel-about .about-name {
-  font-size: clamp(1.65rem, 3.6vw, 2.55rem);
-  margin-bottom: clamp(0.85rem, 2vh, 1.35rem);
+  font-size: clamp(2rem, 4.2vw, 3.15rem);
+  margin-bottom: clamp(1.15rem, 2.4vh, 1.85rem);
 }
 
 .page-panel-about .about-text {
@@ -277,9 +277,9 @@ body.one-page-scroll .main-content.main-content-scroll {
 }
 
 .page-panel-about .about-text p {
-  font-size: clamp(0.8125rem, 1.4vw, 0.9375rem);
-  line-height: 1.7;
-  margin-bottom: clamp(0.65rem, 1.6vh, 1rem);
+  font-size: clamp(0.9375rem, 1.15vw, 1.125rem);
+  line-height: 1.85;
+  margin-bottom: clamp(1rem, 2vh, 1.5rem);
 }
 
 .page-panel-about .about-text p:last-child {
@@ -1804,12 +1804,12 @@ a.news-window-line:hover .news-window-arrow {
 /* === ABOUT / BIO SECTION === */
 .about-name {
   font-family: var(--font-display);
-  font-size: clamp(1.75rem, 4vw, 2.65rem);
+  font-size: clamp(2rem, 4.4vw, 3.15rem);
   font-weight: 400;
-  line-height: 1.15;
+  line-height: 1.12;
   letter-spacing: -0.03em;
   color: var(--text-primary);
-  margin: 0 0 1.25rem;
+  margin: 0 0 1.5rem;
 }
 
 .about-name-given {
@@ -1832,8 +1832,8 @@ a.news-window-line:hover .news-window-arrow {
 
 .about-profile {
   width: 100%;
-  max-width: 14.5rem;
-  margin: 0 auto 1.25rem;
+  max-width: 16rem;
+  margin: 0 auto 1.5rem;
 }
 
 .about-portrait {
@@ -1871,10 +1871,10 @@ a.news-window-line:hover .news-window-arrow {
 
 .about-more-info {
   font-family: var(--font-mono);
-  font-size: 0.75rem;
-  line-height: 1.45;
+  font-size: 0.8125rem;
+  line-height: 1.55;
   color: var(--text-secondary);
-  margin-top: 0.55rem;
+  margin-top: 0.75rem;
 }
 
 .about-more-info p {
@@ -1885,9 +1885,9 @@ a.news-window-line:hover .news-window-arrow {
 
 .about-text p {
   color: var(--text-secondary);
-  font-size: 1rem;
-  line-height: 1.8;
-  margin-bottom: 1rem;
+  font-size: 1.0625rem;
+  line-height: 1.85;
+  margin-bottom: 1.35rem;
 }
 
 .about-text a {
@@ -3375,18 +3375,18 @@ a.news-window-line:hover .news-window-arrow {
   }
 
   .page-panel-about .about-name {
-    font-size: clamp(1.45rem, 6.4vw, 1.85rem);
-    margin-bottom: 0.7rem;
+    font-size: clamp(1.65rem, 7vw, 2.15rem);
+    margin-bottom: 1rem;
   }
 
   .page-panel-about .about-more-info {
-    font-size: 0.6875rem;
+    font-size: 0.75rem;
   }
 
   .page-panel-about .about-text p {
-    font-size: 0.8125rem;
-    line-height: 1.55;
-    margin-bottom: 0.6rem;
+    font-size: 0.9375rem;
+    line-height: 1.7;
+    margin-bottom: 0.95rem;
   }
 
   /*
@@ -3615,16 +3615,17 @@ a.news-window-line:hover .news-window-arrow {
   /* Academic wrap: portrait + caption sit to the right of the opening paragraphs. */
   .about-profile {
     float: right;
-    width: min(40%, 16.5rem);
-    max-width: 16.5rem;
-    margin: 0.15rem 0 1.25rem 1.75rem;
+    width: min(36%, 18rem);
+    max-width: 18rem;
+    margin: 0.2rem 0 1.75rem 2.5rem;
   }
 }
 
 @media (min-width: 900px) {
   .about-profile {
-    width: min(40%, 18rem);
-    max-width: 18rem;
+    width: min(34%, 20rem);
+    max-width: 20rem;
+    margin: 0.25rem 0 2rem 3rem;
   }
 }
 
