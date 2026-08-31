@@ -348,7 +348,7 @@ body.one-page-scroll .main-content.main-content-scroll {
 }
 
 .page-panel-research .skill-category-description {
-  color: var(--text-secondary);
+  color: var(--text-primary);
   font-size: 0.875rem;
   line-height: 1.7;
   margin: 0;
@@ -1876,7 +1876,7 @@ a.news-window-line:hover .news-window-arrow {
 }
 
 .about-text p {
-  color: var(--text-secondary);
+  color: var(--text-primary);
   font-size: 1.0625rem;
   line-height: 1.85;
   margin-bottom: 1.35rem;
@@ -2360,7 +2360,7 @@ a.news-window-line:hover .news-window-arrow {
   position: relative;
   padding-left: 1.25rem;
   font-size: 0.875rem;
-  color: var(--text-secondary);
+  color: var(--text-primary);
   line-height: 1.6;
   margin-bottom: 0.5rem;
 }
@@ -3246,7 +3246,7 @@ a.news-window-line:hover .news-window-arrow {
 }
 
 .footer-description {
-  color: var(--text-secondary);
+  color: var(--text-primary);
   font-size: clamp(0.9375rem, 2vw, 1.0625rem);
   line-height: 1.75;
   margin: 0;
@@ -3316,6 +3316,7 @@ a.news-window-line:hover .news-window-arrow {
 }
 
 .markdown-content p {
+  color: var(--text-primary);
   margin-bottom: 1rem;
 }
 
