@@ -62,3 +62,31 @@ _Avoid_: manual QA
 **Signoff**:
 The gate before merging or pushing landing/About/CSS/home-layout changes:
 Layout Probe passing plus Eyeball Pass done.
+
+### Projects filtering
+
+**Facet**:
+One axis a project can be filtered on — one labelled row of checkboxes on the
+projects page, backed by one front matter key. Selections are OR'd inside a
+facet and AND'd across facets.
+_Avoid_: category, filter group, tag type
+
+**Scheme**:
+A named set of facets, defined in `_data/project_facets.yml`. `active_scheme`
+decides which one `/projects/` renders; the rest stay browsable in the
+Prototype Lab.
+_Avoid_: taxonomy, preset
+
+**Domain**:
+The facet naming what a project is *about* (Security & Privacy, Hardware &
+Silicon, …).
+
+**Build Surface**:
+The facet naming what a project is *made of* (RTL & FPGA, Embedded Firmware,
+…). Deliberately not called "stack" in prose; `stack` is only the front matter
+key.
+
+**Prototype Lab**:
+`/projects/filter-lab/` — unlisted, `noindex` page carrying every layout
+variant and every scheme as working filters, for choosing between them.
+_Avoid_: demo page, playground
