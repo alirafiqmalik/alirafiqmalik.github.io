@@ -1,0 +1,93 @@
+# Facet vocabulary for the projects page.
+#
+# `active_scheme` picks which scheme /projects/ renders. Every scheme listed
+# here is browsable side by side at /projects/filter-lab/.
+#
+# A scheme is a list of groups; a group is one row of the filter block. The
+# `key` of a group is the front matter key each project uses to declare its
+# membership (a list, or a single string). Values are rendered in the order
+# written here, not alphabetically — order carries meaning.
+#
+# Adding a value here without tagging any project leaves a permanently empty
+# checkbox, so keep the two in sync.
+
+active_scheme: two-axes
+
+# Every front matter key any scheme filters on. Project cards carry a
+# data-facet-<key> attribute for each of these, so a scheme can be swapped
+# without touching templates.
+facet_keys: [domain, stack, setting, track]
+
+schemes:
+  - id: two-axes
+    name: Two Axes
+    blurb: >-
+      What the project is about, crossed with what it is made of. Two rows,
+      ten checkboxes, and no filter that lands on a single project.
+    groups:
+      - key: domain
+        label: Domain
+        icon: crosshair
+        values:
+          - Security & Privacy
+          - Hardware & Silicon
+          - Machine Learning
+          - Robotics & Cyber-Physical
+          - Networks & Distributed Systems
+      - key: stack
+        label: Build Surface
+        icon: layers
+        values:
+          - RTL & FPGA
+          - Embedded Firmware
+          - ML & Data Pipelines
+          - Networking & Protocols
+          - Tooling & Automation
+
+  - id: three-axes
+    name: Three Axes
+    blurb: >-
+      Two Axes plus where the work happened. Closest in shape to the
+      sec-deadlines filter, and the only scheme that answers "show me the
+      lab work".
+    groups:
+      - key: domain
+        label: Domain
+        icon: crosshair
+        values:
+          - Security & Privacy
+          - Hardware & Silicon
+          - Machine Learning
+          - Robotics & Cyber-Physical
+          - Networks & Distributed Systems
+      - key: stack
+        label: Build Surface
+        icon: layers
+        values:
+          - RTL & FPGA
+          - Embedded Firmware
+          - ML & Data Pipelines
+          - Networking & Protocols
+          - Tooling & Automation
+      - key: setting
+        label: Setting
+        icon: flask
+        values:
+          - Research & Lab Work
+          - Coursework
+          - Personal Build
+
+  - id: three-tracks
+    name: Three Tracks
+    blurb: >-
+      One row, three mutually exclusive tracks, three projects each. The
+      smallest change from today's pill row that still stops single-result
+      filters.
+    groups:
+      - key: track
+        label: Track
+        icon: route
+        values:
+          - Silicon & RTL
+          - Embedded & Robotics
+          - ML & Security

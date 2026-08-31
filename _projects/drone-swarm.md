@@ -4,6 +4,10 @@ description: Event-driven coordination protocol for autonomous drone swarms
 img: /assets/img/drone_setup.png
 importance: 1
 category: Robotics
+domain: [Robotics & Cyber-Physical, Networks & Distributed Systems]
+stack: [Embedded Firmware, Networking & Protocols]
+setting: Research & Lab Work
+track: Embedded & Robotics
 technologies: [Python, ROS, Raspberry Pi, ArduPilot, MAVLink]
 status: Completed
 links:

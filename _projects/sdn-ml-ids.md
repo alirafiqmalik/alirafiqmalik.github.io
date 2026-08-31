@@ -4,6 +4,10 @@ description: Intrusion Detection System for Software-Defined Networks using ML/D
 img: https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&h=400&fit=crop
 importance: 2
 category: Network Security
+domain: [Security & Privacy, Machine Learning, Networks & Distributed Systems]
+stack: [ML & Data Pipelines, Networking & Protocols]
+setting: Coursework
+track: ML & Security
 technologies: [Python, TensorFlow, scikit-learn, Mininet, Ryu, CloudLab]
 status: Completed
 links:
