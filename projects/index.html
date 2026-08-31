@@ -12,25 +12,21 @@ title: Projects
 <section>
   <div class="container">
 
-    <!-- Category Filter -->
-    <div class="category-filters animate-on-scroll">
-      <button class="category-pill active" data-category="all">All</button>
-      {% assign categories = site.projects | map: 'category' | uniq | sort %}
-      {% for category in categories %}
-      <button class="category-pill" data-category="{{ category }}">{{ category }}</button>
-      {% endfor %}
-    </div>
+    <div class="project-browser" data-project-filter data-filter-sync-url>
 
-    <!-- Results Count -->
-    <div class="results-count animate-on-scroll">
-      <span id="project-count">{{ site.projects.size }}</span> of {{ site.projects.size }} projects
-    </div>
+      <!-- Faceted Filter -->
+      {% include project-filters.html id="projects" %}
 
-    <!-- Projects Grid -->
-    <div class="projects-grid">
+      <!-- Results Count -->
+      <div class="results-count" role="status" aria-live="polite">
+        <span data-filter-count>{{ site.projects.size }}</span> of {{ site.projects.size }} projects
+      </div>
+
+      <!-- Projects Grid -->
+      <div class="projects-grid" data-filter-items>
       {% assign sorted_projects = site.projects | sort: 'importance' %}
       {% for project in sorted_projects %}
-      <article class="project-card animate-on-scroll" data-category="{{ project.category }}">
+      <article class="project-card animate-on-scroll" data-filter-item{% include project-facet-attrs.html project=project %}>
         {% if project.img %}
         <div class="project-card-image">
           <img src="{{ project.img }}" alt="{{ project.title }}" loading="lazy">
@@ -83,6 +79,12 @@ title: Projects
         </div>
       </article>
       {% endfor %}
+      </div>
+
+      <p class="projects-empty" data-filter-empty hidden>
+        No project carries every tag you selected. Drop one to widen the search.
+      </p>
+
     </div>
 
   </div>

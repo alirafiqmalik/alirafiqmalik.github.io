@@ -1,0 +1,71 @@
+{% comment %}
+  Faceted project filter block.
+
+  Parameters
+    scheme   Scheme id from _data/project_facets.yml. Defaults to active_scheme.
+    variant  Visual prototype: ledger (default), chips, or console.
+    id       Instance prefix, required when a page renders more than one block
+             so that checkbox ids and labels stay unique.
+
+  Renders checkboxes only. The surrounding [data-project-filter] container owns
+  the result list and the count; see assets/js/main.js.
+{% endcomment %}
+
+{% assign facets = site.data.project_facets %}
+{% assign scheme_id = include.scheme | default: facets.active_scheme %}
+{% assign scheme = facets.schemes | where: 'id', scheme_id | first %}
+{% assign variant = include.variant | default: 'ledger' %}
+{% assign instance = include.id | default: scheme_id %}
+
+{% if scheme %}
+<div class="project-filters project-filters--{{ variant }}" data-filter-panel data-variant="{{ variant }}" data-scheme="{{ scheme.id }}">
+  <p class="project-filters-lede" id="{{ instance }}-filters-lede">
+    <strong>Select one or more tags to filter</strong>
+    <span>(otherwise all projects are shown)</span>
+  </p>
+
+  <div class="facet-rows" role="group" aria-labelledby="{{ instance }}-filters-lede">
+    {% for group in scheme.groups %}
+    {% assign row_label_id = instance | append: '-' | append: group.key | append: '-label' %}
+    <div class="facet-row" role="group" aria-labelledby="{{ row_label_id }}" data-facet-row="{{ group.key }}">
+      <span class="facet-row-label" id="{{ row_label_id }}">
+        <span class="facet-row-icon" aria-hidden="true">
+          {% case group.icon %}
+          {% when 'crosshair' %}
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2.5"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+          {% when 'layers' %}
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3 3 8l9 5 9-5-9-5Z"/><path d="m3 13 9 5 9-5"/></svg>
+          {% when 'flask' %}
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M9.5 3h5M10.5 3v6L5 19a1.8 1.8 0 0 0 1.6 2.6h10.8A1.8 1.8 0 0 0 19 19l-5.5-10V3"/><path d="M7.6 15h8.8"/></svg>
+          {% when 'route' %}
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8.5 6H15a3 3 0 0 1 0 6H9a3 3 0 0 0 0 6h6.5"/></svg>
+          {% else %}
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
+          {% endcase %}
+        </span>
+        <span class="facet-row-name">{{ group.label }}</span>
+      </span>
+
+      <div class="facet-row-options">
+        {% for value in group.values %}
+        {% assign slug = value | slugify %}
+        {% assign input_id = instance | append: '-' | append: group.key | append: '-' | append: slug %}
+        {% assign hits = site.projects | where: group.key, value %}
+        <label class="facet-option" for="{{ input_id }}">
+          <input type="checkbox" id="{{ input_id }}" data-facet="{{ group.key }}" value="{{ slug }}">
+          <span class="facet-option-box" aria-hidden="true"></span>
+          <span class="facet-option-label">{{ value | escape }}</span>
+          <span class="facet-option-count" data-facet-count>{{ hits.size }}</span>
+        </label>
+        {% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="project-filters-footer">
+    <code class="project-filters-echo" data-filter-echo></code>
+    <button type="button" class="project-filters-clear" data-filter-clear hidden>Clear all</button>
+  </div>
+</div>
+{% endif %}
