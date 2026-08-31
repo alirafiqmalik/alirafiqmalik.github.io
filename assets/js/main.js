@@ -831,6 +831,7 @@ document.addEventListener('DOMContentLoaded', () => {
    * line fills ≥ 50% without splitting links or overflowing the float.
    */
   const LINE_FILL_MIN = 0.5;
+  const LINE_FILL_SLACK_PX = 12;
   const LINE_FILL_WORD = /\S*[A-Za-z0-9]\S*/g;
   const LINE_FILL_SELECTOR = [
     '.about-text p',
@@ -901,7 +902,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
       const available = rightEdge - line.left;
       if (available < 8) return;
-      min = Math.min(min, (line.right - line.left) / available);
+      min = Math.min(min, (line.right - line.left + LINE_FILL_SLACK_PX) / available);
     });
     return min;
   };
