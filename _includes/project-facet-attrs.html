@@ -1,0 +1,22 @@
+{%- comment -%}
+  Emits the data-facet-<key> attributes for one project, slugified and
+  space-separated, so the filter engine can match without re-deriving slugs.
+
+  The separator is appended as a filter argument rather than written as
+  template whitespace, which Liquid strips inside an attribute value.
+
+  Parameters
+    project  A _projects document.
+{%- endcomment -%}
+{%- assign doc = include.project -%}
+{%- for key in site.data.project_facets.facet_keys -%}
+  {%- assign values = doc[key] | compact -%}
+  {%- if values.size > 0 -%}
+    {%- assign joined = '' -%}
+    {%- for value in values -%}
+      {%- assign slug = value | slugify -%}
+      {%- assign joined = joined | append: ' ' | append: slug -%}
+    {%- endfor -%}
+    {{ ' ' }}data-facet-{{ key }}="{{ joined | strip }}"
+  {%- endif -%}
+{%- endfor -%}

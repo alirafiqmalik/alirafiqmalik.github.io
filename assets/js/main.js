@@ -823,28 +823,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
 
-  // Project category filter
-  const categoryBtns = document.querySelectorAll('.category-pill');
-  const projectCards = document.querySelectorAll('.project-card[data-category]');
-  const projectCount = document.getElementById('project-count');
-
-  if (categoryBtns.length) {
-    categoryBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const cat = btn.dataset.category;
-        categoryBtns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-
-        let count = 0;
-        projectCards.forEach(card => {
-          const show = cat === 'all' || card.dataset.category === cat;
-          card.classList.toggle('hidden', !show);
-          if (show) count++;
-        });
-        if (projectCount) projectCount.textContent = count;
-      });
-    });
-  }
+  // Faceted project filter
+  document.querySelectorAll('[data-project-filter]').forEach(initProjectFilter);
 
   // Timeline expand/collapse
   const timelineItems = document.querySelectorAll('.timeline-item');
@@ -1172,4 +1152,122 @@ document.addEventListener('DOMContentLoaded', () => {
 // Navigation helper
 function navigateTo(page) {
   window.location.href = page;
+}
+
+// Faceted project filter.
+//
+// Selections are OR'd inside a facet row and AND'd across rows, so ticking two
+// domains widens the result set while ticking a domain and a build surface
+// narrows it. Each checkbox shows how many projects it would return given the
+// selections in the *other* rows, which is why a box can read 0 and switch off
+// without the user having to click it to find out.
+function initProjectFilter(root) {
+  const inputs = Array.from(root.querySelectorAll('input[data-facet]'));
+  const items = Array.from(root.querySelectorAll('[data-filter-item]'));
+  if (!inputs.length || !items.length) return;
+
+  const countEl = root.querySelector('[data-filter-count]');
+  const emptyEl = root.querySelector('[data-filter-empty]');
+  const clearBtn = root.querySelector('[data-filter-clear]');
+  const echoEl = root.querySelector('[data-filter-echo]');
+  const syncUrl = root.hasAttribute('data-filter-sync-url');
+
+  const keys = Array.from(new Set(inputs.map(input => input.dataset.facet)));
+  const tags = new Map(items.map(item => [item, Object.fromEntries(keys.map(key => [
+    key,
+    new Set((item.getAttribute('data-facet-' + key) || '').split(/\s+/).filter(Boolean))
+  ]))]));
+
+  function readSelection() {
+    const selection = Object.fromEntries(keys.map(key => [key, new Set()]));
+    inputs.forEach(input => {
+      if (input.checked) selection[input.dataset.facet].add(input.value);
+    });
+    return selection;
+  }
+
+  // `ignoreKey` lets a row's own selection be excluded, which is what makes the
+  // per-checkbox counts stable while that row is being edited.
+  function itemMatches(item, selection, ignoreKey) {
+    return keys.every(key => {
+      if (key === ignoreKey) return true;
+      const wanted = selection[key];
+      if (!wanted.size) return true;
+      const held = tags.get(item)[key];
+      for (const value of wanted) if (held.has(value)) return true;
+      return false;
+    });
+  }
+
+  function apply() {
+    const selection = readSelection();
+    let visible = 0;
+
+    items.forEach(item => {
+      const show = itemMatches(item, selection, null);
+      item.hidden = !show;
+      if (show) visible++;
+    });
+
+    inputs.forEach(input => {
+      const key = input.dataset.facet;
+      const reachable = items.filter(item =>
+        tags.get(item)[key].has(input.value) && itemMatches(item, selection, key)
+      ).length;
+
+      const option = input.closest('.facet-option');
+      const badge = option && option.querySelector('[data-facet-count]');
+      if (badge) badge.textContent = reachable;
+      if (option) {
+        option.classList.toggle('is-checked', input.checked);
+        option.classList.toggle('is-empty', reachable === 0 && !input.checked);
+      }
+      input.disabled = reachable === 0 && !input.checked;
+      input.setAttribute('aria-disabled', String(input.disabled));
+    });
+
+    const active = keys.some(key => selection[key].size > 0);
+    const panel = root.querySelector('[data-filter-panel]');
+    if (panel) panel.classList.toggle('is-active', active);
+    if (countEl) countEl.textContent = visible;
+    if (emptyEl) emptyEl.hidden = visible !== 0;
+    if (clearBtn) clearBtn.hidden = !active;
+    if (echoEl) {
+      echoEl.textContent = active
+        ? 'filter ' + keys
+          .filter(key => selection[key].size)
+          .map(key => '--' + key + '=' + Array.from(selection[key]).join(','))
+          .join(' ')
+        : 'filter --all';
+    }
+    if (syncUrl) writeUrl(selection);
+  }
+
+  function writeUrl(selection) {
+    const params = new URLSearchParams();
+    keys.forEach(key => {
+      if (selection[key].size) params.set(key, Array.from(selection[key]).join(','));
+    });
+    const query = params.toString();
+    history.replaceState(null, '', query ? '?' + query : window.location.pathname);
+  }
+
+  function readUrl() {
+    const params = new URLSearchParams(window.location.search);
+    inputs.forEach(input => {
+      const wanted = (params.get(input.dataset.facet) || '').split(',');
+      if (wanted.includes(input.value)) input.checked = true;
+    });
+  }
+
+  inputs.forEach(input => input.addEventListener('change', apply));
+  if (clearBtn) {
+    clearBtn.addEventListener('click', () => {
+      inputs.forEach(input => { input.checked = false; });
+      apply();
+    });
+  }
+
+  if (syncUrl) readUrl();
+  apply();
 }

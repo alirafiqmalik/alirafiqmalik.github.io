@@ -2437,41 +2437,393 @@ a.news-window-line:hover .news-window-arrow {
 }
 
 /* === PROJECTS PAGE === */
-.category-filters {
+
+/* --- Faceted filter: shared skeleton ---
+   One row per facet group: a label column naming the group, and a wrapping
+   run of checkboxes. The three prototypes (ledger / chips / console) restyle
+   the option, never the skeleton. */
+.project-filters {
+  margin-bottom: 1.5rem;
+  padding: 1.25rem 1.25rem 0.875rem;
+  border: 1px solid var(--border-muted);
+  border-radius: var(--radius-lg);
+  background: rgba(26, 26, 26, 0.5);
+}
+
+.project-filters-lede {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin-bottom: 0.875rem;
+}
+
+.project-filters-lede strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.facet-row {
+  display: grid;
+  grid-template-columns: minmax(8.5rem, max-content) 1fr;
+  gap: 0.25rem 1.25rem;
+  padding: 0.625rem 0;
+}
+
+.facet-row + .facet-row {
+  border-top: 1px solid var(--border-muted);
+}
+
+.facet-row-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  padding-top: 0.25rem;
+}
+
+.facet-row-icon {
+  display: inline-flex;
+  color: var(--accent);
+}
+
+.facet-row-icon svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.facet-row-options {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
-  margin-bottom: 2rem;
+  gap: 0.375rem 1rem;
 }
 
-.category-pill {
-  padding: 0.5rem 1.25rem;
-  border-radius: 999px;
-  border: 1px solid var(--border);
-  background: transparent;
-  color: var(--text-secondary);
+.facet-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
   font-size: 0.875rem;
+  color: var(--text-secondary);
   cursor: pointer;
-  transition: all 0.3s;
-  font-family: inherit;
+  transition: color 0.2s;
 }
 
-.category-pill:hover {
+.facet-option input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.facet-option-count {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.facet-option.is-empty {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.project-filters-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 2rem;
+  margin-top: 0.5rem;
+  padding-top: 0.625rem;
+  border-top: 1px solid var(--border-muted);
+}
+
+.project-filters-clear {
+  margin-left: auto;
+  padding: 0.25rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.project-filters-clear:hover {
   border-color: var(--accent);
   color: var(--accent);
 }
 
-.category-pill.active {
+/* The echoed command line belongs to the console prototype; elsewhere the
+   footer is only worth its rule once there is something to clear. */
+.project-filters:not(.project-filters--console) .project-filters-echo {
+  display: none;
+}
+
+.project-filters:not(.project-filters--console):not(.is-active) .project-filters-footer {
+  display: none;
+}
+
+.project-filters-echo {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* --- Prototype A: ledger (checkbox rows, closest to sec-deadlines) --- */
+.project-filters--ledger .facet-option-box {
+  position: relative;
+  flex: none;
+  width: 0.9375rem;
+  height: 0.9375rem;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.03);
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.project-filters--ledger .facet-option:hover:not(.is-empty) {
+  color: var(--text-primary);
+}
+
+.project-filters--ledger .facet-option:hover:not(.is-empty) .facet-option-box {
   border-color: var(--accent);
-  background-color: var(--accent);
-  color: black;
+}
+
+.project-filters--ledger .facet-option.is-checked {
+  color: var(--text-primary);
+}
+
+.project-filters--ledger .facet-option.is-checked .facet-option-box {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.project-filters--ledger .facet-option.is-checked .facet-option-box::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 47%;
+  width: 0.25rem;
+  height: 0.5rem;
+  border: solid #141414;
+  border-width: 0 2px 2px 0;
+  transform: translate(-50%, -55%) rotate(45deg);
+}
+
+/* --- Prototype B: chips (pill toggles, keeps the current pill vocabulary) --- */
+.project-filters--chips .facet-row-options {
+  gap: 0.5rem;
+}
+
+.project-filters--chips .facet-option {
+  padding: 0.3125rem 0.875rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  gap: 0.4375rem;
+  transition: border-color 0.2s, background-color 0.2s, color 0.2s;
+}
+
+.project-filters--chips .facet-option-box {
+  display: none;
+}
+
+.project-filters--chips .facet-option:hover:not(.is-empty) {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.project-filters--chips .facet-option.is-checked {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #141414;
   font-weight: 600;
+}
+
+.project-filters--chips .facet-option.is-checked .facet-option-count {
+  color: rgba(20, 20, 20, 0.65);
+}
+
+/* --- Prototype C: console (bracket toggles, matches the nav prompt) --- */
+.project-filters--console {
+  font-family: var(--font-mono);
+}
+
+.project-filters--console .facet-row-label,
+.project-filters--console .facet-option {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+}
+
+.project-filters--console .facet-row-label::after {
+  content: ':';
+  color: var(--text-muted);
+}
+
+.project-filters--console .facet-option {
+  gap: 0.375rem;
+}
+
+.project-filters--console .facet-option-box::before {
+  content: '[ ]';
+  color: var(--text-muted);
+}
+
+.project-filters--console .facet-option:hover:not(.is-empty),
+.project-filters--console .facet-option:hover:not(.is-empty) .facet-option-box::before {
+  color: var(--accent);
+}
+
+.project-filters--console .facet-option.is-checked {
+  color: var(--text-primary);
+}
+
+.project-filters--console .facet-option.is-checked .facet-option-box::before {
+  content: '[x]';
+  color: var(--accent);
+}
+
+.project-filters--console .project-filters-echo::before {
+  content: '❯ ';
+  color: var(--accent);
+}
+
+/* Keyboard focus lands on the visually hidden input; show it on the option. */
+.facet-option:has(input:focus-visible) {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 3px;
 }
 
 .results-count {
   margin-bottom: 1.5rem;
   color: var(--text-secondary);
   font-size: 0.875rem;
+}
+
+[data-filter-item][hidden] {
+  display: none;
+}
+
+.projects-empty {
+  padding: 2.5rem 1rem;
+  text-align: center;
+  color: var(--text-secondary);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-lg);
+}
+
+/* --- Prototype lab (/projects/filter-lab/) --- */
+.filter-lab-intro {
+  padding: 1.5rem;
+  margin-bottom: 3rem;
+  border: 1px solid var(--border-muted);
+  border-radius: var(--radius-lg);
+  background: rgba(26, 26, 26, 0.5);
+}
+
+.filter-lab-intro h2 {
+  font-size: 1.125rem;
+  margin-bottom: 0.75rem;
+}
+
+.filter-lab-intro ul {
+  padding-left: 1.125rem;
+  color: var(--text-secondary);
+  font-size: 0.9375rem;
+}
+
+.filter-lab-intro li + li {
+  margin-top: 0.5rem;
+}
+
+.filter-lab-intro p {
+  color: var(--text-secondary);
+  font-size: 0.9375rem;
+}
+
+.filter-lab-intro code,
+.filter-lab-card-note code {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  color: var(--accent);
+}
+
+.filter-lab-section-title {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.filter-lab-section-note {
+  color: var(--text-secondary);
+  font-size: 0.9375rem;
+  margin-bottom: 1.5rem;
+}
+
+.filter-lab-card {
+  margin-bottom: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-muted);
+}
+
+.filter-lab-card-title {
+  font-size: 1.125rem;
+  color: var(--accent);
+  margin-bottom: 0.25rem;
+}
+
+.filter-lab-card-note {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+  max-width: 60ch;
+}
+
+.filter-lab-results {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  gap: 0.5rem;
+}
+
+.filter-lab-result {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  padding: 0.625rem 0.75rem;
+  border: 1px solid var(--border-muted);
+  border-radius: var(--radius);
+  font-size: 0.875rem;
+}
+
+.filter-lab-result a:hover {
+  color: var(--accent);
+}
+
+.filter-lab-result-meta {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.filter-lab-back {
+  margin: 2rem 0 4rem;
+  color: var(--accent);
+}
+
+/* Below the two-column threshold the label column would squeeze the options
+   into a one-word-per-line ribbon, so the label takes its own line instead. */
+@media (max-width: 699px) {
+  .project-filters {
+    padding: 1rem 1rem 0.75rem;
+  }
+
+  .facet-row {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .facet-row-label {
+    padding-top: 0;
+  }
 }
 
 .projects-grid {
