@@ -1,0 +1,40 @@
+{% comment %}
+  One self-contained, working filter on the prototype lab page: a filter block
+  plus a compact result list, wired by the same engine the real page uses.
+
+  Parameters
+    id       Instance prefix, must be unique on the page.
+    title    Heading for the prototype card.
+    note     One-line rationale under the heading.
+    scheme   Scheme id from _data/project_facets.yml.
+    variant  ledger | chips | console
+{% endcomment %}
+
+<section class="filter-lab-card">
+  <header class="filter-lab-card-header">
+    <h3 class="filter-lab-card-title">{{ include.title }}</h3>
+    <p class="filter-lab-card-note">{{ include.note }}</p>
+  </header>
+
+  <div class="project-browser" data-project-filter>
+    {% include project-filters.html scheme=include.scheme variant=include.variant id=include.id %}
+
+    <p class="results-count" role="status" aria-live="polite">
+      <span data-filter-count>{{ site.projects.size }}</span> of {{ site.projects.size }} projects
+    </p>
+
+    <ul class="filter-lab-results" data-filter-items>
+      {% assign demo_projects = site.projects | sort: 'importance' %}
+      {% for project in demo_projects %}
+      <li class="filter-lab-result" data-filter-item{% include project-facet-attrs.html project=project %}>
+        <a href="{{ project.url | relative_url }}">{{ project.title }}</a>
+        <span class="filter-lab-result-meta">{{ project.category }}</span>
+      </li>
+      {% endfor %}
+    </ul>
+
+    <p class="projects-empty" data-filter-empty hidden>
+      No project carries every tag you selected.
+    </p>
+  </div>
+</section>

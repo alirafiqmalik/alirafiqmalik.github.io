@@ -2,6 +2,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{% if page.title %}{{ page.title }} | {% endif %}{{ site.title }}</title>
 <meta name="description" content="{{ page.description | default: site.description }}">
+{% if page.noindex %}<meta name="robots" content="noindex, nofollow">{% endif %}
 
 <!-- Fonts: self-hosted Atkinson (preload hero file only). Faces are inlined
      so first paint is not gated on a second stylesheet round trip. -->

@@ -1,0 +1,123 @@
+---
+layout: default
+title: Projects Filter Lab
+permalink: /projects/filter-lab/
+description: Working prototypes of the projects filter — three layouts and three grouping schemes, side by side.
+noindex: true
+sitemap: false
+---
+
+<section class="page-hero">
+  <h1>Projects <span class="highlight">Filter Lab</span></h1>
+  <p class="subtitle">
+    Every prototype below is live and filters the real project set. Tick boxes
+    to compare them. Nothing here is linked from the site — it exists to be
+    chosen from, then deleted.
+  </p>
+</section>
+
+<section>
+  <div class="container-md">
+
+    <div class="filter-lab-intro">
+      <h2>What was wrong with the pill row</h2>
+      <ul>
+        <li>
+          <strong>Seven categories over nine projects.</strong> Four of the
+          seven returned exactly one project, so the filter worked as a table
+          of contents, not a filter.
+        </li>
+        <li>
+          <strong>One choice at a time.</strong> "Hardware <em>or</em>
+          security" was not expressible; neither was "the ML work that is also
+          embedded".
+        </li>
+        <li>
+          <strong>One flat axis.</strong> "Hardware Design" (a discipline),
+          "Network Security" (a domain), and "Machine Learning" (a technique)
+          sat in the same row as if they were the same kind of thing.
+        </li>
+        <li>
+          <strong>No counts.</strong> Every dead end had to be clicked to be
+          discovered.
+        </li>
+        <li>
+          <strong>Alphabetical order.</strong> The row opened on "AI &amp;
+          Privacy" because A sorts first, not because it leads.
+        </li>
+      </ul>
+    </div>
+
+    <h2 class="filter-lab-section-title">Layout prototypes</h2>
+    <p class="filter-lab-section-note">
+      Same grouping, same behaviour, three treatments of the checkbox itself.
+      All three keep the shape of the attached reference: a labelled row per
+      facet, options running across it.
+    </p>
+
+    {% include project-filter-demo.html
+        id="proto-ledger"
+        title="A · Ledger"
+        note="Literal read of the reference: square checkboxes, hairline rules between rows, counts set quiet. Densest of the three and the least decorated."
+        scheme="two-axes"
+        variant="ledger" %}
+
+    {% include project-filter-demo.html
+        id="proto-chips"
+        title="B · Chip rack"
+        note="Keeps the pill vocabulary already on the page, but pills now group into labelled rows and multi-select. Easiest to hit on a phone; costs the most vertical space."
+        scheme="two-axes"
+        variant="chips" %}
+
+    {% include project-filter-demo.html
+        id="proto-console"
+        title="C · Console"
+        note="Picks up the terminal prompt in the nav. Bracket toggles, monospace, and an echoed command line that mirrors the shareable URL."
+        scheme="two-axes"
+        variant="console" %}
+
+    <h2 class="filter-lab-section-title">Grouping schemes</h2>
+    <p class="filter-lab-section-note">
+      Same layout, three different taxonomies. The question each answers is in
+      the note; the checkbox counts tell you whether it splits nine projects
+      into useful piles.
+    </p>
+
+    {% include project-filter-demo.html
+        id="scheme-two"
+        title="1 · Two Axes"
+        note="Domain × Build Surface. Ten checkboxes, none returning fewer than three projects. Answers 'what is it about' and 'what is it made of' separately."
+        scheme="two-axes"
+        variant="ledger" %}
+
+    {% include project-filter-demo.html
+        id="scheme-three"
+        title="2 · Three Axes"
+        note="Two Axes plus Setting — lab work, coursework, personal build. Matches the reference's three-row shape and answers the question a hiring committee actually asks."
+        scheme="three-axes"
+        variant="ledger" %}
+
+    {% include project-filter-demo.html
+        id="scheme-tracks"
+        title="3 · Three Tracks"
+        note="One row, three mutually exclusive tracks, three projects each. Smallest departure from today; loses cross-cutting queries like 'everything with a network in it'."
+        scheme="three-tracks"
+        variant="ledger" %}
+
+    <div class="filter-lab-intro">
+      <h2>Picking one</h2>
+      <p>
+        <code>/projects/</code> currently ships <strong>A · Ledger</strong> on
+        <strong>1 · Two Axes</strong>. Layout and scheme are independent
+        choices: set <code>active_scheme</code> in
+        <code>_data/project_facets.yml</code> to switch taxonomy, and pass
+        <code>variant</code> to <code>project-filters.html</code> to switch
+        layout. The written comparison lives in
+        <code>docs/adr/0002-projects-faceted-filter.md</code>.
+      </p>
+    </div>
+
+    <p class="filter-lab-back"><a href="{{ '/projects/' | relative_url }}">&larr; Back to Projects</a></p>
+
+  </div>
+</section>
