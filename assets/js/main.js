@@ -906,24 +906,59 @@ document.addEventListener('DOMContentLoaded', () => {
     return min;
   };
 
-  const glueLastWords = (el, wordCount) => {
-    if (wordCount < 2) return false;
-    const texts = [];
+  const eachWord = (el) => {
+    const words = [];
     const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
     let node;
-    while ((node = walker.nextNode())) texts.push(node);
-    let remaining = wordCount - 1;
-    for (let i = texts.length - 1; i >= 0 && remaining > 0; i -= 1) {
-      const chars = [...texts[i].textContent];
-      for (let j = chars.length - 1; j >= 0 && remaining > 0; j -= 1) {
-        if (!/\s/.test(chars[j])) continue;
-        chars[j] = '\u00a0';
-        remaining -= 1;
-        while (j > 0 && /\s/.test(chars[j - 1])) j -= 1;
+    while ((node = walker.nextNode())) {
+      const re = new RegExp(LINE_FILL_WORD.source, 'g');
+      let match;
+      while ((match = re.exec(node.textContent))) {
+        words.push({
+          node,
+          start: match.index,
+          end: match.index + match[0].length
+        });
       }
-      texts[i].textContent = chars.join('');
     }
-    return remaining === 0;
+    return words;
+  };
+
+  const nbspRange = (node, from, to) => {
+    const t = node.textContent;
+    node.textContent = t.slice(0, from) + t.slice(from, to).replace(/\s/g, '\u00a0') + t.slice(to);
+  };
+
+  const glueLastWords = (el, wordCount) => {
+    const words = eachWord(el);
+    if (wordCount < 2 || words.length < wordCount) return false;
+    const slice = words.slice(-wordCount);
+    for (let i = 1; i < slice.length; i += 1) {
+      const prev = slice[i - 1];
+      const next = slice[i];
+      if (prev.node === next.node) {
+        nbspRange(prev.node, prev.end, next.start);
+      } else {
+        nbspRange(prev.node, prev.end, prev.node.textContent.length);
+        const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+        let seen = false;
+        let node;
+        while ((node = walker.nextNode())) {
+          if (node === prev.node) {
+            seen = true;
+            continue;
+          }
+          if (node === next.node) break;
+          if (seen) node.textContent = node.textContent.replace(/\s/g, '\u00a0');
+        }
+        nbspRange(next.node, 0, next.start);
+      }
+    }
+    const gluedNodes = new Set(slice.map((word) => word.node));
+    gluedNodes.forEach((node) => {
+      node.textContent = node.textContent.replace(/\//g, '/\u2060');
+    });
+    return true;
   };
 
   const restoreLineFill = (el) => {
@@ -939,7 +974,7 @@ document.addEventListener('DOMContentLoaded', () => {
         f.side === 'right' &&
         line.top < f.bottom - 1 &&
         line.top + 4 > f.top &&
-        line.right > f.left + 1
+        line.right > f.left + 4
       )
     );
   };
@@ -969,7 +1004,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     restoreLineFill(el);
-    if (bestK > 0) glueLastWords(el, bestK);
+    // Only mutate when every wrapped line actually clears 50%. A "best effort"
+    // glue that still misses can wrap the glued tail and make the widow worse.
+    if (bestK > 0 && bestScore >= LINE_FILL_MIN) glueLastWords(el, bestK);
   };
 
   const optimizeLineUtilization = () => {
