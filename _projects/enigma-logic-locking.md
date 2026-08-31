@@ -4,6 +4,10 @@ description: Automated hardware IP protection through logic obfuscation
 img: https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=400&fit=crop
 importance: 2
 category: Hardware Security
+domain: [Security & Privacy, Hardware & Silicon]
+stack: [RTL & FPGA, Tooling & Automation]
+setting: Research & Lab Work
+track: Silicon & RTL
 technologies: [Python, Verilog, RISC-V, EDA Tools]
 status: Completed
 links:

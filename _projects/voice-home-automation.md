@@ -4,6 +4,10 @@ description: ESP32-based voice automation with TinyML wake-word detection
 img: https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=400&fit=crop
 importance: 4
 category: Embedded Systems
+domain: [Robotics & Cyber-Physical, Machine Learning, Networks & Distributed Systems]
+stack: [Embedded Firmware, ML & Data Pipelines, Networking & Protocols]
+setting: Personal Build
+track: Embedded & Robotics
 technologies: [C/C++, Python, TensorFlow Lite, ESP32, JavaScript]
 status: Completed
 links:

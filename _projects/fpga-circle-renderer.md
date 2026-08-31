@@ -4,6 +4,10 @@ description: Hardware-accelerated graphics using Bresenham's Circle Algorithm
 img: https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=400&fit=crop
 importance: 5
 category: Hardware Design
+domain: [Hardware & Silicon]
+stack: [RTL & FPGA]
+setting: Coursework
+track: Silicon & RTL
 technologies: [Verilog, FPGA, VGA, Digital Logic]
 status: Completed
 links:

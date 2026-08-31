@@ -4,6 +4,10 @@ description: 5-stage pipelined processor with hazard detection and forwarding
 img: https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=400&fit=crop
 importance: 4
 category: Hardware Design
+domain: [Hardware & Silicon]
+stack: [RTL & FPGA, Tooling & Automation]
+setting: Coursework
+track: Silicon & RTL
 technologies: [Verilog, Python, RISC-V, Digital Logic]
 status: Completed
 links:

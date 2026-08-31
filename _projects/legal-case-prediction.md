@@ -4,6 +4,10 @@ description: Transformer-based models for automated legal analysis
 img: https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=800&h=400&fit=crop
 importance: 3
 category: Machine Learning
+domain: [Machine Learning]
+stack: [ML & Data Pipelines]
+setting: Research & Lab Work
+track: ML & Security
 technologies: [Python, TensorFlow, PyTorch, Transformers, NLP]
 status: Completed
 links:

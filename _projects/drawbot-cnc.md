@@ -4,6 +4,10 @@ description: G-code controlled drawing robot with motion planning algorithms
 img: https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&h=400&fit=crop
 importance: 6
 category: Embedded Systems
+domain: [Robotics & Cyber-Physical]
+stack: [Embedded Firmware, Tooling & Automation]
+setting: Personal Build
+track: Embedded & Robotics
 technologies: [C/C++, Python, Arduino, G-code]
 status: Completed
 links:
