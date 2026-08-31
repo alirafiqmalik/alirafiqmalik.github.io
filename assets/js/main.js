@@ -827,9 +827,12 @@ document.addEventListener('DOMContentLoaded', () => {
   /*
    * Line utilization: no wrapped line should occupy less than half of its
    * available measure (the "planes." widow in About). text-wrap:pretty is the
-   * CSS first pass; this then groups trailing words so the last line fills.
+   * CSS first pass; this then inserts a break so the last line fills ≥ 50%.
+   * A nowrap span is avoided: glued words overflow narrow float columns and
+   * expanding a wrap through an <a> aborts the search (Taqi / Khwarizmi).
    */
   const LINE_FILL_MIN = 0.5;
+  const LINE_FILL_WORD = /\S*[A-Za-z0-9]\S*/g;
   const LINE_FILL_SELECTOR = [
     '.about-text p',
     '.landing-bio p',
@@ -839,14 +842,27 @@ document.addEventListener('DOMContentLoaded', () => {
     '.publication-entry-title',
     '.publication-entry-authors'
   ].join(',');
+  const lineFillOriginals = new WeakMap();
 
-  const unwrapLineFills = (el) => {
-    el.querySelectorAll('[data-line-fill]').forEach((span) => {
-      const parent = span.parentNode;
-      while (span.firstChild) parent.insertBefore(span.firstChild, span);
-      parent.removeChild(span);
-    });
-    el.normalize();
+  const collectRightFloats = (el) => {
+    const floats = [];
+    let parent = el.parentElement;
+    for (let depth = 0; parent && depth < 5; depth += 1, parent = parent.parentElement) {
+      for (const child of parent.children) {
+        const side = getComputedStyle(child).float;
+        if (side !== 'right' && side !== 'left') continue;
+        const r = child.getBoundingClientRect();
+        const cs = getComputedStyle(child);
+        floats.push({
+          side,
+          top: r.top,
+          bottom: r.bottom,
+          left: r.left - (parseFloat(cs.marginLeft) || 0),
+          right: r.right + (parseFloat(cs.marginRight) || 0)
+        });
+      }
+    }
+    return floats;
   };
 
   const mergeLineRects = (el) => {
@@ -868,85 +884,86 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const minLineRatio = (el) => {
+    if (el.clientWidth < 32) return 1;
     const lines = mergeLineRects(el);
     if (lines.length < 2) return 1;
     const box = el.getBoundingClientRect();
     const padRight = parseFloat(getComputedStyle(el).paddingRight) || 0;
+    const contentRight = box.right - padRight;
+    const floats = collectRightFloats(el);
     let min = 1;
     lines.forEach((line) => {
-      const available = box.right - padRight - line.left;
-      if (available < 1) return;
+      let rightEdge = contentRight;
+      floats.forEach((f) => {
+        if (f.side !== 'right') return;
+        if (line.top < f.bottom - 1 && line.top + 4 > f.top) {
+          rightEdge = Math.min(rightEdge, f.left);
+        }
+      });
+      const available = rightEdge - line.left;
+      if (available < 8) return;
       min = Math.min(min, (line.right - line.left) / available);
     });
     return min;
   };
 
-  const wrapLastWords = (el, wordCount) => {
-    const texts = [];
+  const wordStarts = (el) => {
+    const starts = [];
     const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
     let node;
     while ((node = walker.nextNode())) {
-      if (node.parentElement && node.parentElement.closest('[data-line-fill]')) continue;
-      texts.push(node);
-    }
-    if (!texts.length) return false;
-
-    const endNode = texts[texts.length - 1];
-    const endOffset = endNode.textContent.length;
-    let remaining = wordCount;
-    let startNode = null;
-    let startOffset = 0;
-
-    for (let i = texts.length - 1; i >= 0 && remaining > 0; i -= 1) {
-      const matches = [...texts[i].textContent.matchAll(/\S+/g)];
-      for (let m = matches.length - 1; m >= 0 && remaining > 0; m -= 1) {
-        remaining -= 1;
-        startNode = texts[i];
-        startOffset = matches[m].index;
+      const re = new RegExp(LINE_FILL_WORD.source, 'g');
+      let match;
+      while ((match = re.exec(node.textContent))) {
+        starts.push({ node, offset: match.index });
       }
     }
-    if (!startNode) return false;
+    return starts;
+  };
 
+  const insertBreakBeforeLastWords = (el, wordCount) => {
+    const starts = wordStarts(el);
+    if (wordCount <= 0 || wordCount >= starts.length) return false;
+    const target = starts[starts.length - wordCount];
     const range = document.createRange();
-    range.setStart(startNode, startOffset);
-    range.setEnd(endNode, endOffset);
-    const span = document.createElement('span');
-    span.setAttribute('data-line-fill', '');
-    span.style.whiteSpace = 'nowrap';
-    try {
-      range.surroundContents(span);
-    } catch (err) {
-      span.appendChild(range.extractContents());
-      range.insertNode(span);
-    }
+    range.setStart(target.node, target.offset);
+    range.collapse(true);
+    const br = document.createElement('br');
+    br.setAttribute('data-line-fill', '');
+    range.insertNode(br);
     return true;
+  };
+
+  const restoreLineFill = (el) => {
+    if (lineFillOriginals.has(el)) el.innerHTML = lineFillOriginals.get(el);
   };
 
   const fillElement = (el) => {
     if (!el || !el.textContent.trim()) return;
-    unwrapLineFills(el);
+    if (!lineFillOriginals.has(el)) lineFillOriginals.set(el, el.innerHTML);
+    restoreLineFill(el);
+    if (el.clientWidth < 32) return;
+
     let bestK = 0;
     let bestScore = minLineRatio(el);
     if (bestScore >= LINE_FILL_MIN) return;
 
-    const wordCount = el.textContent.trim().split(/\s+/).length;
-    for (let k = 2; k < wordCount; k += 1) {
-      unwrapLineFills(el);
-      if (!wrapLastWords(el, k)) break;
-      if (el.scrollWidth > el.clientWidth + 1) {
-        unwrapLineFills(el);
-        break;
-      }
+    const wordCount = (el.textContent.match(LINE_FILL_WORD) || []).length;
+    const maxK = Math.min(wordCount - 1, 48);
+    for (let k = 2; k <= maxK; k += 1) {
+      restoreLineFill(el);
+      if (!insertBreakBeforeLastWords(el, k)) continue;
+      if (el.scrollWidth > el.clientWidth + 1) continue;
       const score = minLineRatio(el);
-      if (score > bestScore) {
+      if (score > bestScore + 0.001) {
         bestScore = score;
         bestK = k;
       }
       if (score >= LINE_FILL_MIN) break;
     }
 
-    unwrapLineFills(el);
-    if (bestK > 0) wrapLastWords(el, bestK);
+    restoreLineFill(el);
+    if (bestK > 0) insertBreakBeforeLastWords(el, bestK);
   };
 
   const optimizeLineUtilization = () => {
@@ -964,9 +981,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const startLineFill = () => {
     optimizeLineUtilization();
+    window.setTimeout(optimizeLineUtilization, 400);
     window.addEventListener('resize', scheduleLineFill);
     document.querySelectorAll('.about-portrait img').forEach((img) => {
       if (!img.complete) img.addEventListener('load', scheduleLineFill, { once: true });
+      else scheduleLineFill();
+    });
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        scheduleLineFill();
+        io.unobserve(entry.target);
+      });
+    }, { threshold: 0.02 });
+    document.querySelectorAll('#about, #research, #experience, #contact').forEach((el) => {
+      io.observe(el);
     });
   };
 
