@@ -144,6 +144,26 @@ document.addEventListener('DOMContentLoaded', () => {
   let onSectionChange = null;
   let claimSection = null;
   let lastSectionId = null;
+  // Shared with the one-page lock so a click-to-section can pin the prompt
+  // during the smooth scroll without the scroll handler reverting it.
+  let isNavigating = false;
+
+  // Fraction of the viewport from the top. The panel whose top has crossed
+  // this line owns the nav prompt and hash. Waiting for flush-top (the
+  // progress-bar index) lagged the visual hand-off: About was already on
+  // screen while the prompt still read `~/`.
+  const NAV_ACTIVE_LINE = 0.42;
+
+  const resolveNavSectionId = (scrollTop) => {
+    if (sectionStops.length === 0) return SECTION_ORDER[0];
+    if (sectionStops.length === 1) return sectionStops[0].id;
+    const viewport = scrollContainer ? scrollContainer.clientHeight : window.innerHeight;
+    const probe = scrollTop + viewport * NAV_ACTIVE_LINE;
+    const last = sectionStops.length - 1;
+    let index = 0;
+    while (index < last && probe >= sectionStops[index + 1].top) index += 1;
+    return sectionStops[index].id;
+  };
 
   const applyScrollState = () => {
     const scrollTop = getScrollTop();
@@ -166,9 +186,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (scrollHint) {
       scrollHint.classList.toggle('hidden', position.index >= sectionStops.length - 1);
     }
-    if (position.id !== lastSectionId) {
-      lastSectionId = position.id;
-      onSectionChange?.(position.id);
+    // Click-to-section already claimed the destination; don't flash the
+    // previous prompt while the smooth scroll is still in the prior panel.
+    if (isNavigating) return;
+    const navSectionId = resolveNavSectionId(scrollTop);
+    if (navSectionId !== lastSectionId) {
+      lastSectionId = navSectionId;
+      onSectionChange?.(navSectionId);
     }
   };
 
@@ -346,10 +370,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const panelSectionMap = new Map();
     let activeSectionId = SECTION_ORDER[0];
-    let isNavigating = false;
 
     const releaseNavigationLock = () => {
       isNavigating = false;
+      applyScrollState();
     };
 
     const lockNavigation = (smooth) => {
