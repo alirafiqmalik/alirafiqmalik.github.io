@@ -1,12 +1,18 @@
 name: Ali Hamza Malik
+name_given: Ali Hamza
+name_family: Malik
 tagline: Formal Verification | Security | Quantum Networks
-bio: PhD student at University of Massachusetts Amherst working on quantum computers and quantum systems, focusing on security aspects. Researching formal analysis of quantum protocols to uncover security vulnerabilities and develop automated verification techniques.
+bio: PhD Candidate in Electrical & Computer Engineering at University of Massachusetts Amherst working on formal methods, security verification, and model checking.
 bio_paragraphs:
-  - PhD student at University of Massachusetts Amherst working on quantum computers and quantum systems, focusing on security aspects.
-  - Researching formal analysis of quantum protocols to uncover security vulnerabilities and develop automated verification techniques.
+  - PhD Candidate in Electrical & Computer Engineering at University of Massachusetts Amherst.
+  - I work on formal methods, security verification, and model checking with Dr. Muhammad Taqi Raza in Khwarizmi Lab.
 cv_pdf: /assets/pdf/AliMalik_Resume.pdf
 email: ahmalik@umass.edu
 location: Amherst, MA
+office:
+  - Knowles Engineering Building
+  - 151 Holdsworth Way,
+  - Amherst, MA 01003
 
 footer:
   description: If you have questions, ideas for collaboration, or want to chat, here's how to find me. I typically respond within 2 business days.
@@ -20,8 +26,10 @@ socials:
   scholar: https://scholar.google.com/citations?user=alihamzamalik
 
 extended_bio: |
-  Hi, I am PhD student @ [University of Massachusetts Amherst](https://www.umass.edu/). I work on quantum computers and quantum systems, focusing on security aspect with Dr. Muhammad Taqi Raza in [Khwarizmi Lab](https://khwarizmilab.github.io/).
-  
-  Before joining UMass, I completed my Bachelor's in Electrical Engineering (BSEE) from [National University of Sciences and Technology (NUST)](https://nust.edu.pk/), Pakistan in 2023.
-  
-  I am engaged in the examination of quantum protocols pertaining to network communication, focusing on conducting formal analyses to uncover security vulnerabilities. My research endeavors lay the groundwork for devising efficient techniques to automate protocol analysis, ensuring the security guarantees provided by these protocols.
+  Hi, I am a PhD Candidate in Electrical & Computer Engineering @ [University of Massachusetts Amherst](https://www.umass.edu/). I work on formal methods, security verification, and model checking with [Dr. Muhammad Taqi Raza](https://people.umass.edu/taqi/) in [Khwarizmi Lab](https://khwarizmilab.github.io/).
+
+  I study the formal specifications of large-scale network and communication systems for identifying vulnerabilities and mitigating risks like unauthorized access and denial-of-service. My research focuses on conducting comprehensive and systematic security analyses of modern digital systems through SAT-based bounded model checking and theorem proving. This includes scrutinizing the security functions and protocols within the U.S. ACH network, quantum-classical interfaces (QKD), and cross-plane eSIM connectivity to ensure the highest standard of protection for users and business assets. A systematic analysis of these security specifications not only enhances the resilience of systems but also ensures mathematically proven validation for complex control planes.
+
+  My research paves the way for the development of effective remedies, ensuring the integrity and trustworthiness of digital systems in various operational contexts.
+
+  Before joining UMass, I completed my Bachelor's in Electrical Engineering (BE) from [National University of Sciences and Technology (NUST)](https://nust.edu.pk/) in 2023. At NUST, I worked as an Undergraduate Research Assistant and Hardware Security Intern, focusing on autonomous aerial swarm robotics and logic-locking defenses for hardware security. Further details regarding my technical deployments and publications are available in [AliMalik_Resume.pdf](/assets/pdf/AliMalik_Resume.pdf).

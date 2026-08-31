@@ -225,7 +225,7 @@ body.one-page-scroll .main-content.main-content-scroll {
 }
 
 .page-panel-about {
-  justify-content: center;
+  justify-content: flex-start;
   padding-bottom: 5rem;
 }
 
@@ -233,7 +233,7 @@ body.one-page-scroll .main-content.main-content-scroll {
   flex: 0 1 auto;
   height: auto;
   max-height: calc(var(--snap-panel-height) - 6.5rem);
-  justify-content: center;
+  justify-content: flex-start;
   /* Bio may be taller than the snap panel on phones — scroll only when needed.
      `.is-scrollable` is toggled by landing-scroll.js. Use overflow-x:clip (not
      hidden): hidden+visible computes to auto and steals page wheel/touch. */
@@ -248,9 +248,12 @@ body.one-page-scroll .main-content.main-content-scroll {
 
 .page-panel-about .about-panel {
   width: 100%;
+  max-width: 54rem;
+  margin-inline: auto;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
 }
 
 .page-panel-about .about-panel.animate-on-scroll {
@@ -264,27 +267,19 @@ body.one-page-scroll .main-content.main-content-scroll {
   transform: none;
 }
 
-.page-panel-about .about-grid {
-  align-items: center;
-  width: 100%;
-  min-height: 0;
-  max-height: 100%;
-  gap: clamp(1rem, 2.5vh, 2rem);
+.page-panel-about .about-name {
+  font-size: clamp(1.65rem, 3.6vw, 2.55rem);
+  margin-bottom: clamp(0.85rem, 2vh, 1.35rem);
 }
 
 .page-panel-about .about-text {
   min-height: 0;
 }
 
-.page-panel-about .about-text h2 {
-  font-size: clamp(1.5rem, 3vw, 1.875rem);
-  margin-bottom: clamp(0.75rem, 2vh, 1.25rem);
-}
-
 .page-panel-about .about-text p {
   font-size: clamp(0.8125rem, 1.4vw, 0.9375rem);
-  line-height: 1.55;
-  margin-bottom: clamp(0.5rem, 1.5vh, 0.875rem);
+  line-height: 1.7;
+  margin-bottom: clamp(0.65rem, 1.6vh, 1rem);
 }
 
 .page-panel-about .about-text p:last-child {
@@ -293,9 +288,9 @@ body.one-page-scroll .main-content.main-content-scroll {
 
 .page-panel-about .about-portrait img,
 .page-panel-about .about-placeholder {
-  max-height: min(40dvh, 20rem);
-  width: auto;
-  object-fit: contain;
+  max-height: min(42dvh, 22rem);
+  width: 100%;
+  object-fit: cover;
 }
 
 .page-panel-publications .publication-list {
@@ -1807,35 +1802,59 @@ a.news-window-line:hover .news-window-arrow {
 }
 
 /* === ABOUT / BIO SECTION === */
-.about-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 3rem;
-  align-items: start;
+.about-name {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 4vw, 2.65rem);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+  margin: 0 0 1.25rem;
+}
+
+.about-name-given {
+  font-weight: 700;
+}
+
+.about-name-family {
+  font-weight: 400;
+}
+
+.about-body {
+  min-width: 0;
+}
+
+.about-body::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.about-profile {
+  width: 100%;
+  max-width: 14.5rem;
+  margin: 0 auto 1.25rem;
 }
 
 .about-portrait {
-  display: flex;
-  justify-content: center;
+  display: block;
 }
 
 .about-portrait picture {
-  display: flex;
-  justify-content: center;
-  max-width: 280px;
+  display: block;
+  width: 100%;
 }
 
 .about-portrait img {
   width: 100%;
-  max-width: 280px;
   height: auto;
   aspect-ratio: 560 / 747;
+  object-fit: cover;
   border-radius: var(--radius-lg);
-  border: 1px solid var(--border);
 }
 
 .about-placeholder {
-  width: min(100%, 280px);
+  width: 100%;
   aspect-ratio: 560 / 747;
   border-radius: var(--radius-lg);
   border: 1px solid var(--border);
@@ -1850,10 +1869,18 @@ a.news-window-line:hover .news-window-arrow {
   letter-spacing: -0.08em;
 }
 
-.about-text h2 {
-  font-size: 1.875rem;
-  font-weight: 700;
-  margin-bottom: 1.5rem;
+.about-more-info {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: var(--text-secondary);
+  margin-top: 0.55rem;
+}
+
+.about-more-info p {
+  display: block;
+  margin: 0;
+  color: var(--text-secondary);
 }
 
 .about-text p {
@@ -1870,6 +1897,7 @@ a.news-window-line:hover .news-window-arrow {
 
 .about-text a:hover {
   opacity: 0.8;
+  text-decoration: underline;
 }
 
 .about-stats {
@@ -3346,24 +3374,19 @@ a.news-window-line:hover .news-window-arrow {
     max-height: calc(var(--snap-panel-height) - 4.75rem);
   }
 
-  .page-panel-about .about-grid {
-    gap: 1rem;
+  .page-panel-about .about-name {
+    font-size: clamp(1.45rem, 6.4vw, 1.85rem);
+    margin-bottom: 0.7rem;
   }
 
-  .page-panel-about .about-portrait img,
-  .page-panel-about .about-placeholder {
-    max-height: min(26dvh, 11.5rem);
-    max-width: 11.5rem;
-  }
-
-  .page-panel-about .about-text h2 {
-    margin-bottom: 0.65rem;
+  .page-panel-about .about-more-info {
+    font-size: 0.6875rem;
   }
 
   .page-panel-about .about-text p {
     font-size: 0.8125rem;
-    line-height: 1.5;
-    margin-bottom: 0.55rem;
+    line-height: 1.55;
+    margin-bottom: 0.6rem;
   }
 
   /*
@@ -3539,6 +3562,18 @@ a.news-window-line:hover .news-window-arrow {
   body > .landing-globe-slot {
     --globe-size: min(150vw, 70dvh, 24rem);
   }
+
+  .page-panel-about .about-profile {
+    float: none;
+    width: 100%;
+    max-width: 11.5rem;
+    margin: 0 auto 0.85rem;
+  }
+
+  .page-panel-about .about-portrait img,
+  .page-panel-about .about-placeholder {
+    max-height: min(26dvh, 11.5rem);
+  }
 }
 
 /* Narrow phones: keep CTAs readable when wrapping */
@@ -3575,6 +3610,21 @@ a.news-window-line:hover .news-window-arrow {
 
   .quick-links {
     grid-template-columns: repeat(3, 1fr);
+  }
+
+  /* Academic wrap: portrait + caption sit to the right of the opening paragraphs. */
+  .about-profile {
+    float: right;
+    width: min(40%, 16.5rem);
+    max-width: 16.5rem;
+    margin: 0.15rem 0 1.25rem 1.75rem;
+  }
+}
+
+@media (min-width: 900px) {
+  .about-profile {
+    width: min(40%, 18rem);
+    max-width: 18rem;
   }
 }
 
@@ -3659,10 +3709,6 @@ a.news-window-line:hover .news-window-arrow {
 
   .quick-links {
     grid-template-columns: repeat(6, 1fr);
-  }
-
-  .about-grid {
-    grid-template-columns: 1fr 1.5fr;
   }
 }
 
