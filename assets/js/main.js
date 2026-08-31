@@ -824,6 +824,158 @@ document.addEventListener('DOMContentLoaded', () => {
     if (card) card.addEventListener('click', toggle);
   });
 
+  /*
+   * Line utilization: no wrapped line should occupy less than half of its
+   * available measure (the "planes." widow in About). text-wrap:pretty is the
+   * CSS first pass; this then groups trailing words so the last line fills.
+   */
+  const LINE_FILL_MIN = 0.5;
+  const LINE_FILL_SELECTOR = [
+    '.about-text p',
+    '.landing-bio p',
+    '.skill-category-description',
+    '.cv-responsibilities li',
+    '.footer-description',
+    '.publication-entry-title',
+    '.publication-entry-authors'
+  ].join(',');
+
+  const unwrapLineFills = (el) => {
+    el.querySelectorAll('[data-line-fill]').forEach((span) => {
+      const parent = span.parentNode;
+      while (span.firstChild) parent.insertBefore(span.firstChild, span);
+      parent.removeChild(span);
+    });
+    el.normalize();
+  };
+
+  const mergeLineRects = (el) => {
+    const range = document.createRange();
+    range.selectNodeContents(el);
+    const raw = [...range.getClientRects()].filter((r) => r.width > 0 && r.height > 1);
+    raw.sort((a, b) => a.top - b.top || a.left - b.left);
+    const lines = [];
+    raw.forEach((r) => {
+      const last = lines[lines.length - 1];
+      if (!last || Math.abs(r.top - last.top) > 2) {
+        lines.push({ top: r.top, left: r.left, right: r.right });
+      } else {
+        last.left = Math.min(last.left, r.left);
+        last.right = Math.max(last.right, r.right);
+      }
+    });
+    return lines;
+  };
+
+  const minLineRatio = (el) => {
+    const lines = mergeLineRects(el);
+    if (lines.length < 2) return 1;
+    const box = el.getBoundingClientRect();
+    const padRight = parseFloat(getComputedStyle(el).paddingRight) || 0;
+    let min = 1;
+    lines.forEach((line) => {
+      const available = box.right - padRight - line.left;
+      if (available < 1) return;
+      min = Math.min(min, (line.right - line.left) / available);
+    });
+    return min;
+  };
+
+  const wrapLastWords = (el, wordCount) => {
+    const texts = [];
+    const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+    let node;
+    while ((node = walker.nextNode())) {
+      if (node.parentElement && node.parentElement.closest('[data-line-fill]')) continue;
+      texts.push(node);
+    }
+    if (!texts.length) return false;
+
+    const endNode = texts[texts.length - 1];
+    const endOffset = endNode.textContent.length;
+    let remaining = wordCount;
+    let startNode = null;
+    let startOffset = 0;
+
+    for (let i = texts.length - 1; i >= 0 && remaining > 0; i -= 1) {
+      const matches = [...texts[i].textContent.matchAll(/\S+/g)];
+      for (let m = matches.length - 1; m >= 0 && remaining > 0; m -= 1) {
+        remaining -= 1;
+        startNode = texts[i];
+        startOffset = matches[m].index;
+      }
+    }
+    if (!startNode) return false;
+
+    const range = document.createRange();
+    range.setStart(startNode, startOffset);
+    range.setEnd(endNode, endOffset);
+    const span = document.createElement('span');
+    span.setAttribute('data-line-fill', '');
+    span.style.whiteSpace = 'nowrap';
+    try {
+      range.surroundContents(span);
+    } catch (err) {
+      span.appendChild(range.extractContents());
+      range.insertNode(span);
+    }
+    return true;
+  };
+
+  const fillElement = (el) => {
+    if (!el || !el.textContent.trim()) return;
+    unwrapLineFills(el);
+    let bestK = 0;
+    let bestScore = minLineRatio(el);
+    if (bestScore >= LINE_FILL_MIN) return;
+
+    const wordCount = el.textContent.trim().split(/\s+/).length;
+    for (let k = 2; k < wordCount; k += 1) {
+      unwrapLineFills(el);
+      if (!wrapLastWords(el, k)) break;
+      if (el.scrollWidth > el.clientWidth + 1) {
+        unwrapLineFills(el);
+        break;
+      }
+      const score = minLineRatio(el);
+      if (score > bestScore) {
+        bestScore = score;
+        bestK = k;
+      }
+      if (score >= LINE_FILL_MIN) break;
+    }
+
+    unwrapLineFills(el);
+    if (bestK > 0) wrapLastWords(el, bestK);
+  };
+
+  const optimizeLineUtilization = () => {
+    document.querySelectorAll(LINE_FILL_SELECTOR).forEach(fillElement);
+  };
+
+  let lineFillTimer = 0;
+  const scheduleLineFill = () => {
+    if (lineFillTimer) window.clearTimeout(lineFillTimer);
+    lineFillTimer = window.setTimeout(() => {
+      lineFillTimer = 0;
+      optimizeLineUtilization();
+    }, 80);
+  };
+
+  const startLineFill = () => {
+    optimizeLineUtilization();
+    window.addEventListener('resize', scheduleLineFill);
+    document.querySelectorAll('.about-portrait img').forEach((img) => {
+      if (!img.complete) img.addEventListener('load', scheduleLineFill, { once: true });
+    });
+  };
+
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(startLineFill);
+  } else {
+    startLineFill();
+  }
+
 });
 
 // Navigation helper

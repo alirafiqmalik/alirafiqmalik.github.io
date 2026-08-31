@@ -268,7 +268,7 @@ body.one-page-scroll .main-content.main-content-scroll {
 }
 
 .page-panel-about .about-name {
-  font-size: clamp(2rem, 4.2vw, 3.15rem);
+  font-size: clamp(1.85rem, 4vw, 2.75rem);
   margin-bottom: clamp(1.15rem, 2.4vh, 1.85rem);
 }
 
@@ -1804,20 +1804,12 @@ a.news-window-line:hover .news-window-arrow {
 /* === ABOUT / BIO SECTION === */
 .about-name {
   font-family: var(--font-display);
-  font-size: clamp(2rem, 4.4vw, 3.15rem);
-  font-weight: 400;
+  font-size: clamp(1.85rem, 4vw, 2.75rem);
+  font-weight: 700;
   line-height: 1.12;
   letter-spacing: -0.03em;
   color: var(--text-primary);
   margin: 0 0 1.5rem;
-}
-
-.about-name-given {
-  font-weight: 700;
-}
-
-.about-name-family {
-  font-weight: 400;
 }
 
 .about-body {
@@ -1898,6 +1890,18 @@ a.news-window-line:hover .news-window-arrow {
 .about-text a:hover {
   opacity: 0.8;
   text-decoration: underline;
+}
+
+/* Prefer even wraps; JS in main.js then enforces last-line utilization ≥ 50%. */
+.about-text p,
+.landing-bio p,
+.skill-category-description,
+.cv-responsibilities li,
+.footer-description,
+.publication-entry-title,
+.publication-entry-authors,
+.markdown-content p {
+  text-wrap: pretty;
 }
 
 .about-stats {
@@ -3566,8 +3570,8 @@ a.news-window-line:hover .news-window-arrow {
   .page-panel-about .about-profile {
     float: none;
     width: 100%;
-    max-width: 11.5rem;
-    margin: 0 auto 0.85rem;
+    max-width: 13rem;
+    margin: 0 auto 1.15rem;
   }
 
   .page-panel-about .about-portrait img,
