@@ -14,7 +14,7 @@
   --border-muted: rgba(65, 65, 65, 0.65);
   --accent: #CEFF00;
   --accent-dim: rgba(206, 255, 0, 0.1);
-  --text-primary: #FAFAFA;
+  --text-primary: #FFFFFF;
   --text-secondary: #B3B3B3;
   --text-muted: #8D8D8D;
   --font-display: 'Atkinson Hyperlegible Next', 'Atkinson Hyperlegible Next Fallback', sans-serif;
@@ -1902,6 +1902,15 @@ a.news-window-line:hover .news-window-arrow {
 .publication-entry-authors,
 .markdown-content p {
   text-wrap: pretty;
+}
+
+.about-text p,
+.landing-bio p,
+.skill-category-description,
+.cv-responsibilities li,
+.footer-description,
+.markdown-content p {
+  font-weight: 500;
 }
 
 .about-stats {
