@@ -104,36 +104,48 @@ layout: home
   </section>
 </div>
 
-<!-- About — match live alihamzamalik.me/#about -->
+<!-- About — name + wrap-around portrait, matching the academic bio layout -->
 <section class="page-panel page-panel-about" id="about">
   <div class="page-panel-inner container">
     <div class="about-panel animate-on-scroll" data-probe="about-panel">
-      <div class="about-grid">
-        <div class="about-portrait">
-          {% assign profile_image = site.static_files | where: "path", site.data.personal.profileImage | first %}
-          {% if site.data.personal.profileImage and profile_image %}
-          {% assign profile_webp = site.static_files | where: "path", "/assets/img/ali.webp" | first %}
-          <picture>
-            {% if profile_webp %}
-            <source type="image/webp" srcset="{{ '/assets/img/ali.webp' | relative_url }}">
+      <h2 class="about-name">
+        <span class="about-name-given">{{ site.data.personal.name_given | default: site.data.personal.name }}</span>
+        {% if site.data.personal.name_family %}
+        <span class="about-name-family">{{ site.data.personal.name_family }}</span>
+        {% endif %}
+      </h2>
+      <div class="about-body">
+        <aside class="about-profile">
+          <div class="about-portrait">
+            {% assign profile_image = site.static_files | where: "path", site.data.personal.profileImage | first %}
+            {% if site.data.personal.profileImage and profile_image %}
+            {% assign profile_webp = site.static_files | where: "path", "/assets/img/ali.webp" | first %}
+            <picture>
+              {% if profile_webp %}
+              <source type="image/webp" srcset="{{ '/assets/img/ali.webp' | relative_url }}">
+              {% endif %}
+              <img
+                src="{{ site.data.personal.profileImage | relative_url }}"
+                alt="{{ site.data.personal.name }}"
+                width="560"
+                height="747"
+                loading="lazy"
+                decoding="async"
+              >
+            </picture>
+            {% else %}
+            <div class="about-placeholder" aria-label="{{ site.data.personal.name }}">{{ site.data.personal.name | split: ' ' | first | slice: 0 }}{{ site.data.personal.name | split: ' ' | last | slice: 0 }}</div>
             {% endif %}
-            <img
-              src="{{ site.data.personal.profileImage | relative_url }}"
-              alt="{{ site.data.personal.name }}"
-              width="560"
-              height="747"
-              loading="lazy"
-              decoding="async"
-            >
-          </picture>
-          {% else %}
-          <div class="about-placeholder" aria-label="{{ site.data.personal.name }}">{{ site.data.personal.name | split: ' ' | first | slice: 0 }}{{ site.data.personal.name | split: ' ' | last | slice: 0 }}</div>
+          </div>
+          {% if site.data.personal.office %}
+          <div class="about-more-info">
+            {% for line in site.data.personal.office %}
+            <p>{{ line }}</p>
+            {% endfor %}
+          </div>
           {% endif %}
-        </div>
-        <div class="about-text">
-          <h2>About <span class="highlight">Me</span></h2>
-          <div class="markdown-content">{{ site.data.personal.extended_bio | markdownify }}</div>
-        </div>
+        </aside>
+        <div class="about-text markdown-content">{{ site.data.personal.extended_bio | markdownify }}</div>
       </div>
     </div>
   </div>
