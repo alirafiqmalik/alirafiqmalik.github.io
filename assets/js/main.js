@@ -954,10 +954,29 @@ document.addEventListener('DOMContentLoaded', () => {
         nbspRange(next.node, 0, next.start);
       }
     }
-    const gluedNodes = new Set(slice.map((word) => word.node));
-    gluedNodes.forEach((node) => {
-      node.textContent = node.textContent.replace(/\//g, '/\u2060');
-    });
+    const start = slice[0];
+    const end = slice[slice.length - 1];
+    const harden = (text) => text.replace(/-/g, '\u2011').replace(/\//g, '/\u2060');
+    if (start.node === end.node) {
+      const t = start.node.textContent;
+      start.node.textContent = t.slice(0, start.start) + harden(t.slice(start.start, end.end)) + t.slice(end.end);
+    } else {
+      const startT = start.node.textContent;
+      start.node.textContent = startT.slice(0, start.start) + harden(startT.slice(start.start));
+      const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+      let seen = false;
+      let node;
+      while ((node = walker.nextNode())) {
+        if (node === start.node) {
+          seen = true;
+          continue;
+        }
+        if (node === end.node) break;
+        if (seen) node.textContent = harden(node.textContent);
+      }
+      const endT = end.node.textContent;
+      end.node.textContent = harden(endT.slice(0, end.end)) + endT.slice(end.end);
+    }
     return true;
   };
 
@@ -986,7 +1005,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const range = document.createRange();
     range.setStart(slice[0].node, slice[0].start);
     range.setEnd(slice[slice.length - 1].node, slice[slice.length - 1].end);
-    return range.getBoundingClientRect().width;
+    const span = document.createElement('span');
+    span.style.whiteSpace = 'nowrap';
+    try {
+      range.surroundContents(span);
+    } catch (err) {
+      span.appendChild(range.extractContents());
+      range.insertNode(span);
+    }
+    const width = span.getBoundingClientRect().width;
+    const parent = span.parentNode;
+    while (span.firstChild) parent.insertBefore(span.firstChild, span);
+    parent.removeChild(span);
+    el.normalize();
+    return width;
   };
 
   const lastLineAvailable = (el) => {
