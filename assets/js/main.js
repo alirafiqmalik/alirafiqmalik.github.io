@@ -827,9 +827,8 @@ document.addEventListener('DOMContentLoaded', () => {
   /*
    * Line utilization: no wrapped line should occupy less than half of its
    * available measure (the "planes." widow in About). text-wrap:pretty is the
-   * CSS first pass; this then inserts a break so the last line fills ≥ 50%.
-   * A nowrap span is avoided: glued words overflow narrow float columns and
-   * expanding a wrap through an <a> aborts the search (Taqi / Khwarizmi).
+   * CSS first pass; this then glues trailing words with NBSP so the last
+   * line fills ≥ 50% without splitting links or overflowing the float.
    */
   const LINE_FILL_MIN = 0.5;
   const LINE_FILL_WORD = /\S*[A-Za-z0-9]\S*/g;
@@ -907,35 +906,42 @@ document.addEventListener('DOMContentLoaded', () => {
     return min;
   };
 
-  const wordStarts = (el) => {
-    const starts = [];
+  const glueLastWords = (el, wordCount) => {
+    if (wordCount < 2) return false;
+    const texts = [];
     const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
     let node;
-    while ((node = walker.nextNode())) {
-      const re = new RegExp(LINE_FILL_WORD.source, 'g');
-      let match;
-      while ((match = re.exec(node.textContent))) {
-        starts.push({ node, offset: match.index });
+    while ((node = walker.nextNode())) texts.push(node);
+    let remaining = wordCount - 1;
+    for (let i = texts.length - 1; i >= 0 && remaining > 0; i -= 1) {
+      const chars = [...texts[i].textContent];
+      for (let j = chars.length - 1; j >= 0 && remaining > 0; j -= 1) {
+        if (!/\s/.test(chars[j])) continue;
+        chars[j] = '\u00a0';
+        remaining -= 1;
+        while (j > 0 && /\s/.test(chars[j - 1])) j -= 1;
       }
+      texts[i].textContent = chars.join('');
     }
-    return starts;
-  };
-
-  const insertBreakBeforeLastWords = (el, wordCount) => {
-    const starts = wordStarts(el);
-    if (wordCount <= 0 || wordCount >= starts.length) return false;
-    const target = starts[starts.length - wordCount];
-    const range = document.createRange();
-    range.setStart(target.node, target.offset);
-    range.collapse(true);
-    const br = document.createElement('br');
-    br.setAttribute('data-line-fill', '');
-    range.insertNode(br);
-    return true;
+    return remaining === 0;
   };
 
   const restoreLineFill = (el) => {
     if (lineFillOriginals.has(el)) el.innerHTML = lineFillOriginals.get(el);
+  };
+
+  const overflowsMeasure = (el) => {
+    if (el.scrollWidth > el.clientWidth + 1) return true;
+    const lines = mergeLineRects(el);
+    const floats = collectRightFloats(el);
+    return lines.some((line) =>
+      floats.some((f) =>
+        f.side === 'right' &&
+        line.top < f.bottom - 1 &&
+        line.top + 4 > f.top &&
+        line.right > f.left + 1
+      )
+    );
   };
 
   const fillElement = (el) => {
@@ -952,8 +958,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const maxK = Math.min(wordCount - 1, 48);
     for (let k = 2; k <= maxK; k += 1) {
       restoreLineFill(el);
-      if (!insertBreakBeforeLastWords(el, k)) continue;
-      if (el.scrollWidth > el.clientWidth + 1) continue;
+      if (!glueLastWords(el, k)) continue;
+      if (overflowsMeasure(el)) continue;
       const score = minLineRatio(el);
       if (score > bestScore + 0.001) {
         bestScore = score;
@@ -963,7 +969,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     restoreLineFill(el);
-    if (bestK > 0) insertBreakBeforeLastWords(el, bestK);
+    if (bestK > 0) glueLastWords(el, bestK);
   };
 
   const optimizeLineUtilization = () => {
