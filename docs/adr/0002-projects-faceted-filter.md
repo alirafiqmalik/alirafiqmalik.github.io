@@ -28,32 +28,41 @@ Filter on **facets**: several labelled rows of checkboxes, OR within a row and
 AND across rows, matching the grouped-checkbox filter already shipped in the
 sec-deadlines tool.
 
-The shipped taxonomy is **Two Axes**:
+The shipped taxonomy is **Three Axes**:
 
-| Domain (what it is about)     | Build Surface (what it is made of) |
-| ----------------------------- | ---------------------------------- |
-| Security & Privacy            | RTL & FPGA                         |
-| Hardware & Silicon            | Embedded Firmware                  |
-| Machine Learning              | ML & Data Pipelines                |
-| Robotics & Cyber-Physical     | Networking & Protocols             |
-| Networks & Distributed Systems| Tooling & Automation               |
+| Domain (what it is about)     | Build Surface (what it is made of) | Setting (where it happened) |
+| ----------------------------- | ---------------------------------- | --------------------------- |
+| Security & Privacy            | RTL & FPGA                         | Research & Lab Work         |
+| Hardware & Silicon            | Embedded Firmware                  | Coursework                  |
+| Machine Learning              | ML & Data Pipelines                | Personal Build              |
+| Robotics & Cyber-Physical     | Networking & Protocols             |                             |
+| Networks & Distributed Systems| Tooling & Automation               |                             |
 
-Ten checkboxes, none of which returns fewer than three projects, over a set of
-nine. Projects are multi-valued on both axes, which is what lets a single
-project answer both "show me the security work" and "show me the RTL work"
-without either answer being a list of one.
+Thirteen checkboxes over nine projects, none returning fewer than three.
+Projects are multi-valued on Domain and Build Surface, which is what lets a
+single project answer both "show me the security work" and "show me the RTL
+work" without either answer being a list of one. Setting is single-valued and
+splits 3/3/3.
 
-Two alternatives were built and are browsable at `/projects/filter-lab/`:
+The shipped layout is **Console**: monospace, `[ ]` / `[x]` bracket toggles,
+and an echoed command line that mirrors the query string. It matches the
+terminal prompt already in the nav, so the filter reads as part of the site's
+voice rather than as a generic form.
 
-- **Three Axes** adds a `setting` row (Research & Lab Work / Coursework /
-  Personal Build). It splits 3/3/3 and matches the reference's row count. It
-  is the better scheme if the page is read mainly by people asking what was
-  supervised work; it was not shipped because provenance for the coursework
-  and personal entries is inferred rather than recorded (see *Open* below).
+Two alternative taxonomies and two alternative layouts were built and remain
+browsable at `/projects/filter-lab/`:
+
+- **Two Axes** drops the Setting row. Ten checkboxes, same guarantees; the
+  right choice if provenance stops being worth a row of its own.
 - **Three Tracks** is one row of three mutually exclusive tracks, three
   projects each. It is the smallest change from the pill row and fixes the
   single-result problem, but it cannot express cross-cutting queries, which
   was the second reason the pill row failed.
+- **Ledger** is the literal read of the sec-deadlines reference: square
+  checkboxes and hairline rules. Densest and least decorated.
+- **Chip rack** keeps the pill vocabulary the page already used, now grouped
+  into labelled rows and multi-selecting. Largest touch targets, most vertical
+  space.
 
 ## Consequences
 
@@ -81,4 +90,6 @@ Two alternatives were built and are browsable at `/projects/filter-lab/`:
 `setting` values for the coursework and personal-build projects are inferred
 from the project write-ups, not recorded fact. The three `Research & Lab Work`
 entries are grounded in `_data/cv.yml` (CSN Lab, IC Design Lab, TUKL Deep
-Learning Lab). Confirm the other six before promoting Three Axes.
+Learning Lab); the other six are a guess that now ships on the live page.
+Confirm them — a wrong `setting` is the one facet value a reader could catch
+before the author does.
