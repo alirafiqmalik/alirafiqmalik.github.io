@@ -165,14 +165,14 @@ document.addEventListener('DOMContentLoaded', () => {
     return sectionStops[index].id;
   };
 
-  // Fixed chevron must not sit on body copy. About (and other auto-height
-  // panels) are taller than the viewport, so the cue is hidden whenever its
-  // box intersects readable text. Landing still shows it: the hero copy is
-  // padded clear of the hint slot.
-  const HINT_COPY_SELECTOR = [
-    '.about-name',
-    '.about-more-info',
-    '.about-text p',
+  // Fixed chevron must not sit on body copy. About is taller than the
+  // viewport, so the cue is hidden for the whole #about panel (not just
+  // paragraph boxes — mid-scroll gaps between <p>s would let it flash
+  // back on). Research/Experience still use copy intersection. Landing
+  // keeps the cue: at rest, #about starts at the landing edge below the
+  // hint slot.
+  const HINT_COVER_SELECTOR = [
+    '#about',
     '.page-panel-header',
     '.skill-category',
     '.cv-item',
@@ -189,7 +189,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const bottom = hintBox.bottom + pad;
     const left = hintBox.left - pad;
     const right = hintBox.right + pad;
-    const nodes = document.querySelectorAll(HINT_COPY_SELECTOR);
+    const nodes = document.querySelectorAll(HINT_COVER_SELECTOR);
     for (let i = 0; i < nodes.length; i += 1) {
       const r = nodes[i].getBoundingClientRect();
       if (r.width < 2 || r.height < 2) continue;
