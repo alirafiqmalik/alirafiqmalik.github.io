@@ -49,16 +49,20 @@ Every viewport must satisfy all of:
   separates the sections.
 - **News readable:** every selected news item is reachable (fully visible or
   scrollable inside the News card) — never clipped mid-item with no way to read it.
-- **About readable:** the full About bio is reachable (fully visible or scrollable
-  inside the About panel) — never clipped mid-paragraph with no way to read it.
+- **About readable:** the full About bio is reachable (fully visible, or
+  further down `#page-scroll-container`) — never clipped mid-paragraph, and
+  never behind a nested About scrollbar. `#about` grows with its content
+  (`height: auto`); do not put `overflow-y: auto` on `.page-panel-about` or
+  `.page-panel-about .page-panel-inner`.
 - **≤899px stacks:** title → news → bio/CTAs (not cramped absolute corners).
 - **≥900px corners:** bio bottom-left, News bottom-right, title centered above.
 - **CTAs usable:** social icons + CV/Projects fully on-screen and clickable.
 - **Scroll continuity:** wheel/trackpad can advance landing → About → Research →
-  later sections without getting stuck. Nested News/About scrollports must not
+  later sections without getting stuck. Nested News scrollports must not
   trap page scroll (`overscroll-behavior: contain` is unsafe inside
   `#page-scroll-container`; `overflow-x: hidden` + `overflow-y: visible`
   computes to a scrollport — use `overflow-x: clip` instead).
+  About is not a nested scrollport.
   **Do not reintroduce CSS `scroll-snap-type` on `#page-scroll-container`.**
   Mandatory snap re-snapped after every wheel event, and one real gesture is a
   burst of many small events, so each was reverted before the next landed: the
