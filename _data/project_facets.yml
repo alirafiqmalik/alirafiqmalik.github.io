@@ -11,7 +11,7 @@
 # Adding a value here without tagging any project leaves a permanently empty
 # checkbox, so keep the two in sync.
 
-active_scheme: two-axes
+active_scheme: three-axes
 
 # Every front matter key any scheme filters on. Project cards carry a
 # data-facet-<key> attribute for each of these, so a scheme can be swapped
