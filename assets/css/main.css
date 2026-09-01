@@ -574,6 +574,9 @@ body.one-page-scroll .footer.footer-one-page {
   visibility: hidden;
   pointer-events: none;
   animation: none;
+  /* display:flex on the base rule would otherwise keep a pulsing
+     painted box even while opacity is transitioning. */
+  display: none;
 }
 
 @keyframes panel-scroll-hint-bounce {
