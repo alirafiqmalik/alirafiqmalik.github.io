@@ -165,6 +165,41 @@ document.addEventListener('DOMContentLoaded', () => {
     return sectionStops[index].id;
   };
 
+  // Fixed chevron must not sit on body copy. About (and other auto-height
+  // panels) are taller than the viewport, so the cue is hidden whenever its
+  // box intersects readable text. Landing still shows it: the hero copy is
+  // padded clear of the hint slot.
+  const HINT_COPY_SELECTOR = [
+    '.about-name',
+    '.about-more-info',
+    '.about-text p',
+    '.page-panel-header',
+    '.skill-category',
+    '.cv-item',
+    '.publication-entry',
+    '.footer-description'
+  ].join(', ');
+
+  const hintOverlapsCopy = () => {
+    if (!scrollHint) return false;
+    const hintBox = scrollHint.getBoundingClientRect();
+    if (hintBox.width < 2 || hintBox.height < 2) return false;
+    const pad = 6;
+    const top = hintBox.top - pad;
+    const bottom = hintBox.bottom + pad;
+    const left = hintBox.left - pad;
+    const right = hintBox.right + pad;
+    const nodes = document.querySelectorAll(HINT_COPY_SELECTOR);
+    for (let i = 0; i < nodes.length; i += 1) {
+      const r = nodes[i].getBoundingClientRect();
+      if (r.width < 2 || r.height < 2) continue;
+      if (r.left < right && r.right > left && r.top < bottom && r.bottom > top) {
+        return true;
+      }
+    }
+    return false;
+  };
+
   const applyScrollState = () => {
     const scrollTop = getScrollTop();
 
@@ -184,7 +219,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (progressBar) progressBar.style.transform = `scaleX(${position.progress})`;
     if (scrollHint) {
-      scrollHint.classList.toggle('hidden', position.index >= sectionStops.length - 1);
+      const atEnd = position.index >= sectionStops.length - 1;
+      scrollHint.classList.toggle('hidden', atEnd || hintOverlapsCopy());
     }
     // Click-to-section already claimed the destination; don't flash the
     // previous prompt while the smooth scroll is still in the prior panel.
