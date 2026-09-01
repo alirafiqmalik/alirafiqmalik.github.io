@@ -226,24 +226,23 @@ body.one-page-scroll .main-content.main-content-scroll {
 
 .page-panel-about {
   justify-content: flex-start;
-  padding-bottom: 5rem;
+  height: auto;
+  min-height: var(--snap-panel-height);
+  max-height: none;
+  overflow: visible;
+  padding-bottom: 5.5rem;
 }
 
 .page-panel-about .page-panel-inner {
   flex: 0 1 auto;
   height: auto;
-  max-height: calc(var(--snap-panel-height) - 6.5rem);
+  max-height: none;
   justify-content: flex-start;
-  /* Bio may be taller than the snap panel on phones — scroll only when needed.
-     `.is-scrollable` is toggled by landing-scroll.js. Use overflow-x:clip (not
-     hidden): hidden+visible computes to auto and steals page wheel/touch. */
+  /* Never a nested About scrollport — overflowed bio continues in
+     #page-scroll-container. overflow-x:clip (not hidden): hidden+visible
+     computes to auto and steals page wheel/touch. */
   overflow-x: clip;
   overflow-y: visible;
-  -webkit-overflow-scrolling: touch;
-}
-
-.page-panel-about .page-panel-inner.is-scrollable {
-  overflow-y: auto;
 }
 
 .page-panel-about .about-panel {
@@ -3377,15 +3376,16 @@ a.news-window-line:hover .news-window-arrow {
     --landing-track-height: 200vh;
   }
 
-  /* About: fit more bio above the fold; keep inner scroll for remainder */
+  /* About: stack on phones; page scroll carries leftover bio — no inner port */
   .page-panel-about {
     justify-content: flex-start;
-    padding-bottom: 3.25rem;
+    padding-bottom: 4.25rem;
   }
 
   .page-panel-about .page-panel-inner {
     justify-content: flex-start;
-    max-height: calc(var(--snap-panel-height) - 4.75rem);
+    max-height: none;
+    overflow-y: visible;
   }
 
   .page-panel-about .about-name {
@@ -3640,6 +3640,33 @@ a.news-window-line:hover .news-window-arrow {
     width: min(34%, 20rem);
     max-width: 20rem;
     margin: 0.25rem 0 2rem 3rem;
+  }
+}
+
+/* Compact laptops (MacBook 14/16 browser chrome): keep the wrap in one view. */
+@media (min-width: 900px) and (max-height: 820px) {
+  .page-panel-about {
+    padding-bottom: 4.25rem;
+  }
+
+  .page-panel-about .about-name {
+    font-size: clamp(1.65rem, 3vw, 2.15rem);
+    margin-bottom: 0.8rem;
+  }
+
+  .page-panel-about .about-text p {
+    font-size: 0.975rem;
+    line-height: 1.65;
+    margin-bottom: 0.75rem;
+  }
+
+  .page-panel-about .about-portrait img,
+  .page-panel-about .about-placeholder {
+    max-height: min(34dvh, 16rem);
+  }
+
+  .about-profile {
+    margin-bottom: 1.2rem;
   }
 }
 

@@ -45,18 +45,13 @@
       window.dispatchEvent(new Event('resize'));
     }
 
-    // Nested overflow:auto scrollports (News / About) steal wheel/touch even
+    // Nested overflow:auto scrollports (News) steal wheel/touch even
     // when content fits. Only enable scrolling when content actually overflows.
+    // About is never a nested scrollport — leftover bio uses page scroll.
     const nestedScrollPorts = () =>
-      document.querySelectorAll('.landing-aside, .page-panel-about .page-panel-inner');
+      document.querySelectorAll('.landing-aside');
 
-    const needsNestedScroll = (el) => {
-      // The About reveal transform expands scrollHeight even when the bio fits.
-      // Its own scrollHeight measures the bio layout without that transform.
-      const content = el.querySelector(':scope > .about-panel');
-      const contentHeight = content ? content.scrollHeight : el.scrollHeight;
-      return contentHeight > el.clientHeight + 1;
-    };
+    const needsNestedScroll = (el) => el.scrollHeight > el.clientHeight + 1;
 
     const syncNestedScrollPorts = () => {
       nestedScrollPorts().forEach((el) => {
