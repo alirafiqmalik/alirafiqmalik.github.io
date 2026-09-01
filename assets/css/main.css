@@ -287,9 +287,13 @@ body.one-page-scroll .main-content.main-content-scroll {
 
 .page-panel-about .about-portrait img,
 .page-panel-about .about-placeholder {
+  /* max-height must shrink width too — width:100% + cover cropped the
+     cockpit photo into a landscape slice on short laptops. */
   max-height: min(42dvh, 22rem);
-  width: 100%;
-  object-fit: cover;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
 }
 
 .page-panel-publications .publication-list {
@@ -1822,7 +1826,7 @@ a.news-window-line:hover .news-window-arrow {
 }
 
 .about-profile {
-  width: 100%;
+  width: fit-content;
   max-width: 16rem;
   margin: 0 auto 1.5rem;
 }
@@ -1833,14 +1837,17 @@ a.news-window-line:hover .news-window-arrow {
 
 .about-portrait picture {
   display: block;
-  width: 100%;
+  width: max-content;
+  max-width: 100%;
 }
 
 .about-portrait img {
-  width: 100%;
+  display: block;
+  width: auto;
+  max-width: 100%;
   height: auto;
   aspect-ratio: 560 / 747;
-  object-fit: cover;
+  object-fit: contain;
   border-radius: var(--radius-lg);
 }
 
@@ -3579,7 +3586,7 @@ a.news-window-line:hover .news-window-arrow {
 
   .page-panel-about .about-profile {
     float: none;
-    width: 100%;
+    width: fit-content;
     max-width: 13rem;
     margin: 0 auto 1.15rem;
   }
@@ -3629,16 +3636,15 @@ a.news-window-line:hover .news-window-arrow {
   /* Academic wrap: portrait + caption sit to the right of the opening paragraphs. */
   .about-profile {
     float: right;
-    width: min(36%, 18rem);
-    max-width: 18rem;
+    width: fit-content;
+    max-width: min(36%, 18rem);
     margin: 0.2rem 0 1.75rem 2.5rem;
   }
 }
 
 @media (min-width: 900px) {
   .about-profile {
-    width: min(34%, 20rem);
-    max-width: 20rem;
+    max-width: min(34%, 20rem);
     margin: 0.25rem 0 2rem 3rem;
   }
 }
