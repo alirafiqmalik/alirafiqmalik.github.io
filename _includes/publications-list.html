@@ -4,7 +4,7 @@
 <div class="publications-showcase">
   <header class="publications-showcase-header animate-on-scroll">
     <h2 class="publications-showcase-title">Selected <span class="highlight">Publications</span></h2>
-    <p class="publications-showcase-subtitle">publications in reversed chronological order.</p>
+    <p class="publications-showcase-subtitle">Newest first.</p>
   </header>
 
   {% assign years = pubs | map: 'year' | uniq | sort | reverse %}
@@ -69,9 +69,9 @@
             {% endif %}
             {% if detail_url != "" %}
             {% if detail_url contains '://' %}
-            <a href="{{ detail_url }}" target="_blank" rel="noopener noreferrer" class="publication-link-btn">Read Blog</a>
+            <a href="{{ detail_url }}" target="_blank" rel="noopener noreferrer" class="publication-link-btn">Analysis</a>
             {% else %}
-            <a href="{{ detail_url | relative_url }}" class="publication-link-btn">Read Blog</a>
+            <a href="{{ detail_url | relative_url }}" class="publication-link-btn">Analysis</a>
             {% endif %}
             {% endif %}
           </div>

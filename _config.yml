@@ -1,7 +1,7 @@
 # Site Settings
 title: Ali Hamza Malik
 show_blog_in_nav: true  # Set to false to hide Blog from the navigation bar
-description: Research scientist specializing in formal verification, automated reasoning, and security.
+description: Provable security for emerging systems. Formal methods, security verification, and model checking at UMass Amherst.
 url: "https://alihamzamalik.me"
 baseurl: ""
 

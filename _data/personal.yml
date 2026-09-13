@@ -1,9 +1,9 @@
 name: Ali Hamza Malik
-tagline: Formal Verification | Security | Quantum Networks
-bio: PhD Candidate in Electrical & Computer Engineering at University of Massachusetts Amherst working on formal methods, security verification, and model checking.
+tagline: Provable Security for Emerging Systems
+bio: I check deployed systems against their own specs to find security gaps the spec never states.
 bio_paragraphs:
-  - PhD Candidate in Electrical & Computer Engineering at University of Massachusetts Amherst.
-  - I work on formal methods, security verification, and model checking with Dr. Muhammad Taqi Raza in Khwarizmi Lab.
+  - I check deployed systems against their own specs to find security gaps the spec never states.
+  - PhD candidate in Electrical & Computer Engineering at UMass Amherst, with Dr. Muhammad Taqi Raza in Khwarizmi Lab.
 cv_pdf: /assets/pdf/AliMalik_Resume.pdf
 email: ahmalik@umass.edu
 location: Amherst, MA
@@ -13,7 +13,7 @@ office:
   - Amherst, MA 01003
 
 footer:
-  description: If you have questions, ideas for collaboration, or want to chat, here's how to find me. I typically respond within 2 business days.
+  description: For questions or collaboration, email is best. I usually reply within two business days.
 
 profileImage: /assets/img/ali.jpg
 
@@ -24,10 +24,10 @@ socials:
   scholar: https://scholar.google.com/citations?user=alihamzamalik
 
 extended_bio: |
-  Hi, I am a PhD Candidate in Electrical & Computer Engineering @ [University of Massachusetts Amherst](https://www.umass.edu/). I work on formal methods, security verification, and model checking with [Dr. Muhammad Taqi Raza](https://people.umass.edu/taqi/) in [Khwarizmi Lab](https://khwarizmilab.github.io/).
+  I analyze the security specifications of large-scale network and communication systems. The goal is to find gaps such as unauthorized access and denial of service.
 
-  I study the formal specifications of large-scale network and communication systems for identifying vulnerabilities and mitigating risks like unauthorized access and denial-of-service. My research focuses on conducting comprehensive and systematic security analyses of modern digital systems through SAT-based bounded model checking and theorem proving. This includes scrutinizing the security functions and protocols within the U.S. ACH network, quantum-classical interfaces (QKD), and cross-plane eSIM connectivity to ensure the highest standard of protection for users and business assets. A systematic analysis of these security specifications not only enhances the resilience of systems but also ensures mathematically proven validation for complex control planes.
+  Current targets are the U.S. ACH payment network, quantum-classical interfaces in QKD, and cross-plane eSIM connectivity. I use SAT-based bounded model checking and theorem proving.
 
-  My research paves the way for the development of effective remedies, ensuring the integrity and trustworthiness of digital systems in various operational contexts.
+  This is PhD work in Electrical & Computer Engineering at [University of Massachusetts Amherst](https://www.umass.edu/), with [Dr. Muhammad Taqi Raza](https://people.umass.edu/taqi/) in [Khwarizmi Lab](https://khwarizmilab.github.io/).
 
-  Before joining UMass, I completed my Bachelor's in Electrical Engineering (BE) from [National University of Sciences and Technology (NUST)](https://nust.edu.pk/) in 2023. At NUST, I worked as an Undergraduate Research Assistant and Hardware Security Intern, focusing on autonomous aerial swarm robotics and logic-locking defenses for hardware security. Further details regarding my technical deployments and publications are in my [CV](/assets/pdf/AliMalik_Resume.pdf).
+  Before UMass I completed a BE in Electrical Engineering at [National University of Sciences and Technology (NUST)](https://nust.edu.pk/) in 2023. There I worked on aerial swarm robotics and logic-locking defenses for hardware. More in the [CV](/assets/pdf/AliMalik_Resume.pdf).

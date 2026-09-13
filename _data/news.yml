@@ -10,6 +10,6 @@ news:
   - date: July 2026
     kind: paper
     publication: beyond-quantum-promise-qkd
-    prefix: "Paper on quantum security, '"
-    suffix: "', accepted to "
+    prefix: "Accepted: '"
+    suffix: "' at "
     selected: true
