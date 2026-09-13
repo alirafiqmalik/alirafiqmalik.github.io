@@ -1,9 +1,9 @@
 name: Ali Hamza Malik
 tagline: Provable Security for Emerging Systems
-bio: I check deployed systems against their own specs to find security gaps the spec never states.
+bio: I check deployed systems against their own specs to find security gaps those specs never state.
 bio_paragraphs:
-  - I check deployed systems against their own specs to find security gaps the spec never states.
-  - PhD candidate in Electrical & Computer Engineering at UMass Amherst, with Dr. Muhammad Taqi Raza in Khwarizmi Lab.
+  - I check deployed systems against their own specs to find security gaps those specs never state.
+  - PhD candidate in Electrical & Computer Engineering at UMass Amherst, with Dr. Taqi Raza in Khwarizmi Lab.
 cv_pdf: /assets/pdf/AliMalik_Resume.pdf
 email: ahmalik@umass.edu
 location: Amherst, MA
@@ -30,4 +30,4 @@ extended_bio: |
 
   This is PhD work in Electrical & Computer Engineering at [University of Massachusetts Amherst](https://www.umass.edu/), with [Dr. Muhammad Taqi Raza](https://people.umass.edu/taqi/) in [Khwarizmi Lab](https://khwarizmilab.github.io/).
 
-  Before UMass I completed a BE in Electrical Engineering at [National University of Sciences and Technology (NUST)](https://nust.edu.pk/) in 2023. There I worked on aerial swarm robotics and logic-locking defenses for hardware. More in the [CV](/assets/pdf/AliMalik_Resume.pdf).
+  Before UMass I completed a BE in Electrical Engineering at the National University of Sciences and Technology ([NUST](https://nust.edu.pk/)) in 2023. There I worked on aerial swarm robotics and logic-locking defenses for hardware. Details are in the [CV](/assets/pdf/AliMalik_Resume.pdf).
