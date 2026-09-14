@@ -4007,17 +4007,15 @@ a.news-window-line:hover .news-window-arrow {
   .about-profile {
     grid-column: 2;
     grid-row: 1;
-    float: none;
     width: fit-content;
-    max-width: min(36%, 18rem);
+    max-width: 18rem;
     margin: 0;
-    justify-self: end;
   }
 }
 
 @media (min-width: 900px) {
   .about-profile {
-    max-width: min(34%, 20rem);
+    max-width: 20rem;
   }
 }
 
