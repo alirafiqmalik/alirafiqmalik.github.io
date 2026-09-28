@@ -7,6 +7,13 @@
 #   hand-written editorial phrasing around the pulled facts.
 # - paper_title overrides the record's short_title/title if set by hand.
 news:
+  - date: August 2026
+    kind: paper
+    publication: credit-without-debit
+    prefix: "Paper on banking payment systems, '"
+    suffix: "', accepted to "
+    selected: true
+
   - date: July 2026
     kind: paper
     publication: beyond-quantum-promise-qkd
