@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const SECTION_ORDER = ['landing', 'about', 'research', 'experience', 'publications', 'explore', 'contact'];
 
   const navPromptCwd = document.querySelector('[data-nav-cwd]');
+  const navPromptRoot = document.querySelector('[data-nav-prompt-root]');
 
   const SECTION_CWD_MAP = {
     landing: '',
@@ -23,33 +24,27 @@ document.addEventListener('DOMContentLoaded', () => {
     news: 'news'
   };
 
-  const PATHNAME_CWD_MAP = [
-    { match: /\/blog(?:\/|$)/i, cwd: 'blog' },
-    { match: /\/cv(?:\/|$)/i, cwd: 'cv' },
-    { match: /\/projects(?:\/|$)/i, cwd: 'projects' },
-    { match: /\/history(?:\/|$)/i, cwd: 'history' },
-    { match: /\/experience(?:\/|$)/i, cwd: 'experience' }
-  ];
+  // Homepage sections stay under ~/. Standalone pages (publications, cv,
+  // history, blog, projects, and the rest) are site paths and use /.
+  const updateNavPrompt = (root, cwd) => {
+    if (navPromptRoot) navPromptRoot.textContent = root;
+    if (navPromptCwd) navPromptCwd.textContent = cwd || '';
+  };
 
-  const updateNavPromptCwd = (cwd) => {
-    if (!navPromptCwd) return;
-    navPromptCwd.textContent = cwd || '';
+  const updateNavPromptCwd = (cwd) => updateNavPrompt('~/', cwd);
+
+  const updateNavPromptFromPath = () => {
+    let path = window.location.pathname || '/';
+    path = path.replace(/\/index\.html$/i, '/').replace(/\.html$/i, '');
+    if (path.length > 1 && path.endsWith('/')) path = path.slice(0, -1);
+    if (!path || path === '/') {
+      updateNavPrompt('~/', '');
+      return;
+    }
+    updateNavPrompt('/', path.slice(1));
   };
 
   const cwdFromSection = (sectionId) => SECTION_CWD_MAP[sectionId] ?? '';
-
-  const cwdFromPathname = () => {
-    const path = window.location.pathname;
-    const match = PATHNAME_CWD_MAP.find(({ match }) => match.test(path));
-    if (match) return match.cwd;
-
-    const hash = window.location.hash.replace('#', '');
-    if (hash && Object.prototype.hasOwnProperty.call(SECTION_CWD_MAP, hash)) {
-      return SECTION_CWD_MAP[hash];
-    }
-
-    return '';
-  };
 
   const getScrollTop = () => scrollContainer ? scrollContainer.scrollTop : window.scrollY;
 
@@ -177,6 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
     '.skill-category',
     '.cv-item',
     '.publication-entry',
+    '.publications-more',
     '.footer-description'
   ].join(', ');
 
@@ -366,7 +362,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (isOnePageScroll && Object.prototype.hasOwnProperty.call(SECTION_CWD_MAP, id)) {
       updateNavPromptCwd(cwdFromSection(id));
     } else if (!isOnePageScroll) {
-      updateNavPromptCwd(cwdFromPathname());
+      updateNavPromptFromPath();
     }
     requestAnimationFrame(() => {
       if (isOnePageScroll) {
@@ -803,11 +799,13 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!href) return;
       if (path === '/' && (href === '/' || href.includes('index'))) {
         link.classList.add('active');
+      } else if (/^\/publications(?:\/|$)/.test(path) && href.includes('#publications')) {
+        link.classList.add('active');
       } else if (path !== '/' && href !== '/' && path.includes(href.replace(/\.html$/, '').replace(/\/$/, ''))) {
         link.classList.add('active');
       }
     });
-    updateNavPromptCwd(cwdFromPathname());
+    updateNavPromptFromPath();
     applyScrollState();
   }
 

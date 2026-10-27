@@ -1,12 +1,21 @@
-{% assign pubs = site.publications | sort: 'year' | reverse %}
+{% assign pubs = site.publications | sort: 'date' | reverse %}
+{% if include.mode == "selected" %}
+  {% assign pubs = pubs | where: "selected", true %}
+{% endif %}
 {% assign author_name = site.data.personal.name %}
 {% if pubs.size > 0 %}
 <div class="publications-showcase">
   <header class="publications-showcase-header animate-on-scroll">
+    {% if include.mode == "selected" %}
     <h2 class="publications-showcase-title">Selected <span class="highlight">Publications</span></h2>
     <p class="publications-showcase-subtitle">publications in reversed chronological order.</p>
+    {% else %}
+    <h1 class="publications-showcase-title">All <span class="highlight">Publications</span></h1>
+    <p class="publications-showcase-subtitle">all publications in reversed chronological order.</p>
+    {% endif %}
   </header>
 
+  <div class="publication-year-groups">
   {% assign years = pubs | map: 'year' | uniq | sort | reverse %}
   {% for year in years %}
   <div class="publication-year-group animate-on-scroll">
@@ -51,17 +60,24 @@
           {% assign detail_url = pub.detail_url | strip %}
           {% if pub.links or detail_url != "" %}
           <div class="publication-entry-links">
+            {% assign doi_url = pub.links.doi | strip %}
+            {% if doi_url and doi_url != "" and doi_url != "#" %}
+            <a href="{{ doi_url }}" target="_blank" rel="noopener noreferrer" class="publication-link-btn">DOI</a>
+            {% endif %}
             {% assign pdf_url = pub.links.pdf | strip %}
             {% if pdf_url and pdf_url != "" and pdf_url != "#" %}
+              {% if pdf_url contains "://" %}
             <a href="{{ pdf_url }}" target="_blank" rel="noopener noreferrer" class="publication-link-btn">PDF</a>
+              {% else %}
+                {% assign pdf_file = site.static_files | where: "path", pdf_url | first %}
+                {% if pdf_file %}
+            <a href="{{ pdf_url | relative_url }}" target="_blank" rel="noopener noreferrer" class="publication-link-btn">PDF</a>
+                {% endif %}
+              {% endif %}
             {% endif %}
             {% assign preprint_url = pub.links.preprint | strip %}
             {% if preprint_url and preprint_url != "" and preprint_url != "#" %}
             <a href="{{ preprint_url }}" target="_blank" rel="noopener noreferrer" class="publication-link-btn">Preprint</a>
-            {% endif %}
-            {% assign doi_url = pub.links.doi | strip %}
-            {% if doi_url and doi_url != "" and doi_url != "#" %}
-            <a href="{{ doi_url }}" target="_blank" rel="noopener noreferrer" class="publication-link-btn">DOI</a>
             {% endif %}
             {% assign code_url = pub.links.code | strip %}
             {% if code_url and code_url != "" and code_url != "#" %}
@@ -82,6 +98,13 @@
     </div>
   </div>
   {% endfor %}
+  </div>
+
+  {% if include.mode == "selected" %}
+  <p class="publications-more animate-on-scroll">
+    <a href="{{ '/publications/' | relative_url }}" class="publication-link-btn publications-more-link">More publications</a>
+  </p>
+  {% endif %}
 </div>
 {% else %}
 <div class="empty-state animate-on-scroll">

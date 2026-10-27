@@ -1,17 +1,12 @@
 ---
-layout: null
+layout: default
+title: Publications
 permalink: /publications/
+description: All publications by Ali Hamza Malik, in reverse chronological order.
 ---
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="refresh" content="0; url={{ '/' | relative_url }}#publications">
-  <link rel="canonical" href="{{ '/' | relative_url }}#publications">
-  <title>Redirecting to Publications</title>
-  <script>window.location.replace('{{ '/' | relative_url }}#publications');</script>
-</head>
-<body>
-  <p><a href="{{ '/' | relative_url }}#publications">Continue to Publications</a></p>
-</body>
-</html>
+
+<section class="publications-page">
+  <div class="container-md">
+    {% include publications-list.html mode="all" %}
+  </div>
+</section>
