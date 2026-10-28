@@ -83,7 +83,9 @@ Every viewport must satisfy all of:
 
 The homepage elements named by the Viewport Matrix carry `data-probe`
 attributes: `name`, `tagline`, `nav`, `nav-logo`, `news-card`, `about-panel`,
-`cta-social`, `cta-links`. The probe locates elements only through these
+`cta-social`, `cta-links`. The `news-card` handle belongs to the News aside,
+the visible scrollport, rather than its overflowing content; reachability
+checks still inspect and scroll all descendant news entries. The probe locates elements only through these
 handles and section ids — never styling or state classes (ADR-0001) — so
 renaming or removing a `data-probe` attribute is a contract change: keep the
 handle on the element that plays that role, or update the probe and this
