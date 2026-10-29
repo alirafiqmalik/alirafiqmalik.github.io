@@ -80,9 +80,8 @@ schemes:
   - id: three-tracks
     name: Three Tracks
     blurb: >-
-      One row, three mutually exclusive tracks, three projects each. The
-      smallest change from today's pill row that still stops single-result
-      filters.
+      One row, three mutually exclusive tracks. The smallest change from
+      the old pill row that still avoids single-result filters.
     groups:
       - key: track
         label: Track
