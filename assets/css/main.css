@@ -2846,6 +2846,8 @@ a.news-window-line:hover .news-window-arrow {
 }
 
 .project-card {
+  display: flex;
+  flex-direction: column;
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
@@ -2859,7 +2861,8 @@ a.news-window-line:hover .news-window-arrow {
   border-color: rgba(204, 255, 0, 0.3);
 }
 
-.project-card.hidden {
+.project-card.hidden,
+.project-card[hidden] {
   display: none;
 }
 
@@ -2893,6 +2896,9 @@ a.news-window-line:hover .news-window-arrow {
 }
 
 .project-card-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
   padding: 1.5rem;
 }
 
@@ -2939,8 +2945,9 @@ a.news-window-line:hover .news-window-arrow {
 .tech-tags {
   display: flex;
   flex-wrap: wrap;
+  align-content: flex-start;
   gap: 0.375rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0;
 }
 
 .tech-tag {
@@ -2956,6 +2963,7 @@ a.news-window-line:hover .news-window-arrow {
   display: flex;
   align-items: center;
   gap: 1rem;
+  margin-top: auto;
   padding-top: 1rem;
   border-top: 1px solid var(--border);
 }
