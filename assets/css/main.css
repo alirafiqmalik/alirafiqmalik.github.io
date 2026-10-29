@@ -2896,10 +2896,30 @@ a.news-window-line:hover .news-window-arrow {
   padding: 1.5rem;
 }
 
+.project-card-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.25rem;
+}
+
 .project-card-title {
   font-size: 1.25rem;
   font-weight: 700;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0;
+}
+
+.project-card-github {
+  flex: none;
+  display: inline-flex;
+  margin-top: 0.2rem;
+  color: var(--text-secondary);
+  transition: color 0.2s;
+}
+
+.project-card-github:hover {
+  color: var(--accent);
 }
 
 .project-card-category {

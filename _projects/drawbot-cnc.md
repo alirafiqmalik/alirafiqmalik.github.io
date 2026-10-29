@@ -11,7 +11,7 @@ track: Embedded & Robotics
 technologies: [C/C++, Python, Arduino, G-code]
 status: Completed
 links:
-  github: "#"
+  github: https://github.com/alirafiqmalik/CNC-controller
 ---
 
 This project brings digital designs into the physical world through a custom-built CNC drawing machine. By implementing G-code parsing and motion control algorithms from scratch, the system translates vector graphics into precise mechanical movements.

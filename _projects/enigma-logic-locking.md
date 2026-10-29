@@ -11,7 +11,7 @@ track: Silicon & RTL
 technologies: [Python, Verilog, RISC-V, EDA Tools]
 status: Completed
 links:
-  github: "#"
+  github: https://github.com/alirafiqmalik/ENIGMA-Logic-Locking-Framework
 ---
 
 During my internship at the IC Design Lab, I led the development of ENIGMA, a Python framework designed to automatically insert logic-locking defenses into hardware designs. This project addresses one of the semiconductor industry's most pressing concerns: protecting intellectual property from unauthorized use and reverse engineering.

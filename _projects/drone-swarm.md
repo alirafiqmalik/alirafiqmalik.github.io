@@ -11,7 +11,7 @@ track: Embedded & Robotics
 technologies: [Python, ROS, Raspberry Pi, ArduPilot, MAVLink]
 status: Completed
 links:
-  github: "#"
+  github: https://github.com/alirafiqmalik/Event-Driven-Swarm-Configuration
   paper: "#"
 ---
 

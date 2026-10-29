@@ -11,7 +11,7 @@ track: Silicon & RTL
 technologies: [Verilog, FPGA, VGA, Digital Logic]
 status: Completed
 links:
-  github: "#"
+  github: https://github.com/alirafiqmalik/Bresenham-Circle-Algorithm-Hardware-Accelerator
 ---
 
 This project implements hardware-accelerated graphics rendering on an FPGA, demonstrating how geometric algorithms can be translated into parallel digital logic for real-time visual effects.

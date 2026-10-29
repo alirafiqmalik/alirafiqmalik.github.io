@@ -11,7 +11,7 @@ track: ML & Security
 technologies: [Python, TensorFlow, scikit-learn, Mininet, Ryu, CloudLab]
 status: Completed
 links:
-  github: "#"
+  github: https://github.com/alirafiqmalik/SDN-Based-Machine-Learning-IDS
 ---
 
 Software-Defined Networking (SDN) architectures introduce unique security challenges due to their centralized control plane. This project implements an intelligent Intrusion Detection System using machine learning.

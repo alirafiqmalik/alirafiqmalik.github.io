@@ -11,7 +11,7 @@ track: Silicon & RTL
 technologies: [Verilog, Python, RISC-V, Digital Logic]
 status: Completed
 links:
-  github: "#"
+  github: https://github.com/alirafiqmalik/rv32i-processor-fpga
 ---
 
 This project implements a complete RISC-V processor core from scratch, demonstrating the principles of pipelined computer architecture. The design achieves instruction-level parallelism through a classic 5-stage pipeline while maintaining correctness through sophisticated hazard detection and data forwarding mechanisms.
