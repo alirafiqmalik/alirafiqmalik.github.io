@@ -60,34 +60,42 @@
           {% assign detail_url = pub.detail_url | strip %}
           {% if pub.links or detail_url != "" %}
           <div class="publication-entry-links">
-            {% assign doi_url = pub.links.doi | strip %}
-            {% if doi_url and doi_url != "" and doi_url != "#" %}
-            <a href="{{ doi_url }}" target="_blank" rel="noopener noreferrer" class="publication-link-btn">DOI</a>
-            {% endif %}
             {% assign pdf_url = pub.links.pdf | strip %}
             {% if pdf_url and pdf_url != "" and pdf_url != "#" %}
               {% if pdf_url contains "://" %}
-            <a href="{{ pdf_url }}" target="_blank" rel="noopener noreferrer" class="publication-link-btn">PDF</a>
+            {% include publication-link.html url=pdf_url icon="paper" label="Paper" external=true %}
               {% else %}
                 {% assign pdf_file = site.static_files | where: "path", pdf_url | first %}
                 {% if pdf_file %}
-            <a href="{{ pdf_url | relative_url }}" target="_blank" rel="noopener noreferrer" class="publication-link-btn">PDF</a>
+            {% include publication-link.html url=pdf_url icon="paper" label="Paper" external=true local=true %}
                 {% endif %}
               {% endif %}
             {% endif %}
+            {% assign doi_url = pub.links.doi | strip %}
+            {% if doi_url and doi_url != "" and doi_url != "#" %}
+            {% include publication-link.html url=doi_url icon="doi" label="DOI" external=true %}
+            {% endif %}
             {% assign preprint_url = pub.links.preprint | strip %}
             {% if preprint_url and preprint_url != "" and preprint_url != "#" %}
-            <a href="{{ preprint_url }}" target="_blank" rel="noopener noreferrer" class="publication-link-btn">Preprint</a>
+            {% include publication-link.html url=preprint_url icon="preprint" label="Preprint" external=true %}
+            {% endif %}
+            {% assign slides_url = pub.links.slides | strip %}
+            {% if slides_url and slides_url != "" and slides_url != "#" %}
+            {% include publication-link.html url=slides_url icon="slides" label="Slides" external=true %}
             {% endif %}
             {% assign code_url = pub.links.code | strip %}
             {% if code_url and code_url != "" and code_url != "#" %}
-            <a href="{{ code_url }}" target="_blank" rel="noopener noreferrer" class="publication-link-btn">Code</a>
+            {% include publication-link.html url=code_url icon="code" label="Code" external=true %}
+            {% endif %}
+            {% assign video_url = pub.links.video | strip %}
+            {% if video_url and video_url != "" and video_url != "#" %}
+            {% include publication-link.html url=video_url icon="video" label="Presentation" external=true %}
             {% endif %}
             {% if detail_url != "" %}
             {% if detail_url contains '://' %}
-            <a href="{{ detail_url }}" target="_blank" rel="noopener noreferrer" class="publication-link-btn">Read Blog</a>
+            {% include publication-link.html url=detail_url icon="blog" label="Blog" external=true %}
             {% else %}
-            <a href="{{ detail_url | relative_url }}" class="publication-link-btn">Read Blog</a>
+            {% include publication-link.html url=detail_url icon="blog" label="Blog" local=true %}
             {% endif %}
             {% endif %}
           </div>

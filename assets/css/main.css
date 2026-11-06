@@ -2159,7 +2159,46 @@ a.news-window-line:hover .news-window-arrow {
 .publication-entry-links {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 0.35rem 0.85rem;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+}
+
+/* Inline "[icon Label]" links: brackets in secondary text, link in the accent. */
+.publication-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.04em;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.publication-link::before {
+  content: "[";
+}
+
+.publication-link::after {
+  content: "]";
+}
+
+.publication-link a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  color: var(--accent);
+  text-decoration: none;
+  text-underline-offset: 3px;
+}
+
+.publication-link a:hover,
+.publication-link a:focus-visible {
+  text-decoration: underline;
+}
+
+.publication-link-icon {
+  width: 1.05em;
+  height: 1.05em;
+  flex-shrink: 0;
 }
 
 .publication-link-btn {
