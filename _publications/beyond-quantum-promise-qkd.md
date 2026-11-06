@@ -13,5 +13,6 @@ detail_url: "https://alihamzamalik.me/blog-demo-qkd-fv/"
 links:
   preprint: https://www.researchgate.net/publication/403682108_Beyond_the_Quantum_Promise_A_Security_Analysis_of_Classical_Control_in_Quantum_Key_Distribution
   arxiv: https://arxiv.org/abs/2608.07626
+  slides: https://alihamzamalik.me/ieee-qweek-presentation-setup/
   code: https://github.com/KhwarizmiLab/QVerify
 ---

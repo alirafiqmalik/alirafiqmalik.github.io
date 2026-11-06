@@ -81,7 +81,14 @@
             {% endif %}
             {% assign slides_url = pub.links.slides | strip %}
             {% if slides_url and slides_url != "" and slides_url != "#" %}
+              {% if slides_url contains "://" %}
             {% include publication-link.html url=slides_url icon="slides" label="Slides" external=true %}
+              {% else %}
+                {% assign slides_file = site.static_files | where: "path", slides_url | first %}
+                {% if slides_file %}
+            {% include publication-link.html url=slides_url icon="slides" label="Slides" external=true local=true %}
+                {% endif %}
+              {% endif %}
             {% endif %}
             {% assign code_url = pub.links.code | strip %}
             {% if code_url and code_url != "" and code_url != "#" %}
