@@ -1,7 +1,6 @@
 ---
 title: "Beyond the Quantum Promise: A Security Analysis of Classical Control in QKD"
 publication: beyond-quantum-promise-qkd
-status: Accepted
 img: /assets/img/papers/ieee-quantum-week-2026-qkd/figure-1-architecture.png
 description: >-
   A formal verification framework, built in Tamarin, that models the classical

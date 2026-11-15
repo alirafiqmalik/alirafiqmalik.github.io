@@ -2,7 +2,6 @@
 title: "Credit Without Debit: Formal Verification of Banking Payment Systems"
 publication: credit-without-debit
 redirect: https://khwarizmilab.github.io/credit-without-debit/
-status: Published
 img: /assets/img/papers/acm-ccs-2026-cwd/figure-2-framework.png
 description: >-
   A formal verification of U.S. ACH bank transfers that breaks all three core

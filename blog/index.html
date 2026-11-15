@@ -23,9 +23,6 @@ title: Blog
       {% if post.img %}
       <div class="project-card-image">
         <img src="{{ post.img }}" alt="{{ post.title }}" loading="lazy">
-        {% if post.status %}
-        <span class="project-status-badge">{{ post.status }}</span>
-        {% endif %}
       </div>
       {% endif %}
       <div class="project-card-content">
