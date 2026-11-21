@@ -11,7 +11,7 @@ date: 2026-11-15
 selected: true
 detail_url: ""
 links:
-  pdf: /assets/pdf/papers/credit-without-debit.pdf
+  pdf: https://dl.acm.org/doi/pdf/10.1145/3830454.3846614
   doi: https://doi.org/10.1145/3830454.3846614
 
 ---
