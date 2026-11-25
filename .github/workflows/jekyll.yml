@@ -14,12 +14,14 @@ concurrency:
   group: "pages"
   cancel-in-progress: false
 
+# Build and deploy are separate jobs, as in GitHub's Pages starter workflow.
+# In one job, deploy-pages can query the artifact API in the same second the
+# upload finalizes and find no "github-pages" artifact (run 45612385013).
+# A separate job starts only after the upload is complete, and
+# "Re-run failed jobs" then retries only the deploy, without a rebuild.
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -56,6 +58,13 @@ jobs:
         with:
           path: _site/
 
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
