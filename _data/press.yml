@@ -1,0 +1,145 @@
+# Media coverage of the research, shown as a logo wall in the homepage
+# "Research Featured In" section (#media).
+#
+# Only news media whose article discusses the paper and names the author.
+# Each entry was checked against the live article text. Company blogs and
+# daily digests that only list the story are left out.
+#
+# One entry per outlet; order here is display order. Each logo links to `url`.
+# - name:   outlet name (used in the link label)
+# - logo:   file under /assets/img/press/. Any colors are fine: the page shows
+#           every logo as a single-color silhouette, so the file needs a
+#           transparent background (no solid box behind the wordmark; cut the
+#           text out of a box instead, as in skytg24.svg).
+# - w / h:  the logo's intrinsic width and height (SVG viewBox or PNG pixels).
+#           They reserve its space before it loads and size it by area, so
+#           wide wordmarks and square marks look equally heavy.
+# - url / title / date / lang: the article (lang is ISO 639-1).
+# - publication: slug of the _publications/*.md record the article covers.
+# - note:   provenance (syndication, republication).
+outlets:
+  - name: Yahoo Finance
+    logo: /assets/img/press/yahoofinance.svg
+    w: 1284.1
+    h: 181.3
+    url: https://finance.yahoo.com/technology/articles/researchers-spot-ach-loopholes-152500145.html
+    title: Researchers spot ACH loopholes
+    date: 2026-11-19
+    lang: en
+    publication: credit-without-debit
+    note: Syndicates the Payments Dive article.
+
+  - name: Sky TG24
+    logo: /assets/img/press/skytg24.svg
+    w: 962.2
+    h: 250
+    url: https://tg24.sky.it/tecnologia/2026/11/21/nuovo-attacco-hacker-banche
+    title: Cybersecurity, scoperto nuovo tipo di attacco hacker contro le banche
+    date: 2026-11-21
+    lang: it
+    publication: credit-without-debit
+
+  - name: MassLive
+    logo: /assets/img/press/masslive.svg
+    w: 366.92
+    h: 139.16
+    url: https://www.masslive.com/umass/2026/11/umass-researchers-expose-bank-loophole-amid-widespread-hacking-issues.html
+    title: UMass researchers expose bank loophole amid widespread hacking issues
+    date: 2026-11-17
+    lang: en
+    publication: credit-without-debit
+
+  - name: Payments Dive
+    logo: /assets/img/press/paymentsdive.svg
+    w: 1237.18
+    h: 203.33
+    url: https://www.paymentsdive.com/news/researchers-spot-ach-loopholes/875186/
+    title: Researchers spot ACH loopholes
+    date: 2026-11-19
+    lang: en
+    publication: credit-without-debit
+
+  - name: WWLP 22News
+    logo: /assets/img/press/wwlp-22news.png
+    w: 171
+    h: 140
+    url: https://www.wwlp.com/news/fraud-awareness/umass-amherst-researchers-discover-new-class-of-banking-cyberthreat/
+    title: UMass Amherst researchers discover new banking cyberthreat
+    date: 2026-11-17
+    lang: en
+    publication: credit-without-debit
+
+  - name: Tech Xplore
+    logo: /assets/img/press/techxplore.svg
+    w: 506.7
+    h: 81.4
+    url: https://techxplore.com/news/2026-11-credit-debit-hackers-bank-accounts.html
+    title: "Credit without debit: A new way for hackers to target bank accounts"
+    date: 2026-11-16
+    lang: en
+    publication: credit-without-debit
+    note: Republishes the UMass Amherst release.
+
+  - name: EurekAlert!
+    logo: /assets/img/press/eurekalert.png
+    w: 538
+    h: 140
+    url: https://www.eurekalert.org/news-releases/1152058
+    title: New way for hackers to target bank accounts discovered by UMass Amherst researchers
+    date: 2026-11-16
+    lang: en
+    publication: credit-without-debit
+    note: UMass Amherst release distributed by AAAS.
+
+  - name: UMass Amherst
+    logo: /assets/img/press/umass-amherst.svg
+    w: 331.59
+    h: 171.87
+    url: https://www.umass.edu/news/article/umass-amherst-researchers-discover-new-ways-hackers-target-bank-accounts
+    title: UMass Amherst Researchers Discover New Ways Hackers Target Bank Accounts
+    date: 2026-11-16
+    lang: en
+    publication: credit-without-debit
+    note: University News Office release.
+
+  - name: XenoSpectrum
+    logo: /assets/img/press/xenospectrum.svg
+    w: 2000
+    h: 318.4
+    url: https://xenospectrum.com/en/ach-credit-without-debit-study/
+    title: US Researchers Find Three ACH Flaws That Let Funds Be Used Before Source Debits Clear
+    date: 2026-11-17
+    lang: en
+    publication: credit-without-debit
+    note: English edition of the Japanese original (https://xenospectrum.com/ach-credit-without-debit-study/).
+
+  - name: LaMiaFinanza
+    logo: /assets/img/press/lamiafinanza.png
+    w: 490
+    h: 96
+    url: https://www.lamiafinanza.it/2026/11/nuovo-attatto-hacker-alle-banche-accrediti-senza-trasferire-denaro-come-funziona-e-come-proteggere-il-conto/
+    title: "Nuovo attatto hacker alle banche: accrediti senza trasferire denaro. Come funziona e come proteggere il conto"
+    date: 2026-11-23
+    lang: it
+    publication: credit-without-debit
+
+  - name: Scienmag
+    logo: /assets/img/press/scienmag.png
+    w: 217
+    h: 72
+    url: https://scienmag.com/umass-amherst-researchers-identify-new-credit-without-debit-banking-cyberthreat/
+    title: UMass Amherst Researchers Identify New Credit-Without-Debit Banking Cyberthreat
+    date: 2026-11-16
+    lang: en
+    publication: credit-without-debit
+
+  - name: NewsBreak
+    logo: /assets/img/press/newsbreak.svg
+    w: 239
+    h: 38
+    url: https://www.newsbreak.com/science-x-336891127/5011024960252-credit-without-debit-a-new-way-for-hackers-to-target-bank-accounts
+    title: "Credit without debit: A new way for hackers to target bank accounts"
+    date: 2026-11-16
+    lang: en
+    publication: credit-without-debit
+    note: Carries the Tech Xplore / Science X article.

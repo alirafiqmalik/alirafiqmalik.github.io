@@ -357,6 +357,100 @@ body.one-page-scroll .main-content.main-content-scroll {
   margin: 0;
 }
 
+/* === MEDIA: outlets that covered the research (_data/press.yml) === */
+/*
+ * Auto-height like Experience: the logo wall wraps to more rows on a phone,
+ * and a fixed-height panel would clip the last row at the Narrow Floor.
+ */
+.page-panel-media {
+  height: auto;
+  min-height: var(--snap-panel-height);
+  max-height: none;
+  overflow: visible;
+}
+
+.page-panel-media .page-panel-inner {
+  overflow: visible;
+}
+
+.page-panel-media .page-panel-header {
+  margin-bottom: 2.5rem;
+}
+
+.press-wall {
+  /* Every logo covers about the same area: a square this wide. */
+  --logo-area: 3.4rem;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 2.25rem 3.5rem;
+  width: 100%;
+  /* Four or five logos a row on desktop; wider rows read as a ticker. */
+  max-width: 50rem;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.press-item {
+  display: flex;
+}
+
+/*
+ * Logos are single-color silhouettes in the text color, so outlets with
+ * different brand colors read as one row and none of them fights the accent.
+ */
+.press-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  padding: 0.25rem;
+  border-radius: var(--radius-lg);
+  opacity: 0.7;
+  transition: opacity 0.25s, transform 0.25s;
+}
+
+.press-logo img {
+  /* Equal visual weight: height = side / sqrt(width / height). */
+  height: 1.75rem;
+  height: clamp(1.1rem, calc(var(--logo-area) / sqrt(var(--logo-ar, 4))), 2.9rem);
+  width: auto;
+  max-width: min(13rem, 72vw);
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+}
+
+.press-logo:hover,
+.press-logo:focus-visible {
+  opacity: 1;
+  transform: translateY(-2px);
+}
+
+.press-logo:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+
+@media (max-width: 639px) {
+  .press-wall {
+    --logo-area: 3rem;
+    gap: 1.75rem 2.25rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .press-logo {
+    transition: opacity 0.25s;
+  }
+
+  .press-logo:hover,
+  .press-logo:focus-visible {
+    transform: none;
+  }
+}
+
 .page-panel-experience .page-panel-header {
   margin-bottom: 1.25rem;
 }
@@ -1330,6 +1424,7 @@ body.globe-is-bg > .landing-globe-slot {
 }
 
 body.globe-is-bg .page-scroll-container,
+body.globe-is-bg .page-panel-media,
 body.globe-is-bg .page-panel-research,
 body.globe-is-bg .page-panel-experience,
 body.globe-is-bg .page-panel-publications,
@@ -1345,6 +1440,7 @@ body.globe-is-bg .footer {
  * per-panel fills are what produced the horizontal band in issue #21.
  */
 body.globe-is-bg .page-panel-about,
+body.globe-is-bg .page-panel-media,
 body.globe-is-bg .page-panel-research,
 body.globe-is-bg .page-panel-experience,
 body.globe-is-bg .page-panel-publications,

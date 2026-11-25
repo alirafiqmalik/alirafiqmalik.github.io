@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const progressBar = document.getElementById('nav-progress-bar');
   const scrollHint = document.querySelector('.panel-scroll-hint');
 
-  const SECTION_ORDER = ['landing', 'about', 'research', 'experience', 'publications', 'explore', 'contact'];
+  const SECTION_ORDER = ['landing', 'about', 'media', 'research', 'experience', 'publications', 'explore', 'contact'];
 
   const navPromptCwd = document.querySelector('[data-nav-cwd]');
   const navPromptRoot = document.querySelector('[data-nav-prompt-root]');
@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const SECTION_CWD_MAP = {
     landing: '',
     about: 'whoami',
+    media: 'media',
     research: 'whoami',
     experience: 'experience',
     publications: 'publications',
@@ -169,6 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const HINT_COVER_SELECTOR = [
     '#about',
     '.page-panel-header',
+    '.press-logo',
     '.skill-category',
     '.cv-item',
     '.publication-entry',
@@ -390,6 +392,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const sectionNavMap = {
       landing: null,
       about: 'about',
+      media: 'media',
       research: 'about',
       experience: null,
       news: null,

@@ -146,6 +146,37 @@ layout: home
   </div>
 </section>
 
+<!-- Media — outlets that covered the research (_data/press.yml) -->
+{% assign press_outlets = site.data.press.outlets %}
+{% if press_outlets.size > 0 %}
+<section class="page-panel page-panel-media" id="media" aria-labelledby="media-heading">
+  <div class="page-panel-inner container">
+    <div class="page-panel-header animate-on-scroll">
+      <h2 id="media-heading">Research <span class="highlight">Featured&nbsp;In</span></h2>
+    </div>
+    <ul class="press-wall animate-on-scroll" role="list">
+      {% for outlet in press_outlets %}
+      {% assign press_pub = site.publications | where: 'slug', outlet.publication | first %}
+      {% capture press_label %}{{ outlet.name }}: {{ outlet.title }}{% if press_pub %} (coverage of {{ press_pub.short_title | default: press_pub.title }}){% endif %}{% endcapture %}
+      {% assign press_label = press_label | strip | escape %}
+      <li class="press-item">
+        <a class="press-logo" href="{{ outlet.url }}"{% if outlet.lang and outlet.lang != 'en' %} hreflang="{{ outlet.lang }}"{% endif %} target="_blank" rel="noopener noreferrer" title="{{ press_label }}" style="--logo-ar: {{ outlet.w | times: 1.0 | divided_by: outlet.h | round: 3 }};">
+          <img
+            src="{{ outlet.logo | relative_url }}"
+            alt="{{ press_label }}"
+            width="{{ outlet.w | round }}"
+            height="{{ outlet.h | round }}"
+            loading="lazy"
+            decoding="async"
+          >
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+{% endif %}
+
 <!-- Research Interests — match live alihamzamalik.me/#research -->
 <section class="page-panel page-panel-research" id="research">
   <div class="page-panel-inner container">

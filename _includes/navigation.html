@@ -6,6 +6,9 @@
     </a>
     <div class="nav-links">
       <a href="{{ '/' | relative_url }}#about" class="nav-link" data-scroll-to="about" data-nav-section="about">About</a>
+      {% if site.data.press.outlets.size > 0 %}
+      <a href="{{ '/' | relative_url }}#media" class="nav-link" data-scroll-to="media" data-nav-section="media">Media</a>
+      {% endif %}
       <a href="{{ '/' | relative_url }}#publications" class="nav-link" data-scroll-to="publications" data-nav-section="publications">Publications</a>
       <a href="{{ '/' | relative_url }}#contact" class="nav-link" data-scroll-to="contact" data-nav-section="contact">Contact</a>
 
@@ -55,6 +58,9 @@
   <!-- Mobile Menu -->
   <div class="mobile-menu">
     <a href="{{ '/' | relative_url }}#about" class="nav-link" data-scroll-to="about" data-nav-section="about">About</a>
+    {% if site.data.press.outlets.size > 0 %}
+    <a href="{{ '/' | relative_url }}#media" class="nav-link" data-scroll-to="media" data-nav-section="media">Media</a>
+    {% endif %}
     <a href="{{ '/' | relative_url }}#publications" class="nav-link" data-scroll-to="publications" data-nav-section="publications">Publications</a>
     <a href="{{ '/' | relative_url }}#contact" class="nav-link" data-scroll-to="contact" data-nav-section="contact">Contact</a>
 
